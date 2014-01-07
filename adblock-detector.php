@@ -42,6 +42,3 @@ include_once ( ABD_ROOT_PATH . 'includes/shortcodes.php' );
 if ( !session_id() ) {
 	session_start();
 }
-
-//	Load shortcodes
-//AM_Interface_Manip::create_shortcodes();
