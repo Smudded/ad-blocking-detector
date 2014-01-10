@@ -53,10 +53,10 @@ if ( !class_exists( 'ABD_Admin_Pages' ) ) {
 							Or, if you are short on funds, there are other ways you can help out:
 						</p>
 						<ul>
-							<li>Leave us a positive review on the plugin's <a href=''>WordPress listing</a></li>
-							<li>Vote "Works" on the plugin's <a href=''>WordPress listing</a></li>
-							<li><a href=''>Share your thoughts on Twitter</a> and other social sites</li>
-							<li>Improve this plugin on <a href=''>GitHub</a></li>
+							<li>Leave us a positive review on the plugin's <a target='_blank' href='http://wordpress.org/support/view/plugin-reviews/ad-blocking-detector'>WordPress listing</a></li>
+							<li>Vote "Works" on the plugin's <a target='_blank' href='http://wordpress.org/plugins/ad-blocking-detector/#compatibility'>WordPress listing</a></li>
+							<li><a target='_blank' href='http://twitter.com/home?status=I%20love%20this%20WordPress%20plugin!%20http://adblockingdetector.jtmorris.net/'>Share your thoughts on Twitter</a> and other social sites</li>
+							<li>Improve this plugin on <a target='_blank' href='https://github.com/jtmorris/adblock-detector'>GitHub</a></li>
 						</ul>						
 					</div>
 
@@ -66,8 +66,8 @@ if ( !class_exists( 'ABD_Admin_Pages' ) ) {
 							If you're encountering a problem, have a question, or would like to suggest an improvement, be sure to let me know!
 						</p>						
 						<p> 
-							You can start a thread on this plugin's <a target='_blank' href=''>WordPress support page</a>, open an "issue"
-							in the <a target='_blank' href=''>GitHub</a> repository, or <a target='_blank' href='http://jtmorris.net/contact-me/'>contact the 
+							You can start a thread on this plugin's <a target='_blank' href='http://wordpress.org/support/plugin/ad-blocking-detector'>WordPress support page</a>, open an "issue"
+							in the <a target='_blank' href='https://github.com/jtmorris/adblock-detector/issues'>GitHub</a> repository, or <a target='_blank' href='http://jtmorris.net/contact-me/'>contact the 
 							developer directly</a>.
 						</p>
 					</div>					
