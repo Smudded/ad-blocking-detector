@@ -61,6 +61,9 @@ web browser, and operating system you are using.  We will then investigate the p
 
 
 == Changelog ==
+= 1.0 =
+* Prep for initial publishing on WordPress.org.
+* Fix a few links.
 = 0.2 =
 * Add content and formatting required to submit this plugin to WordPress.org's repository.
 = 0.1 =
