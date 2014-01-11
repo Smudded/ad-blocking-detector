@@ -21,6 +21,7 @@
 				wp_enqueue_script( 'jquery' );
 				wp_enqueue_script( 'abd-adblock-detector', ABD_ROOT_URL . 'js/adblock-detector.js' );
 				wp_enqueue_script( 'abd-run-on-load', ABD_ROOT_URL . 'js/runonload.js' );
+				wp_enqueue_script( 'abd-fake-ad', ABD_ROOT_URL . 'js/advertisement.js' );
 			}
 		}	//	end class ABD_Enqueue
 

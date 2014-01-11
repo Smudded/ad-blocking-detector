@@ -23,12 +23,15 @@ function Abd_Detector (options) {
 				src: 'http://exadwese.us/adserver/adlogger_tracker.php',	//	junk URL that would set off an ad blocker's alarm bells
 				height: '728',
 				width: '90',
-				style: 'position: absolute; top: -1000px; left: -1000px;'
+				style: 'position: absolute; top: -1000px; left: -1000px; display: block; visibility: visible;'
 			});
-
 			frame.appendTo('body');
+			self.debugMsg("Inserting fake ad iframe");		
 
-			self.debugMsg("Inserting fake ad iframe (" + frame.html() + ").");			
+
+			var div = jQuery("<div id='abd-ad-div' style='position: absolute; top: -1000px; left: -1000px; display: block; visibility: visible;'>Advertisment ad adsense adlogger</div>");
+			div.appendTo('body');
+			self.debugMsg("Inserting fake ad div");
 		});
 	};	//	end this.loadFakeAds
 
@@ -42,20 +45,82 @@ function Abd_Detector (options) {
 	 */
 	this.checkAdStatus = function() {
 		var frame = jQuery('#abd-ad-iframe');
+		var frameNoJq = document.getElementById("abd-ad-iframe");
+
+		var div = jQuery('#abd-ad-div');
+		var divNoJq = document.getElementById("abd-ad-div");
+
 		var retVal = true;
 
+		//	Appended frame
 		if (frame.length === 0) {
 			retVal = false;
 
 			self.debugMsg("iframe removal detected! (Detection Method: jQuery selector empty - $('#abd-ad-iframe').length === 0)");
 		}
-		else if (frame.height === 0) {
+		else if (frameNoJq == undefined) {
+			retval = false;
+
+			self.debugMsg("iframe removal detected! (Detection Method: no element with id found - document.getElementById == undefined")
+		}
+		else if (frame.height < 50) {
 			retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: iframe height resized to 0 - $('#abd-ad-iframe').height === 0");
+			self.debugMsg("iframe removal detected! (Detection Method: iframe height resized to near 0 - $('#abd-ad-iframe').height < 50");
+		}
+		else if (frame.is("hidden")) {
+			retVal = false;
+
+			self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('#abd-ad-iframe').is('hidden')");
+		}
+		else if (frame.find(":hidden").length !== 0) {
+			retVal = false;
+
+			self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('$abd-ad-iframe').find(':hidden').length === 0");
+		}
+		else if (frame.css('visibility') === 'hidden' || frame.css('display') === 'none') {
+			retVal = false;
+
+			self.debugMsg("iframe removal detected! (Detection Method: iframe css changed to hidden - frame.css('visibility') === 'hidden' || frame.css('display') === 'none'");
 		}
 		else {
 			self.debugMsg("No iframe removal detected.");
+		}
+
+		//	Appended div
+		if (div.length === 0) {
+			retVal = false;
+
+			self.debugMsg("div removal detected! (Detection Method: jQuery selector empty");
+		}
+		else if (div.height === 0) {
+			retVal = false;
+
+			self.debugMsg("div removal detected! (Detection Method: height resized to 0");
+		}
+		else if (div.is("hidden")) {
+			retVal = false;
+
+			self.debugMsg("div removal detected! (Detection Method: div hidden");
+		}
+		else if (div.css('visibility') === 'hidden' || div.css('display') === 'none') {
+			retVal = false;
+
+			self.debugMsg("div removal detected! (Detection Method: CSS visibility or display altered!)");
+		}
+		else {
+			self.debugMsg("No div removal detected");
+		}
+
+		//	Bait javascript file
+		if (window.abd_script_load_flag !== true) {
+			//	Then the bait javascript file, advertisement.js, was not loaded or run
+			retVal = false;
+
+			self.debugMsg("js removal detected! (Detection Method: Bait javascript file prevented from loading and execution!)");
+		}
+		else {
+			self.debugMsg("No js removal detected");
 		}
 
 
@@ -78,7 +143,7 @@ function Abd_Detector (options) {
 			else {
 				blockerFunc();
 			}
-		}, 300);
+		}, 500);
 	};
 
 	////////////////
