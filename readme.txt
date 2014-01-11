@@ -61,6 +61,11 @@ web browser, and operating system you are using.  We will then investigate the p
 
 
 == Changelog ==
+= 1.1.0 =
+* Add two new ad block detection methods
+* Fix broken detection in Firefox's Adblock Plus
+* Fix repeated ad block toggling problem
+* Several bug fixes and performance improvements
 = 1.0.2 =
 * Fix default shortcodes
 = 1.0 =
@@ -73,5 +78,7 @@ web browser, and operating system you are using.  We will then investigate the p
 
 
 == Upgrade Notice ==
+= 1.1.0 =
+Fixed detection of Firefox's Adblock Plus and added numerous bug fixes and performance improvements
 = 0.1 =
 Because it's the awesome first version!
