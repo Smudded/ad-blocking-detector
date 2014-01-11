@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,8 @@ web browser, and operating system you are using.  We will then investigate the p
 
 
 == Changelog ==
+= 1.1.1 =
+* Add screenshots and a banner image to the plugin listing.
 = 1.1.0 =
 * Add two new ad block detection methods
 * Fix broken detection in Firefox's Adblock Plus
