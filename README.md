@@ -17,7 +17,7 @@ such as [Adblock Plus](https://adblockplus.org), it displays alternative content
 
 Install
 ========
-This plugin is installed like any other WordPress plugin.  You can it through WordPress (*coming soon*), or 
+This plugin is installed like any other WordPress plugin.  You can it through [WordPress.org](http://wordpress.org/plugins/ad-blocking-detector/), or 
 [install it manually](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
 To install manually, download all the files, and copy to a directory named adblock-detector in your WordPress install's **wp-content/plugins** directory.
 Then go to the Plugins screen in your WordPress admin section, find the new plugin in the list and activate it.
