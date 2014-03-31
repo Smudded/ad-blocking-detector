@@ -2,7 +2,7 @@ function Abd_Detector (options) {
 	var self = this;
 
 	this.debugMsg = function(msg, level) {
-		if (options.debugMessages) {
+		if (options.debugMessage) {
 			if (typeof(options.debugMessage) == 'function') {
 				options.debugMessage(msg, level);
 			}
