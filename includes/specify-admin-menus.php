@@ -16,7 +16,7 @@ if ( !class_exists( 'ABD_Admin_Menu' ) ) {
 		public function navigate() {
 			ABD_Admin_Pages::navigate();
 		}
-	}	//	end class AM_Admin_Menu
+	}	//	end class ABD_Admin_Menu
 
 
 	//	Instantiate the object to setup the menu
