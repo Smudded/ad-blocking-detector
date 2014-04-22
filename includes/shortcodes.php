@@ -15,9 +15,13 @@ if( !class_exists( 'ABD_Shortcodes' ) ) {
 			//	Get database value with that shortcode
 			$res = ABD_Db_Manip::get_shortcode_by_id( $id );
 
+			//	Process shortcodes within the shortcode
+			$noab = do_shortcode( $res['noadblock'] );
+			$ab = do_shortcode( $res['adblock'] );
+
 			if ( $res ) {
-				$retval = '<div class="ABD_display ABD_display_noadblock">' . $res['noadblock'] . '</div>';
-				$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $res['adblock'] . '</div>';
+				$retval = '<div class="ABD_display ABD_display_noadblock">' . $noab . '</div>';
+				$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $ab . '</div>';
 
 				return $retval;
 			}
