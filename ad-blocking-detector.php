@@ -3,7 +3,7 @@
  * Plugin Name: Ad Blocking Detector
  * Plugin URI: http://adblockingdetector.jtmorris.net
  * Description: A plugin to detect ad blocking browser extensions and display alternative content to site visitors.
- * Version: 1.2.2
+ * Version: 2.0.0
  * Author: John Morris
  * Author URI: http://jtmorris.net
  * License: GPL2
@@ -30,12 +30,8 @@ define ( 'ABD_ROOT_PATH', plugin_dir_path( __FILE__ ) );
 define ( 'ABD_ROOT_URL', plugin_dir_url( __FILE__ ) );
 define ( 'ABD_PLUGIN_FILE', ABD_ROOT_PATH . 'ad-blocking-detector.php' );
 
-include_once ( ABD_ROOT_PATH . 'includes/specify-admin-menus.php' );
-include_once ( ABD_ROOT_PATH . 'includes/admin-page.php' );
-include_once ( ABD_ROOT_PATH . 'includes/hooks.php' );
-include_once ( ABD_ROOT_PATH . 'includes/enqueue.php' );
-include_once ( ABD_ROOT_PATH . 'includes/ajax-actions.php' );
-include_once ( ABD_ROOT_PATH . 'includes/shortcodes.php' );
+
+
 
 
 //      Start SESSION to facilitate data transfers
