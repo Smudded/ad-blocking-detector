@@ -45,7 +45,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 							is_network_admin() ) {
 						//	all shortcodes that do not have a specific blog,
 						//	and all shortcodes that are network wide.
-						return "blog_id<0 OR network_wide<>0";
+						return "blog_id<0 OR blog_id=NULL OR network_wide<>0";
 					}
 					//	Network wide, but in specific blog/site admin
 					else {
