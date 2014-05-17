@@ -2,9 +2,9 @@
 Contributors: jtmorris
 Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement
-Requires at least: 3.8
-Tested up to: 3.9
-Stable tag: 1.2.2
+Requires at least: 3.9
+Tested up to: 3.9.1
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,13 @@ to display rotating ads while harnessing the power of ad block detection.  You c
 
 
 == Changelog ==
+= 2.0.0 =
+* Massive code base cleanup and refactoring.
+* Performance improvements.
+* Multisite support.
+* Improved documentation.
+* Bug fixes.
+* UI cleanup.
 = 1.2.2 =
 * Fixed PHP warnings when PHPSESSID cookie contains illegal characters.
 = 1.2.1 =
@@ -102,6 +109,8 @@ to display rotating ads while harnessing the power of ad block detection.  You c
 
 
 == Upgrade Notice ==
+= 2.0.0 =
+Major update! Lot's of bug fixes, performance improvements, documentation improvements, interface cleanup, and *multisite* support.
 = 1.2.2 =
 SECURITY UPDATE: This update plugs a security hole that, in cicumstances, gave [Full Path Disclosure](https://www.owasp.org/index.php/Full_Path_Disclosure).
 = 1.2.0 =
