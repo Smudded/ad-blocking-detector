@@ -6,6 +6,10 @@
 
 if ( !class_exists( 'ABD_Database' ) ) {
 	class ABD_Database {
+		/**
+		 * Get the database table name for ABD.
+		 * @return string The table name.
+		 */
 		protected static function get_table_name() {
 			//	Okay, this table is network wide, not blog/site specific. 
 			//	Therefore, we want the network table prefix, not the specific 
@@ -227,5 +231,5 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				return false;
 			}
 		}
-	}
-}
+	}	//	end class
+}	// end if (!class_exists(...
