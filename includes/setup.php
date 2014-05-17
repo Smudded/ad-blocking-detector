@@ -185,11 +185,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 		}
 			protected static function menus_helper() {
 				add_menu_page( 
-					'Ad Blocking Detector',	//	Title tag value
-					'Ad Blocking Detector',	//	Menu Text
+					'ABD Dashboard',	//	Title tag value
+					'Ad Blocking Detector - Dashboard',	//	Menu Text
 					'administrator',	//	Required privileges/capability
 					'adblock-detector',	//	Menu Slug
-					array( 'ABD_Admin_Views', 'initialize' ), // Content Function
+					array( 'ABD_Admin_Views', 'output_main' ), // Content Function
 					'dashicons-forms'	//	Menu Icon (http://goo.gl/vN3FjZ)
 				);
 			}
