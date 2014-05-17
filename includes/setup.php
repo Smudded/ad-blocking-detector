@@ -25,6 +25,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	Enqueue public facing JS
 			add_action( 'wp_enqueue_scripts',
 				array( &$this, 'enqueue_helper_public_js' ) );
+
+			//	Add AJAX listeners
+			add_action( 'wp_ajax_abd_ajax',
+				array( 'ABD_Ajax_Actions', 'navigate' ) );
 		}
 			protected static function enqueue_helper_admin_css() {
 				wp_register_style( 'abd-admin-css', 
@@ -216,29 +220,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					$atts
 				);
 
-				//	Get the database entry for that shortcode
-				require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
-				$res = ABD_Database::get_shortcode_by_id( $id );
-
-				//	Was it successful?
-				if ( $res ) {
-					//	Good!
-					//	Process any shortcodes used within the ABD shortcode
-					$noab = do_shortcode( $res['noadblock'] );
-					$ab = do_shortcode( $res['adblock'] );
-
-					//	And now create the return value;
-					$retval = '<div class="ABD_display ABD_display_noadblock">' . $noab . '</div>';
-					$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $ab . '</div>';
-				}
-				else {
-					// Uh-Oh. This means the query failed or, more likely,
-					// their is no shortcode with that ID in the database.
-					// Let's return a generic error message.
-					$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>Could not find a shortcode with specified ID#. Please check your configuration!</em></div>';
-				}
-
-				return $retval;
+				//	We're going to be doing some public view output, so we'll
+				//	need the public view class
+				require_once ( ABD_ROOT_PATH . 'includes/public-views.php' );
+				return ABD_Public_Views::get_shortcode_output( $id );
 			}
 
 		/**
