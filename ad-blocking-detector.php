@@ -31,11 +31,13 @@ define ( 'ABD_ROOT_URL', plugin_dir_url( __FILE__ ) );
 define ( 'ABD_PLUGIN_FILE', ABD_ROOT_PATH . 'ad-blocking-detector.php' );
 
 
+require_once ( ABD_ROOT_PATH . 'includes/setup.php' );
 
+ABD_Setup::initialize();
 
 
 //      Start SESSION to facilitate data transfers
-//      Error Prevention: http://www.php.net/manual/en/function.session-start.php#82957
+//      Error Prevention: http://goo.gl/Acm9oY
 function my_session_start()
 {
         if (isset($_COOKIE['PHPSESSID'])) {
