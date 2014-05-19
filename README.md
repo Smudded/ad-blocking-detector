@@ -84,21 +84,3 @@ Plugin Limitations
 
 * By default, Wordpress does not allow shortcodes in sidebar widgets.  This functionality must be enabled manually if you wish to use this in a widget.
   Instructions for doing so can be found [here](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/).
-
-
-
-How Can I Contribute?
-======================
-Awesome!  I'd be happy to have contributions!  Anything's welcome.  If you want some ideas, contact me
-and we'll brainstorm.  Otherwise, there are a few general ideas below:
-
-<<<<<<< HEAD
-**Code Cleanup**
-=======
-*Code Cleanup*
-
-
-<<<<<<< HEAD
-**UI Improvements**
-=======
-*UI Improvements*
