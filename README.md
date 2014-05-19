@@ -35,7 +35,8 @@ of those other methods.
 
 Installation
 =================
-= Using WordPress.org's Plugin Repository (recommended) =
+Using WordPress.org's Plugin Repository (recommended)
+---------------------------------------------------------
 1. Search for "Ad Blocking Detector" in your WordPress "Add New" plugin section of your dashboard.
 1. Install and activate the "[Ad Blocking Detector](http://wordpress.org/plugins/ad-blocking-detector/)" plugin by John Morris.
 1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
