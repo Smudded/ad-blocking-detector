@@ -4,18 +4,24 @@
  * manipulation functions.  
  */
 
+//	Need is_plugin_active_for_network()
+include_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+require_once( ABD_ROOT_PATH . 'includes/multisite.php' );
+
 if ( !class_exists( 'ABD_Database' ) ) {
 	class ABD_Database {
 		/**
 		 * Get the database table name for ABD.
 		 * @return string The table name.
 		 */
-		protected static function get_table_name() {
+		public static function get_table_name() {
+			global $wpdb;
+
 			//	Okay, this table is network wide, not blog/site specific. 
 			//	Therefore, we want the network table prefix, not the specific 
 			//	blog/site prefix. This is $wpdb->base_prefix. 
 			//	$wpdb->prefix is blog/site specific.
-			$prefix = $wpdb->base_prefix;			
+			$prefix = $wpdb->base_prefix;
 
 			return $prefix . 'abd_shortcodes';
 		}
@@ -27,22 +33,34 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * not tied to a specific blog_id. If we have multisite, and the user is
 		 * in a specific blog context, we want everything blog specific, and 
 		 * everything network wide.  If no multisite, then we want network wide.
+		 *
+		 * @param boolean $cached_context Whether to use cached user context info,
+		 * or fresh user context info. Cached context is useful for AJAX calls 
+		 * where the calling page is an AJAX handler, not the user's page.  For
+		 * info on cached contexts, see the includes/multisite.php file.
+		 * 
 		 * @return string          String containing some conditions for a WHERE
 		 * clause. (e.g. "blog_id=1 OR network_wide<>0")
 		 * @return boolean	FALSE if no multisite conditions are needed.
 		 */
-		protected static function multisite_where_conditions( ) {
+		protected static function multisite_where_conditions( $cached_context = false ) {
 			global $wpdb;
 
+			//	Let's get the current or cached context as needed.
+			//	If $cached_context = false, then we want to get the most recent,
+			//	which means passing true to get_current_context.  If $cached_context
+			//	is true, then we want the cached context, which means passing false
+			//	to get_current context... or, in other words, passing the inverse
+			//	of $cached_context.
+			$context = ABD_Multisite::get_current_context( !$cached_context );
+
 			//	Is this a multisite?
-			if ( function_exists('is_multisite') && is_multisite() ) {
+			if ( $context['is_this_a_multisite'] ) {
 				//	Is the plugin active network wide?
-				if ( function_exists( 'is_plugin_active_for_network' ) &&
-						is_plugin_active_for_network() ) {
+				if ( $context['is_plugin_active_network_wide'] ) {
 					// Is management being done from within the network admin
 					// page?
-					if ( function_exists( 'is_network_admin' ) && 
-							is_network_admin() ) {
+					if ( $context['is_in_network_admin'] ) {
 						//	all shortcodes that do not have a specific blog,
 						//	and all shortcodes that are network wide.
 						return "blog_id<0 OR blog_id=NULL OR network_wide<>0";
@@ -51,14 +69,14 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					else {
 						//	all shortcodes that match current blog ID, and all
 						//	network wide shortcodes
-						return "blog_id=" . $wpdb->$blogid . 
+						return "blog_id=" . $wpdb->blogid . 
 							" OR network_wide<>0";
 					}
 				}
 				//	Is not network wide, only blog/site active
 				else {
 					//	all shortcodes taht match current blog ID
-					return "blog_id=" . $wpdb->$blogid;
+					return "blog_id=" . $wpdb->blogid;
 				}
 			}
 			//	Not a multisite network
@@ -72,6 +90,10 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * Retrieves all shortcodes from the database and returns them.
 		 * @param  boolean $sort_by_network_wide If true, output is sorted by
 		 * network_wide column first, shortcode creation order second.
+		 * @param boolean $cached_context Whether to use cached user context info,
+		 * or fresh user context info. Cached context is useful for AJAX calls 
+		 * where the calling page is an AJAX handler, not the user's page.  For
+		 * info on cached contexts, see the includes/multisite.php file.
 		 * @return ARRAY_A  A numerical array of associative arrays.
 		 * Each first dimension element is a row from the table. Each second
 		 * dimension element is a column from the table (key = column name, 
@@ -79,10 +101,10 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * @return NULL 	If nothing was found or query failes, NULL is 
 		 * returned
 		 */
-		public static function get_all_shortcodes( $sort_by_network_wide = true ) {
+		public static function get_all_shortcodes( $sort_by_network_wide = true, $cached_context = false ) {
 			global $wpdb;
 
-			$where = self::multisite_where_conditions();
+			$where = self::multisite_where_conditions( $cached_context );
 			
 			$sql = "SELECT * FROM " . self::get_table_name();
 
@@ -114,7 +136,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			$where = "id=" . $id;
 
-			$sql = "SELECT * FROM " . self::get_shortcode_table_name() . 
+			$sql = "SELECT * FROM " . self::get_table_name() . 
 				" WHERE " . $where . " LIMIT 1";
 
 			$retval = $wpdb->get_row($sql, ARRAY_A);
@@ -124,7 +146,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	Permission in this context means either superadmin or within
 			//	the site/blog owning the shortcode.			
 			//	If so, return it.  Otherwise, return NULL.
-			if ( $retval['blog_id'] != $wpdb->$blogid && !is_super_admin() ) {
+			if ( $retval['blog_id'] != $wpdb->blogid && !is_super_admin() ) {
 				return NULL;
 			}
 			else {
@@ -146,11 +168,12 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	Hold up! Does the user have permission to delete this entry?
 			//	The easiest way to check this is to get_shortcode_by_id. It should
 			//	not return it if something goes wrong, like lack of permission.
-			if ( !empty( self::get_shortcode_by_id( $id ) ) ) {
+			$sc = self::get_shortcode_by_id( $id );
+			if ( !empty( $sc ) ) {
 				//	Okay, we have permission, let's delete the row and return
 				//	the appropriate response.
 				return $wpdb->delete( 
-					self::get_shortcode_table_name(), 
+					self::get_table_name(), 
 					array( 'id' => $id ) 
 				);
 			}
@@ -175,11 +198,12 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	Hold up! Does the user have permission to update this entry?
 			//	The easiest way to check this is to get_shortcode_by_id. It should
 			//	not return it if something goes wrong, like lack of permission.
-			if ( !empty( self::get_shortcode_by_id( $id ) ) ) {
+			$sc = self::get_shortcode_by_id( $id );
+			if ( !empty( $sc ) ) {
 				//	Okay, we have permission, let's update the row and return
 				//	the appropriate response.
 				return $wpdb->update( 
-					self::get_shortcode_table_name(), 
+					self::get_table_name(), 
 					$data, 
 					array( 'id' => $id ) 
 				);
@@ -193,20 +217,32 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * Inserts a new row in the shortcode table. blog_id and network_wide is 
 		 * automatically input if appropriate and not already defined in $data.
 		 * @param  ARRAY_A $data An associative array where each entry 
-		 * epresents a column (column_name=>column_value)
+		 * represents a column (column_name=>column_value)
+		 * @param boolean $cached_context Whether to use cached user context info,
+		 * or fresh user context info. Cached context is useful for AJAX calls 
+		 * where the calling page is an AJAX handler, not the user's page.  For
+		 * info on cached contexts, see the includes/multisite.php file.
 		 * @return bool       FALSE if insertion failed.
 		 * @return ARRAY_A Associative array with two elements
 		 *                             'id'=>The ID# of the new row
 		 *                             'res'=>The actual value returned by 
 		 *                             $wpdb->insert
 		 */
-		public static function insert_shortcode( $data ) {
+		public static function insert_shortcode( $data, $cached_context = false ) {
 			global $wpdb;
+
+			//	Let's get the current or cached context as needed.
+			//	If $cached_context = false, then we want to get the most recent,
+			//	which means passing true to get_current_context.  If $cached_context
+			//	is true, then we want the cached context, which means passing false
+			//	to get_current context... or, in other words, passing the inverse
+			//	of $cached_context.
+			$context = ABD_Multisite::get_current_context( !$cached_context );
 
 			//	Is this being done in the network admin?
 			//	If so, this is network wide. Set the appropriate values
 			//	in $data if they're not already set.
-			if ( is_network_admin() && 
+			if ( $context['is_in_network_admin'] && 
 				!array_key_exists('network_wide', $data) ) {
 				
 				$data['network_wide'] = true;
@@ -214,15 +250,15 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	Okay, not network wide admin... If this is multisite, then we
 			//	must be on site/blog specific page. Set the appropriate values
 			//	in $data if they're not already set.
-			else if ( is_multisite() && 
+			else if ( $context['is_this_a_multisite'] && 
 				!array_key_exists( 'blog_id', $data ) ) {
 				
-				$data['blog_id'] == $wpdb->$blogid;
+				$data['blog_id'] = $wpdb->blogid;
 			}
 
 
 			//	Okay, now insert the values and return appropriate response
-			$res = $wpdb->insert( self::get_shortcode_table_name(), $data );
+			$res = $wpdb->insert( self::get_table_name(), $data );
 
 			if ( $res ) {
 				return array( 'id'=>$wpdb->insert_id, 'res'=>$res );

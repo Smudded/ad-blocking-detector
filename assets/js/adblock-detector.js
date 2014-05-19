@@ -1,4 +1,3 @@
-<?php
 /**
  * This file contains the JavaScript required to detect ad blocking browser
  * extensions and display/hide the appropriate content.

@@ -3,6 +3,7 @@
  * This file contains any and all output for the public facing sections of the
  * site.
  */
+require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );			
 
 if ( !class_exists( 'ABD_Public_Views' ) ) {
 	class ABD_Public_Views {
@@ -13,7 +14,6 @@ if ( !class_exists( 'ABD_Public_Views' ) ) {
 		 */
 		public static function get_shortcode_output( $id ) {
 			//	Get the database entry for that shortcode
-			require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
 			$res = ABD_Database::get_shortcode_by_id( $id );
 
 			//	Was it successful?

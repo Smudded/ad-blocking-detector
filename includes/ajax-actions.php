@@ -27,7 +27,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					self::submit_new_shortcode();
 					break;
 				case 'delete_shortcode_by_id':
-					self::delete_shortcode_by_id();
+					self::delete_shortcode_by_id( $_POST['id'] );
 					break;
 				default:
 					echo json_encode( 
@@ -36,7 +36,9 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 							'action' => 'default'
 						) 
 					);
-			}	//	end switch			
+			}	//	end switch
+
+			exit;
 		}	//	end function navigate( ...
 
 
@@ -87,7 +89,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		}
 		
 		protected static function get_all_shortcodes() {
-			$res = ABD_Database::get_all_shortcodes();
+			$res = ABD_Database::get_all_shortcodes( true, true );
 
 			if ( is_null( $res ) ) {	//	error
 				echo json_encode( array(
@@ -105,6 +107,8 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		}
 		
 		protected static function submit_edit_shortcode_by_id( $id ) {
+			global $wpdb;
+
 			//	The data to insert is in the $_POST array.
 			//	However, that array is full of a bunch of other junk as well
 			//	Let's extract only what we need and put it in an array
@@ -155,6 +159,8 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		}
 
 		protected static function submit_new_shortcode() {
+			global $wpdb;
+
 			//	The data to insert is in the $_POST array.
 			//	However, that array is full of a bunch of other junk as well
 			//	Let's extract only what we need and put it in an array
@@ -179,7 +185,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 
 			
 			//	Okay, now let's do the database manip
-			$res = ABD_Database::insert_shortcode( $data );
+			$res = ABD_Database::insert_shortcode( $data, true );
 
 			//	$res is either FALSE or an associative array. (see ABD_Database::insert_shortcode())
 			if ( !$res ) {	//	error
@@ -207,7 +213,9 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		}
 
 		protected static function delete_shortcode_by_id( $id ) {
-			$res = ABD_Db_Manip::delete_shortcode_by_id( $_POST['id'] );
+			global $wpdb;
+
+			$res = ABD_Database::delete_shortcode_by_id( $_POST['id'] );
 
 			//	$res is either an integer indicating how many rows were updated 
 			//	or FALSE.

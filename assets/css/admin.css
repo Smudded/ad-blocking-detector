@@ -74,7 +74,7 @@
 		}
 
 #ABD_content {
-	margin-right: 430px;
+	margin-right: 450px;
 
 	min-height: 1500px;	/*	Keeps absolutely positioned sidebar from running off the page. */
 }
@@ -84,6 +84,7 @@
 
 	#ABD_content table.ABD_shortcode_list {
 		min-width: 600px;
+		max-width: 800px;
 
 		border-collapse: collapse;
 
