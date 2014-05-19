@@ -96,17 +96,9 @@ and we'll brainstorm.  Otherwise, there are a few general ideas below:
 **Code Cleanup**
 =======
 *Code Cleanup*
->>>>>>> 619af9dcff213e36688698abffad9906df2aa3e4
-Honestly, code cleanup and code documentation are what's needed most.  If you find a bug, or have a cool idea, then by all
-means, fix/implement it.  However, ensuring best practices are implemented,
-WordPress code style guidelines are followed, and the code is neatly organized and clearly
-explained are the most important items.
 
 
 <<<<<<< HEAD
 **UI Improvements**
 =======
 *UI Improvements*
->>>>>>> 619af9dcff213e36688698abffad9906df2aa3e4
-There are many subtle, and a few not-so subtle UI improvements that are needed or welcome.  If you have inspiration, let 
-me know.  Even if you won't code it, some ideas for improvements are welcome.
