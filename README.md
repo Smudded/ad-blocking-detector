@@ -1,51 +1,58 @@
-Ad Blocking Detector
+Ad Blocking Detector - WordPress Plugin.
 ====================
-A WordPress plugin that allows users to input two distinct code sections.  One section
-is displayed if no common ad blocking software or browser plugins is placed.  The other
-is displayed if ad blocking is detected.
+Tired of missed opportunities and empty spaces because of pesky ad blocking browser extensions, add-ons, and plugins?
+Would you like to determine which of your site visitors use ad blockers and do something about it? Then this plugin
+is for you! Show an ad to those without ad blockers, and something else entirely to those with them. Don't settle for 
+lost profit!  Use the Ad Blocking Detector WordPress plugin.
 
-Picture this in your mind.  You're running a successful WordPress website which uses a tasteful
-Google AdSense ad in the sidebar to generate a bit of revenue.  Got that pictured?
+- Fully compatible with WordPress multisite networks.
+- Detects all major ad blocking browser extensions, including Ad Block Plus.
+- Works with all major web browsers.
+- Integrates with some other popular ad management plugins, such as AdRotate.
 
-Good, now let me ruin that beautiful picture.  As of 2013, 
-[22.7% of web surfers block ads](http://www.forbes.com/sites/kashmirhill/2013/08/21/use-of-ad-blocking-is-on-the-rise/)!  
-If your site caters to more tech-minded individuals, that percentage is dramatically larger.
+= How Does It Work? =
+This plugin allows you to specify two alternative sections of content.  One for normal visitors, 
+and the other for visitors using ad blockers, such as the popular Adblock Plus.  This content is
+then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode).  
 
-This plugin attempts to insert some item on your site (presumably an ad), but if it detects common ad blockers, 
-such as [Adblock Plus](https://adblockplus.org), it displays alternative content instead.
+Simply insert this shortcode anywhere shortcodes are supported, such as posts, pages, and the
+sidebar (with a simple tweak), and the plugin will display the appropriate content based on
+whether it detects an ad blocker or not.
 
+See a working demonstration at the [plugin's website](http://adblockingdetector.jtmorris.net/demo/).
 
-Install
-========
-This plugin is installed like any other WordPress plugin.  You can it through [WordPress.org](http://wordpress.org/plugins/ad-blocking-detector/), or 
-[install it manually](http://codex.wordpress.org/Managing_Plugins#Manual_Plugin_Installation).
-To install manually, download all the files, and copy to a directory named adblock-detector in your WordPress install's **wp-content/plugins** directory.
-Then go to the Plugins screen in your WordPress admin section, find the new plugin in the list and activate it.
+= What Can I Display To Ad Block Wielding Visitors? =
+Anything that ad blockers won't block. There is no way to turn off the visitor's ad blocker; however,
+you can use the knowledge that they have an ad blocker to your advantage.  Display a signup form for
+your email newsletter.  Pop in a description and link to your new eBook.  Even display a plea for
+the user to disable their ad blockers if necessary.
 
-
-
-Usage
-======
-This plugin adds a new menu item to your WordPress admin section entitled **Adblock**.  Detailed usage instructions are provided on the plugin's
-page.  The short version is explained below.
-
-**Ad Blocking Detector** uses WordPress shortcodes to achieve its goal.  You create a shortcode through the admin page.  When the shortcode is resolved
-by WordPress, the plugin displays the appropriate content based on whether an ad blocker is detected.  Several sample shortcodes are added by default 
-to get you started.
+There are other ways of engaging your site's visitors, when you can't display an ad, take advantage
+of those other methods.
 
 
+== Installation ==
+= Using WordPress.org's Plugin Repository (recommended) =
+1. Search for "Ad Blocking Detector" in your WordPress "Add New" plugin section of your dashboard.
+1. Install and activate the "[Ad Blocking Detector](http://wordpress.org/plugins/ad-blocking-detector/)" plugin by John Morris.
+1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
 
-Tips, Cautions, and Recommendations
-====================================
-Using a tool like this is circumventing the wishes of your site's visitors. They use an ad blocker for a reason. Displaying a different gaudy advertisement
-or berating the visitor will do more harm than good.  If done in significant quantities, it will also make tools like this a target
-for the ad blocker developers and maintainers.
 
-Because of this, I recommend you display something besides an alternative ad or a plea to disable their ad blocker.  This is a perfect way to get visitors to
-sign up for your newsletter, follow you on social media, donate, or any number of other ideas.  Displaying something different will be much more
-effective and well-received.
+= Manually =
+1. Download the latest version of adblock-detector and upload the `adblock-detector.zip` file 
+in the Add New plugin section of your dashboard.
+1. Activate the plugin through the "Plugins" menu in your WordPress admin section.
+1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
 
-Keeping your alternative content simple and tasteful will keep your visitors happy and ensure tools like this continue to function as expected.
+
+= From Source =
+1. Visit the plugin's [GitHub repository](https://github.com/jtmorris/adblock-detector).
+1. Select the branch you want to download (leaving the default master branch is highly recommended).
+1. Click the download ZIP button on the lower right side of the page.
+1. Upload the contents of the adblock-detector-**branch name** directory to a directory named 'adblock-detector'
+in your WordPress site's './wp-content/plugins/' directory.
+1. Visit your WordPress site's Plugins menu in the admin section, and activate the newly listed
+Ad Blocking Detector plugin.
 
 
 
@@ -77,3 +84,29 @@ Plugin Limitations
 
 * By default, Wordpress does not allow shortcodes in sidebar widgets.  This functionality must be enabled manually if you wish to use this in a widget.
   Instructions for doing so can be found [here](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/).
+
+
+
+How Can I Contribute?
+======================
+Awesome!  I'd be happy to have contributions!  Anything's welcome.  If you want some ideas, contact me
+and we'll brainstorm.  Otherwise, there are a few general ideas below:
+
+<<<<<<< HEAD
+**Code Cleanup**
+=======
+*Code Cleanup*
+>>>>>>> 619af9dcff213e36688698abffad9906df2aa3e4
+Honestly, code cleanup and code documentation are what's needed most.  If you find a bug, or have a cool idea, then by all
+means, fix/implement it.  However, ensuring best practices are implemented,
+WordPress code style guidelines are followed, and the code is neatly organized and clearly
+explained are the most important items.
+
+
+<<<<<<< HEAD
+**UI Improvements**
+=======
+*UI Improvements*
+>>>>>>> 619af9dcff213e36688698abffad9906df2aa3e4
+There are many subtle, and a few not-so subtle UI improvements that are needed or welcome.  If you have inspiration, let 
+me know.  Even if you won't code it, some ideas for improvements are welcome.
