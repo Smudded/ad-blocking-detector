@@ -10,7 +10,8 @@ lost profit!  Use the Ad Blocking Detector WordPress plugin.
 - Works with all major web browsers.
 - Integrates with some other popular ad management plugins, such as AdRotate.
 
-= How Does It Work? =
+How Does It Work?
+--------------------
 This plugin allows you to specify two alternative sections of content.  One for normal visitors, 
 and the other for visitors using ad blockers, such as the popular Adblock Plus.  This content is
 then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode).  
@@ -21,7 +22,8 @@ whether it detects an ad blocker or not.
 
 See a working demonstration at the [plugin's website](http://adblockingdetector.jtmorris.net/demo/).
 
-= What Can I Display To Ad Block Wielding Visitors? =
+What Can I Display To Ad Block Wielding Visitors?
+------------------------------------------------------
 Anything that ad blockers won't block. There is no way to turn off the visitor's ad blocker; however,
 you can use the knowledge that they have an ad blocker to your advantage.  Display a signup form for
 your email newsletter.  Pop in a description and link to your new eBook.  Even display a plea for
@@ -31,21 +33,24 @@ There are other ways of engaging your site's visitors, when you can't display an
 of those other methods.
 
 
-== Installation ==
+Installation
+=================
 = Using WordPress.org's Plugin Repository (recommended) =
 1. Search for "Ad Blocking Detector" in your WordPress "Add New" plugin section of your dashboard.
 1. Install and activate the "[Ad Blocking Detector](http://wordpress.org/plugins/ad-blocking-detector/)" plugin by John Morris.
 1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
 
 
-= Manually =
+Manually
+-------------------
 1. Download the latest version of adblock-detector and upload the `adblock-detector.zip` file 
 in the Add New plugin section of your dashboard.
 1. Activate the plugin through the "Plugins" menu in your WordPress admin section.
 1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
 
 
-= From Source =
+From Source
+------------------
 1. Visit the plugin's [GitHub repository](https://github.com/jtmorris/adblock-detector).
 1. Select the branch you want to download (leaving the default master branch is highly recommended).
 1. Click the download ZIP button on the lower right side of the page.
