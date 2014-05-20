@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,11 +112,17 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Screenshots ==
-1. Example of the administration backend.
-2. Example of behavior in a WordPress post with the sample shortcode included by default.
+1. Administration Dashboard for Ad Blocking Detector
+2. New Shortcode Form in Administration Dashboard
+3. Example Content in New Shortcode Form in Administration Dashbaord
+4. Demo of This Plugin **With** an Active Ad Blocker
+5. Demo of This Plugin **Without** an Active Ad Blocker
 
 
 == Changelog ==
+= 2.0.1 =
+* Minor bug fixes.
+* Better documentation.
 = 2.0.0 =
 * MULTISITE SUPPORT!
 * Massive code base cleanup and refactoring.

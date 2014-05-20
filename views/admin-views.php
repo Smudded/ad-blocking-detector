@@ -150,7 +150,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							<a target="_blank" href="http://adblockingdetector.jtmorris.net/display-rotating-ads/">Display Rotating Ads</a>: Explains how to combine the power of an ad rotation plugin with Ad Blocking Detector.
 						</li>
 						<li>
-							Combine The Power of This Plugin With Others <em>(coming soon)</em>
+							<a target="_blank" href="http://adblockingdetector.jtmorris.net/using-ad-blocking-detector-multisite/">Using Ad Blocking Detector With Multisite</a>: Explains how to take advantage of the new multisite features available to this plugin.
 						</li>
 					</ul>
 				</div>
