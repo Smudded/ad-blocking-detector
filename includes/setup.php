@@ -109,7 +109,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 						noadblock text NOT NULL,
 						adblock text NOT NULL,
 						network_wide boolean NOT NULL DEFAULT 0,
-						blog_id mediumint(9) DEFAULT NULL,
+						blog_id mediumint(9) DEFAULT 1,
 						noadblock_count bigint(20) DEFAULT 0,
 						adblock_count bigint(20) DEFAULT 0,
 						PRIMARY KEY (id)
@@ -123,6 +123,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					//	And we update the option in the database to reflect new
 					//	db version
 					update_option( 'abd_cur_db_version', self::$db_version );
+
+					//	And we need to update any NULL blog_ids to something
+					$sql = "UPDATE " . ABD_Database::get_table_name() . " SET blog_id=1 WHERE blog_id=NULL";
+					$wpdb->query($sql);
 				}
 
 
