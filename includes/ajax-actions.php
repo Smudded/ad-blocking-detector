@@ -316,7 +316,9 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 				'name' => $arr[$prefix . 'name'],
 				'noadblock' => $arr[$prefix . 'noadblock'],
 				'adblock' => $arr[$prefix . 'adblock'],
-				'nonce' => $arr['_wpnonce']
+				'nonce' => $arr['_wpnonce'],
+				'wpautop_adblock' => $arr['wpautop_adblock'],
+				'wpautop_noadblock' => $arr['wpautop_noadblock']
 			);
 
 			//	If we are supposed to strip out slashes, do so
