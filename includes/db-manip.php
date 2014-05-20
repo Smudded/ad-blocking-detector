@@ -63,7 +63,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					if ( $context['is_in_network_admin'] ) {
 						//	all shortcodes that do not have a specific blog,
 						//	and all shortcodes that are network wide.
-						return "blog_id<0 OR blog_id=NULL OR network_wide<>0";
+						return "(blog_id<0 OR blog_id=NULL OR network_wide<>0)";
 					}
 					//	Network wide, but in specific blog/site admin
 					else {
@@ -109,7 +109,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			$sql = "SELECT * FROM " . self::get_table_name();
 
 			//	Add the WHERE clause if necessary
-			if ( !empty( $where ) ) {
+			if ( !empty( $where ) && $where !== false ) {
 				$sql .= " WHERE " . $where;
 			}
 
@@ -136,27 +136,33 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			$where = self::multisite_where_conditions( $cached_context );
 
-			$where .= " AND id=" . $id;
-
-			$sql = "SELECT * FROM " . self::get_table_name() . " LIMIT 1";
-
-			if ( !empty( $where ) ) {
-				$sql .= " WHERE " . $where; 
+			if ( !empty( $where ) && $where !== false ) {
+				$where .= " AND id=" . $id;
 			}
+			else {
+				$where = " id=" . $id;
+			}
+
+			$sql = "SELECT * FROM " . self::get_table_name();
+			$sql .= " WHERE " . $where;
+			$sql .= " LIMIT 1";
 
 			$retval = $wpdb->get_row($sql, ARRAY_A);
 
 
 			//	Does the user have permission to see this particular entry?
-			//	Permission in this context means either superadmin or within
-			//	the site/blog owning the shortcode.			
+			//	Permission in this context means a multisite within
+			//	the site/blog owning the shortcode, or a singlesite.		
 			//	If so, return it.  Otherwise, return NULL.
-			if ( $retval['blog_id'] != $wpdb->blogid && !is_super_admin() ) {
-				return NULL;
+			if ( ABD_Multisite::is_this_a_multisite() ) {
+				if ( $retval['blog_id'] != $wpdb->blogid && 
+					$retval['blog_id'] != null ) {
+
+					return NULL;
+				}
 			}
-			else {
-				return $retval;
-			}
+
+			return $retval;
 		}
 
 		/**

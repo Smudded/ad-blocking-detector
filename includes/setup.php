@@ -10,7 +10,7 @@ require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
-		protected static $db_version = '052014';
+		protected static $db_version = '05-20-2014';
 
 		/**
 		 * Registers and enqueues all CSS and JavaScript.
@@ -123,10 +123,6 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					//	And we update the option in the database to reflect new
 					//	db version
 					update_option( 'abd_cur_db_version', self::$db_version );
-
-					//	And we need to update any NULL blog_ids to something
-					$sql = "UPDATE " . ABD_Database::get_table_name() . " SET blog_id=1 WHERE blog_id=NULL";
-					$wpdb->query($sql);
 				}
 
 
