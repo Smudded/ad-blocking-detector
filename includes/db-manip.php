@@ -138,8 +138,11 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			$where .= " AND id=" . $id;
 
-			$sql = "SELECT * FROM " . self::get_table_name() . 
-				" WHERE " . $where . " LIMIT 1";
+			$sql = "SELECT * FROM " . self::get_table_name() . " LIMIT 1";
+
+			if ( !empty( $where ) ) {
+				$sql .= " WHERE " . $where; 
+			}
 
 			$retval = $wpdb->get_row($sql, ARRAY_A);
 
