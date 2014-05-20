@@ -108,11 +108,11 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						<tr>
 							<!--Flattr-->
 							<td>
-								<script id='fbpydtc'>(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=jtmorris&url='+encodeURIComponent(document.URL);f.title='Flattr';f.height=62;f.width=55;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('fbpydtc');</script>
+								<script id='fb5x80j'>(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=jtmorris&title=Ad%20Blocking%20Detector&url=http%3A%2F%2Fadblockingdetector.jtmorris.net';f.title='Flattr';f.height=62;f.width=55;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('fb5x80j');</script>
 							</td>
 							<!--PayPal-->
 							<td>
-								<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+								<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
 									<input type="hidden" name="cmd" value="_s-xclick">
 									<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
 									<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
@@ -221,7 +221,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_new_input_form_noadblock' id='ABD_new_input_form_noadblock'></textarea>
 									wp_editor( '', 'ABD_new_input_form_noadblock', 
 										array( 
-											'textarea_name'=>'ABD_new_input_form_noadblock' 
+											'textarea_name'=>'ABD_new_input_form_noadblock',
+											'wpautop' => true
 										) 
 									);
 								?>
@@ -240,7 +241,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_new_input_form_adblock' id='ABD_new_input_form_adblock'></textarea>
 									wp_editor( '', 'ABD_new_input_form_adblock', 
 										array( 
-											'textarea_name'=>'ABD_new_input_form_adblock'
+											'textarea_name'=>'ABD_new_input_form_adblock',
+											'wpautop' => true
 										) 
 									);
 								?>
@@ -276,7 +278,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_edit_input_form_noadblock' id='ABD_edit_input_form_noadblock'></textarea>
 									wp_editor( '', 'ABD_edit_input_form_noadblock', 
 										array( 
-											'textarea_name'=>'ABD_edit_input_form_noadblock' 
+											'textarea_name'=>'ABD_edit_input_form_noadblock',
+											'wpautop' => true 
 										) 
 									);
 								?>
@@ -295,7 +298,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_edit_input_form_adblock' id='ABD_edit_input_form_adblock'></textarea>
 									wp_editor( '', 'ABD_edit_input_form_adblock', 
 										array( 
-											'textarea_name'=>'ABD_edit_input_form_adblock' 
+											'textarea_name'=>'ABD_edit_input_form_adblock',
+											'wpautop' => true
 										) 
 									);
 								?>
@@ -811,10 +815,48 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							//	doing something first... so do that something
 							tinyMCE.triggerSave();
 
+
 							//	If we're here, then the fields are okay to submit.
 							//	Okay, we have our form fields and context, now 
 							//	encode the form values for sending to AJAX handler
 							encodedData = theForm.serialize();
+
+							//	One more tinyMCE oddity. It's not applying auto paragraphs
+							//	when we extract data using theForm.serialize().  To get around
+							//	this, we are going to add a flag to the end of the encodedData
+							//	that tells the database manipulation functions to wpautop the 
+							//	contents of the tinyMCE fields.
+
+							//	First, we need the field IDs
+							if (passedData.form == 'new') {
+								var aid = newAdblockFieldID;
+								var nid = newNoAdblockFieldID;
+							}
+							else {
+								var aid = editAdblockFieldID;
+								var nid = editNoAdblockFieldID;
+							}
+							
+							if ( typeof tinyMCE != "undefined" ) {
+								var editor_a = tinymce.get(aid);
+								var editor_n = tinymce.get(nid);
+
+								if (editor_a && editor_a instanceof tinymce.Editor) {
+									encodedData += "&wpautop_adblock=true";
+								}
+								else {
+									encodedData += "&wpautop_adblock=false";
+								}
+
+								if (editor_n && editor_n instanceof tinymce.Editor) {
+									encodedData += "&wpautop_noadblock=true";
+								}
+								else {
+									encodedData += "&wpautop_noadblock=false";
+								}
+							}
+											
+							
 
 
 							//	Notify everyone
