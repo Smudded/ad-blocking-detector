@@ -221,7 +221,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_new_input_form_noadblock' id='ABD_new_input_form_noadblock'></textarea>
 									wp_editor( '', 'ABD_new_input_form_noadblock', 
 										array( 
-											'textarea_name'=>'ABD_new_input_form_noadblock' 
+											'textarea_name'=>'ABD_new_input_form_noadblock',
+											'wpautop' => true
 										) 
 									);
 								?>
@@ -240,7 +241,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_new_input_form_adblock' id='ABD_new_input_form_adblock'></textarea>
 									wp_editor( '', 'ABD_new_input_form_adblock', 
 										array( 
-											'textarea_name'=>'ABD_new_input_form_adblock'
+											'textarea_name'=>'ABD_new_input_form_adblock',
+											'wpautop' => true
 										) 
 									);
 								?>
@@ -276,7 +278,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_edit_input_form_noadblock' id='ABD_edit_input_form_noadblock'></textarea>
 									wp_editor( '', 'ABD_edit_input_form_noadblock', 
 										array( 
-											'textarea_name'=>'ABD_edit_input_form_noadblock' 
+											'textarea_name'=>'ABD_edit_input_form_noadblock',
+											'wpautop' => true 
 										) 
 									);
 								?>
@@ -295,7 +298,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_edit_input_form_adblock' id='ABD_edit_input_form_adblock'></textarea>
 									wp_editor( '', 'ABD_edit_input_form_adblock', 
 										array( 
-											'textarea_name'=>'ABD_edit_input_form_adblock' 
+											'textarea_name'=>'ABD_edit_input_form_adblock',
+											'wpautop' => true
 										) 
 									);
 								?>
@@ -811,10 +815,48 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							//	doing something first... so do that something
 							tinyMCE.triggerSave();
 
+
 							//	If we're here, then the fields are okay to submit.
 							//	Okay, we have our form fields and context, now 
 							//	encode the form values for sending to AJAX handler
 							encodedData = theForm.serialize();
+
+							//	One more tinyMCE oddity. It's not applying auto paragraphs
+							//	when we extract data using theForm.serialize().  To get around
+							//	this, we are going to add a flag to the end of the encodedData
+							//	that tells the database manipulation functions to wpautop the 
+							//	contents of the tinyMCE fields.
+
+							//	First, we need the field IDs
+							if (passedData.form == 'new') {
+								var aid = newAdblockFieldID;
+								var nid = newNoAdblockFieldID;
+							}
+							else {
+								var aid = editAdblockFieldID;
+								var nid = editNoAdblockFieldID;
+							}
+							
+							if ( typeof tinyMCE != "undefined" ) {
+								var editor_a = tinymce.get(aid);
+								var editor_n = tinymce.get(nid);
+
+								if (editor_a && editor_a instanceof tinymce.Editor) {
+									encodedData += "&wpautop_adblock=true";
+								}
+								else {
+									encodedData += "&wpautop_adblock=false";
+								}
+
+								if (editor_n && editor_n instanceof tinymce.Editor) {
+									encodedData += "&wpautop_noadblock=true";
+								}
+								else {
+									encodedData += "&wpautop_noadblock=false";
+								}
+							}
+											
+							
 
 
 							//	Notify everyone

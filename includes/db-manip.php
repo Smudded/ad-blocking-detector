@@ -200,8 +200,12 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	not return it if something goes wrong, like lack of permission.
 			$sc = self::get_shortcode_by_id( $id );
 			if ( !empty( $sc ) ) {
-				//	Okay, we have permission, let's update the row and return
-				//	the appropriate response.
+				//	Okay, we have permission
+
+				//	Now, do we need to run the wpautop function on anything?
+				$data = self::wpautop( $data );
+
+				// Llet's update the row and return the appropriate response.
 				return $wpdb->update( 
 					self::get_table_name(), 
 					$data, 
@@ -256,6 +260,8 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				$data['blog_id'] = $wpdb->blogid;
 			}
 
+			//	Now, do we need to run the wpautop function on anything?
+			$data = self::wpautop( $data );
 
 			//	Okay, now insert the values and return appropriate response
 			$res = $wpdb->insert( self::get_table_name(), $data );
@@ -266,6 +272,32 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			else {
 				return false;
 			}
+		}
+
+		/**
+		 * Checks for set flags in a data array and appropriately decides
+		 * whether to run wpautop function on the adblock and noadblock fields
+		 * in the data array.
+		 * @param  ARRAY_A $data The data array
+		 * @return ARRAY_A       The data array after processing.
+		 */
+		protected static function wpautop ( $data ) {
+			if ( array_key_exists( 'wpautop_adblock', $data ) &&
+			 $data['wpautop_adblock'] ) {
+			 	$data['adblock'] = wpautop( $data['adblock'] );
+			}
+
+			if ( array_key_exists( 'wpautop_noadblock', $data ) &&
+				$data['wpautop_noadblock'] ) {
+
+				$data['noadblock'] = wpautop( $data['noadblock'] );
+			}
+
+			//	We don't need those flags anymore.
+			unset($data['wpautop_adblock']);
+			unset($data['wpautop_noadblock']);
+
+			return $data;
 		}
 	}	//	end class
 }	// end if (!class_exists(...
