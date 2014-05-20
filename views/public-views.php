@@ -31,7 +31,7 @@ if ( !class_exists( 'ABD_Public_Views' ) ) {
 				// Uh-Oh. This means the query failed or, more likely,
 				// their is no shortcode with that ID in the database.
 				// Let's return a generic error message.
-				$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>Could not find a shortcode with specified ID#. Please check your configuration!</em></div>';
+				$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>No shortcode with that ID#.</em></div>';
 			}
 
 			return $retval;

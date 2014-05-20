@@ -69,8 +69,8 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					else {
 						//	all shortcodes that match current blog ID, and all
 						//	network wide shortcodes
-						return "blog_id=" . $wpdb->blogid . 
-							" OR network_wide<>0";
+						return "(blog_id=" . $wpdb->blogid . 
+							" OR network_wide<>0)";
 					}
 				}
 				//	Is not network wide, only blog/site active
@@ -131,10 +131,12 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * @return NULL If nothing was found, user doesn't have permission, or 
 		 * query fails in any way, NULL is returned.
 		 */
-		public static function get_shortcode_by_id( $id ) {
+		public static function get_shortcode_by_id( $id, $cached_context = false ) {
 			global $wpdb;
 
-			$where = "id=" . $id;
+			$where = self::multisite_where_conditions( $cached_context );
+
+			$where .= " AND id=" . $id;
 
 			$sql = "SELECT * FROM " . self::get_table_name() . 
 				" WHERE " . $where . " LIMIT 1";

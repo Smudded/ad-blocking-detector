@@ -70,7 +70,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		//  	)
 		
 		protected static function get_shortcode_by_id( $id ) {
-			$res = ABD_Database::get_shortcode_by_id( $id );
+			$res = ABD_Database::get_shortcode_by_id( $id, true );
 
 			if ( is_null( $res ) ) {	// error
 				echo json_encode( array(
