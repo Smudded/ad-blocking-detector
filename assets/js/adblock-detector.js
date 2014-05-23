@@ -49,13 +49,11 @@ function Abd_Detector (options) {
 				//	make it even more juicy by making it a common ad size
 				height: '728',
 				width: '90',
-
-				//	and now let's hide it from the typical user so they don't
-				//	see an ugly empty iframe by moving it way up and left,
-				//	but mark it as visible to ad blockers by setting display and
-				//	visible
-				style: 'position: absolute; top: -1000px; left: -1000px; display: block; visibility: visible;'
 			});
+			//	Now, wrap it in a div that makes it invisible			
+			frame.wrap("<div id='abd-ad-iframe-wrapper' style='position: absolute; top: -10000px; left: -10000px; width: 0; height: 0; overflow: hidden;'> </div>");
+			
+			//	And lastly, append it to the document
 			frame.appendTo('body');
 			self.debugMsg("Inserting fake ad iframe");		
 
@@ -63,7 +61,7 @@ function Abd_Detector (options) {
 			//	Okay, just in case ad blockers get smart and ingore the iframe,
 			//	let's make a div that looks like an advertisement, and
 			//	size it and hide it like we did the iframe.
-			var div = jQuery("<div id='abd-ad-div' style='position: absolute; top: -1000px; left: -1000px; display: block; visibility: visible; width: 336px; height: 280px;'>Advertisment ad adsense adlogger</div>");
+			var div = jQuery("<div id='abd-ad-div' style='position: absolute; top: -1000px; left: -1000px; display: block; visibility: visible; width: 0; height: 0;'>Advertisment ad adsense adlogger</div>");
 			div.appendTo('body');
 			self.debugMsg("Inserting fake ad div");
 		});
@@ -131,7 +129,7 @@ function Abd_Detector (options) {
 		if (div.length === 0) {	//	jQuery couldn't find it in the DOM
 			retVal = false;
 
-			self.debugMsg("div removal detected! (Detection Method: jQuery selector empty");
+			self.debugMsg("div removal detected! (Detection Method: jQuery selector empty)");
 		}
 		else if (divNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
 			retval = false;
