@@ -39,7 +39,7 @@ ABD_Setup::initialize();
 
 //      Start SESSION to facilitate data transfers
 //      Don't Forget Error Prevention: http://goo.gl/Acm9oY
-function my_session_start()
+function abd_my_session_start()
 {
         if (isset($_COOKIE['PHPSESSID'])) {
                 $sessid = $_COOKIE['PHPSESSID'];
@@ -59,4 +59,4 @@ function my_session_start()
 
         return true;
 }
-my_session_start();
+abd_my_session_start();
