@@ -50,11 +50,13 @@ function Abd_Detector (options) {
 				height: '728',
 				width: '90',
 			});
+			//	Append it to the document
+			frame.appendTo('body');
+
 			//	Now, wrap it in a div that makes it invisible			
 			frame.wrap("<div id='abd-ad-iframe-wrapper' style='position: absolute; top: -10000px; left: -10000px; width: 0; height: 0; overflow: hidden;'> </div>");
 			
-			//	And lastly, append it to the document
-			frame.appendTo('body');
+			
 			self.debugMsg("Inserting fake ad iframe");		
 
 
