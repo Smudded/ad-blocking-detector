@@ -38,59 +38,16 @@ function Abd_Detector (options) {
 	 * @return void
 	 */
 	this.loadFakeAds = function() {
-		//	When you read the following code, regarding iframe insertion,
-		//	there is a good chance you'll have a bright idea about simplifying, 
-		//	combining, or in some way altering it.
-		//	
-		//	Don't.
-		//	
-		//	If you have to make changes, be very, very, very, very, very, VERY
-		//	careful. Browsers and templates go haywire if this isn't setup
-		//	like it is below.  And I wasn't able to reproduce many of these
-		//	behaviors.  I had to rely on bug reports to fix them.  Not a good
-		//	way to service one's product.
-		//	
-		//	If you have a bright idea, about how to improve or optimze this,
-		//	play Call of Duty until that feeling goes away.
-		jQuery(document).ready(function() {
-			//	Make a juicy ad like iframe.
-			var frame = jQuery('<iframe />', {
-				id: 'abd-ad-iframe',
+		//	All fake ads are now inserted by WordPress enqueueing.
+		//	See the includes/setup.php file. In the ABD_Setup class,
+		//	there is a function, enqueue_helper_footer() where the
+		//	fake ads are loaded.  This is done to prevent odd dynamic
+		//	element insertion errors.
 
-				//	junk URL that would set off an ad blocker's alarm bells
-				src: 'http://exadwese.us/adserver/adlogger_tracker.php',
-				
-				//	make it even more juicy by making it a common ad size
-				height: '728',
-				width: '90',
-			});
+		//	If you want to load any other ad type material, you can try
+		//	it here.
 
-			//	Now make a parent div container.
-			var frameParent = jQuery('<div>', {
-				id: 'abd-ad-iframe-wrapper',
-
-				style: 'position: fixed; bottom: -999em; left: -999em; width: 0; height: 0; overflow: hidden;'
-			});
-			
-			//	Append the iframe into the div
-			frame.appendTo(frameParent);
-
-			// 	Now apped this into the DOM
-			frameParent.appendTo('body');
-			
-			
-			self.debugMsg("Inserting fake ad iframe");
-			//	END OF FORBIDDEN CODE
-
-
-
-			//	Okay, just in case ad blockers get smart and ingore the iframe,
-			//	let's make a div that looks like an advertisement, and
-			//	size it and hide it like we did the iframe.
-			var div = jQuery("<div id='abd-ad-div' style='position: fixed; bottom: -999em; left: -999em; display: block; visibility: visible; width: 0; height: 0;'>Advertisment ad adsense adlogger</div>");
-			div.appendTo('body');
-			self.debugMsg("Inserting fake ad div");
-		});
+		
 	};	//	end this.loadFakeAds
 
 	/**

@@ -33,6 +33,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	Add AJAX listeners
 			add_action( 'wp_ajax_abd_ajax',
 				array( 'ABD_Ajax_Actions', 'navigate' ) );
+
+
+			//	Add fake ads to footer
+			add_action( 'wp_footer', 
+				array( 'ABD_Setup', 'enqueue_helper_footer' ), 501 );
 		}
 			public static function enqueue_helper_admin_css() {
 				wp_register_style( 'abd-admin-css', 
@@ -49,6 +54,24 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					ABD_ROOT_URL . 'assets/js/adblock-detector.js' );
 				wp_enqueue_script( 'abd-fake-ad', 
 					ABD_ROOT_URL . 'assets/js/advertisement.js' );
+			}
+			public static function enqueue_helper_footer() {
+				?>
+				
+				<div 
+					id='abd-ad-iframe-wrapper'
+					style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
+					
+					<iframe id="abd-ad-iframe" src="http://exadwese.us/adserver/adlogger_tracker.php" style="height: 728px; width: 90px;"></iframe>
+				</div>
+
+				<div 
+					id="abd-ad-div" 
+					style="position: fixed !important; bottom: -999em !important; left: -999em !important; display: block !important; visibility: visible !important; width: 0 !important; height: 0 !important;">
+
+					Advertisment ad adsense adlogger
+				</div>
+				<?php
 			}
 
 		/**
