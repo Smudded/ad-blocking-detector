@@ -38,9 +38,23 @@ function Abd_Detector (options) {
 	 * @return void
 	 */
 	this.loadFakeAds = function() {
+		//	When you read the following code, regarding iframe insertion,
+		//	there is a good chance you'll have a bright idea about simplifying, 
+		//	combining, or in some way altering it.
+		//	
+		//	Don't.
+		//	
+		//	If you have to make changes, be very, very, very, very, very, VERY
+		//	careful. Browsers and templates go haywire if this isn't setup
+		//	like it is below.  And I wasn't able to reproduce many of these
+		//	behaviors.  I had to rely on bug reports to fix them.  Not a good
+		//	way to service one's product.
+		//	
+		//	If you have a bright idea, about how to improve or optimze this,
+		//	play Call of Duty until that feeling goes away.
 		jQuery(document).ready(function() {
 			//	Make a juicy ad like iframe.
-			var frame = jQuery('<iframe/>', {
+			var frame = jQuery('<iframe />', {
 				id: 'abd-ad-iframe',
 
 				//	junk URL that would set off an ad blocker's alarm bells
@@ -50,14 +64,24 @@ function Abd_Detector (options) {
 				height: '728',
 				width: '90',
 			});
-			//	Append it to the document
-			frame.appendTo('body');
 
-			//	Now, wrap it in a div that makes it invisible			
-			frame.wrap("<div id='abd-ad-iframe-wrapper' style='position: absolute; top: -10000px; left: -10000px; width: 0; height: 0; overflow: hidden;'> </div>");
+			//	Now make a parent div container.
+			var frameParent = jQuery('<div>', {
+				id: 'abd-ad-iframe-wrapper',
+
+				style: 'position: absolute; top: -10000px; left: -10000px; width: 0; height: 0; overflow: hidden;'
+			});
+			
+			//	Append the iframe into the div
+			frame.appendTo(frameParent);
+
+			// 	Now apped this into the DOM
+			frameParent.appendTo('body');
 			
 			
-			self.debugMsg("Inserting fake ad iframe");		
+			self.debugMsg("Inserting fake ad iframe");
+			//	END OF FORBIDDEN CODE
+
 
 
 			//	Okay, just in case ad blockers get smart and ingore the iframe,
@@ -119,7 +143,7 @@ function Abd_Detector (options) {
 		else if (frame.css('visibility') === 'hidden' || frame.css('display') === 'none') {	//	and again... another way to look for hidden frame
 			retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: iframe css changed to hidden - frame.css('visibility') === 'hidden' || frame.css('display') === 'none'");
+			self.debugMsg("iframe removal detected! (Detection Method: iframe css changed to hidden - frame.css('visibility') === 'hidden' || frame.css('display') === 'none')");
 		}
 
 		else {	//	Well... I'm out of ideas... the damn thing must be there.
@@ -189,16 +213,43 @@ function Abd_Detector (options) {
 	 * @return {void}
 	 */
 	this.executeFunc = function(noBlockerFunc, blockerFunc) {
-		this.loadFakeAds();
+		var self = this;	//	We're gonna want this this inside the .ready
+							//	function.  Not that this.  So save this this
+							//	and use it instead of that this.
 
-		setTimeout(function() {
-			if (this.checkAdStatus()) {
-				noBlockerFunc();
-			}
-			else {
-				blockerFunc();
-			}
-		}, 500);
+		jQuery(document).ready(function () {
+			self.loadFakeAds();
+
+			//	Okay, now we want to detect the Ad Status.
+			//	However, for God only knows what reason, sometimes
+			//	this executes before loadFakeAds has finished appending and 
+			//	inserting the fake ads.  It shouldn't.  But it does. 
+			//	
+			//	And to make things worse, it doesn't do it on YOUR web browser,
+			//	only the browsers of other unfortunate souls.  So you can't test.
+			//	You can't experiment.  You can't find the cause.  Only treat the
+			//	symptom.  So let's treat it.
+			//	
+			//	We need a little timeout to cool our heels before we get
+			//	cracking.  
+			//	
+			//	
+			//	
+			//	I know what you're thinking... this is bullshit.  John's an idiot.
+			//	There's no way on this Earth that this needs a timeout.  
+			//	
+			//	Well, this is bullshit... and John may very well be an idiot.  But
+			//	there needs to be a timeout here.  If you decide to tinker with
+			//	this, be VERY CAREFUL!  Or, you know... don't.
+			setTimeout(function() {
+				if (self.checkAdStatus()) {
+					noBlockerFunc();
+				}
+				else {
+					blockerFunc();
+				}
+			}, 500);
+		});
 	};
 
 	////////////////
