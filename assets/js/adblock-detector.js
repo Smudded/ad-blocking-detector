@@ -69,7 +69,7 @@ function Abd_Detector (options) {
 			var frameParent = jQuery('<div>', {
 				id: 'abd-ad-iframe-wrapper',
 
-				style: 'position: fixed; bottom: -10000px; left: -10000px; width: 0; height: 0; overflow: hidden;'
+				style: 'position: fixed; bottom: -999em; left: -999em; width: 0; height: 0; overflow: hidden;'
 			});
 			
 			//	Append the iframe into the div
@@ -87,7 +87,7 @@ function Abd_Detector (options) {
 			//	Okay, just in case ad blockers get smart and ingore the iframe,
 			//	let's make a div that looks like an advertisement, and
 			//	size it and hide it like we did the iframe.
-			var div = jQuery("<div id='abd-ad-div' style='position: fixed; bottom: -10000px; left: -10000px; display: block; visibility: visible; width: 0; height: 0;'>Advertisment ad adsense adlogger</div>");
+			var div = jQuery("<div id='abd-ad-div' style='position: fixed; bottom: -999em; left: -999em; display: block; visibility: visible; width: 0; height: 0;'>Advertisment ad adsense adlogger</div>");
 			div.appendTo('body');
 			self.debugMsg("Inserting fake ad div");
 		});
