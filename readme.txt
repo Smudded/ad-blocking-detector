@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 2.0.8
+Stable tag: 2.0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -120,6 +120,14 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.0.11 =
+* Performance improvements.
+* Removed some dependence on JavaScript.
+* Bug fixes.
+= 2.0.10 =
+* Bug fixes.
+= 2.0.9 =
+* Bug fixes.
 = 2.0.8 =
 * Fix Internet Explorer page refresh problems.
 * Fix a rare ad block detection out-of-sync error.
