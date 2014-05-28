@@ -10,7 +10,7 @@ require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
-		protected static $db_version = '05-20-2014';
+		protected static $version = '2.0.12';
 
 		/**
 		 * Registers and enqueues all CSS and JavaScript.
@@ -100,9 +100,6 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			public static function hooks_helper_activation() {
 				global $wpdb;
 
-				//	We're going to be using the dbDelta function, but we need
-				//	the appropriate file included to do so.
-				require_once ( ABSPATH . 'wp-admin/includes/upgrade.php' );
 				//	We're going to be doing some database manipulation, include
 				//	the database class
 				require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
@@ -120,33 +117,6 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	ARRAY_A: 'option_name'=>'option_value'
 				$settings_to_add = array();
 
-
-
-				//	If $cur_db_version equals the self::$db_version value,
-				//	then we shouldn't need to create tables. If not, then we need
-				//	to create the database tables and add default settings
-				if ( get_option( 'abd_cur_db_version') != self::$db_version ) {
-					$tables_to_create[] = "CREATE TABLE " . ABD_Database::get_table_name() . " (
-						id mediumint(9) NOT NULL AUTO_INCREMENT,
-						name text NOT NULL,
-						noadblock text NOT NULL,
-						adblock text NOT NULL,
-						network_wide boolean NOT NULL DEFAULT 0,
-						blog_id mediumint(9) DEFAULT 1,
-						noadblock_count bigint(20) DEFAULT 0,
-						adblock_count bigint(20) DEFAULT 0,
-						PRIMARY KEY (id)
-					);";
-					
-					//	Okay, now we create the tables
-					foreach ( $tables_to_create as $sql ) {
-						dbDelta( $sql );
-					}
-
-					//	And we update the option in the database to reflect new
-					//	db version
-					update_option( 'abd_cur_db_version', self::$db_version );
-				}
 
 
 				//	All right, now we need to create some default shortcodes if
@@ -215,6 +185,9 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 					delete_option( 'abd_cur_db_version' );
 					delete_site_option( 'abd_cur_db_version' );
+
+					delete_option( 'abd_current_version' );
+					delete_site_option( 'abd_current_version' );
 				}
 			public static function hooks_helper_new_multisite_blog( $blog_id ) {
 				//	$blog_id is passed automatically for wpmu_new_blog
@@ -281,15 +254,64 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				return ABD_Public_Views::get_shortcode_output( $id );
 			}
 
+
+		/**
+		 * Checks to see if plugin has been updated and runs any necessary
+		 * upgrade code.
+		 */
+		public static function upgrade() {
+			//	Does the stored plugin version equal the current version?
+			//	If so, then we shouldn't need to do anything.
+			//	If not, then we have to run through any upgrade processes.			
+			if ( get_site_option( 'abd_current_version') != self::$version ) {
+				//	We're going to be using the dbDelta function, but we need
+				//	the appropriate file included to do so.
+				require_once ( ABSPATH . 'wp-admin/includes/upgrade.php' );
+				//	We're going to be doing some database manipulation, include
+				//	the database class
+				require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
+
+
+
+				//	Make sure the database configuration matches the needed
+				//	configuration by using dbDelta().
+				$tables_to_create[] = "CREATE TABLE " . ABD_Database::get_table_name() . " (
+					id mediumint(9) NOT NULL AUTO_INCREMENT,
+					name text NOT NULL,
+					noadblock text NOT NULL,
+					adblock text NOT NULL,
+					network_wide boolean NOT NULL DEFAULT 0,
+					blog_id mediumint(9) DEFAULT 1,
+					noadblock_count bigint(20) DEFAULT 0,
+					adblock_count bigint(20) DEFAULT 0,
+					PRIMARY KEY (id)
+				);";
+				
+				//	Okay, now we create the tables
+				foreach ( $tables_to_create as $sql ) {
+					dbDelta( $sql );
+				}
+
+
+				//	And we update the option in the database to reflect new
+				//	db version
+				update_site_option( 'abd_current_version', self::$version );
+			}
+		}
+
 		/**
 		 * This function runs all the setup functions as needed. Call this
 		 * function in the main plugin file: ABD_Setup::initialize() 
 		 */
 		public static function initialize() {
+			//	Upgrade function runs every time plugin loads. It determines
+			//	what, if anything needs to be done.
+			self::upgrade();
+
 			self::menus();
 			self::hooks();
 			self::enqueue();
-			self::shortcodes();
+			self::shortcodes();			
 		}
 	}	//	end class
 }	//	end if( !class_exists( ...
