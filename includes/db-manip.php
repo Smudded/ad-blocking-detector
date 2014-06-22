@@ -126,6 +126,10 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * Retrieves a single row from the shortcode table.
 		 * @param  int $id The ID# of the row wanted. Used in a WHERE clause
 		 * of the SELECT query.
+		 * @param boolean $cached_context Whether to use cached user context info,
+		 * or fresh user context info. Cached context is useful for AJAX calls 
+		 * where the calling page is an AJAX handler, not the user's page.  For
+		 * info on cached contexts, see the includes/multisite.php file.
 		 * @return ARRAY_A An associative array where each entry 
 		 * represents the column (column_name=>column_value)
 		 * @return NULL If nothing was found, user doesn't have permission, or 
