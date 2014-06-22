@@ -31,7 +31,7 @@ function Abd_Detector (options) {
 			//	Then we aren't supposed to have debug messages... Don't do 
 			//	anything.
 		}
-	}
+	};
 
 	/**
 	 * Adds HTML elements to the DOM that will likely bait ad blockers into removing or hiding.
@@ -80,7 +80,7 @@ function Abd_Detector (options) {
 		else if (frameNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
 			retval = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: no element with id found - document.getElementById == undefined")
+			self.debugMsg("iframe removal detected! (Detection Method: no element with id found - document.getElementById == undefined");
 		}
 		else if (frame.height < 50) { //	Frame resized too small
 			retVal = false;
@@ -117,7 +117,7 @@ function Abd_Detector (options) {
 		else if (divNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
 			retval = false;
 
-			self.debugMsg("div removal detected! (Detection Method: no element with id found - document.getElementById == undefined")
+			self.debugMsg("div removal detected! (Detection Method: no element with id found - document.getElementById == undefined");
 		}
 		else if (div.height === 0) { //	Frame resized too small
 			retVal = false;
