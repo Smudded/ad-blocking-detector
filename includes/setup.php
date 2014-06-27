@@ -256,6 +256,30 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 
 		/**
+		 * Adds links under entry in plugins listing.
+		 * @todo If minimum PHP version for WordPress hits 5.3.0, switch to
+		 * anonymous functions in add_filter call: http://goo.gl/pZnUYV
+		 */
+		public static function plugin_list_links( ) {
+			$plugin_file = ABD_SUBDIR_AND_FILE;
+
+			add_filter( "plugin_action_links_{$plugin_file}", 
+				array( 'ABD_Setup', 'plugin_list_links_helper' ) );
+
+			add_filter( "network_admin_plugin_action_links_{$plugin_file}", 
+				array( 'ABD_Setup', 'plugin_list_links_helper' ) );
+		}
+			public static function plugin_list_links_helper( $old_links ) {
+				$new_links = array(
+					//	Settings
+					'<a href="' . admin_url( 'options-general.php?page=adblock-detector' ) .'">Settings</a>'
+				);
+
+				return array_merge( $new_links, $old_links );
+			}
+
+
+		/**
 		 * Checks to see if plugin has been updated and runs any necessary
 		 * upgrade code.
 		 */
@@ -313,7 +337,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			self::menus();
 			self::hooks();
 			self::enqueue();
-			self::shortcodes();			
+			self::shortcodes();	
+			self::plugin_list_links();		
 		}
 	}	//	end class
 }	//	end if( !class_exists( ...

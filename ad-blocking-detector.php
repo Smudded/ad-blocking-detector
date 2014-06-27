@@ -29,7 +29,7 @@
 define ( 'ABD_ROOT_PATH', plugin_dir_path( __FILE__ ) );
 define ( 'ABD_ROOT_URL', plugin_dir_url( __FILE__ ) );
 define ( 'ABD_PLUGIN_FILE', ABD_ROOT_PATH . 'ad-blocking-detector.php' );
-define ( 'ABD_SUBDIR_AND_FILE', 'ad-blocking-detector/ad-blocking-detector.php' );
+define ( 'ABD_SUBDIR_AND_FILE', plugin_basename(__FILE__) );
 
 
 require_once ( ABD_ROOT_PATH . 'includes/setup.php' );
