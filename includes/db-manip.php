@@ -297,20 +297,17 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 * @return ARRAY_A       The data array after processing.
 		 */
 		protected static function wpautop ( $data ) {
-			if ( array_key_exists( 'wpautop_adblock', $data ) &&
-			 $data['wpautop_adblock'] ) {
+			if ( array_key_exists( 'adblock_wpautop', $data ) &&
+			 	$data['adblock_wpautop'] ) {
+			 	
 			 	$data['adblock'] = wpautop( $data['adblock'] );
 			}
 
-			if ( array_key_exists( 'wpautop_noadblock', $data ) &&
-				$data['wpautop_noadblock'] ) {
+			if ( array_key_exists( 'noadblock_wpautop', $data ) &&
+				$data['noadblock_wpautop'] ) {
 
 				$data['noadblock'] = wpautop( $data['noadblock'] );
 			}
-
-			//	We don't need those flags anymore.
-			unset($data['wpautop_adblock']);
-			unset($data['wpautop_noadblock']);
 
 			return $data;
 		}

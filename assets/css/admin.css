@@ -135,11 +135,24 @@
 	.ABD_input_form_wrapper {
 
 	}
-		.ABD_input_form_wrapper table.ABD_input_form_layout td {
-			padding: 5px 20px;
+		.ABD_input_form_wrapper table.ABD_form_layout {
+			border-collapse: collapse;
 		}
+
+		.ABD_input_form_wrapper table.ABD_form_layout td {
+			padding: 20px 20px 20px 20px;
+
+			border: 1px solid #999;
+		}
+
+		.ABD_input_form_wrapper table.ABD_form_layout tr td:first-child {
+			max-width: 300px;
+		}
+
 		.ABD_input_form_wrapper input[type=text],
-		.ABD_input_form_wrapper textarea {
+		.ABD_input_form_wrapper input[type=radio],
+		.ABD_input_form_wrapper textarea,
+		.ABD_input_form_wrapper select {
 			border: 1px solid #333;
 			border-radius: 3px;
 		}

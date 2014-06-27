@@ -113,7 +113,6 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			//	However, that array is full of a bunch of other junk as well
 			//	Let's extract only what we need and put it in an array
 			$data = self::extractData( 'ABD_edit_input_form_' );
-
 			//	Before we do anything, check the nonce!
 			if ( wp_verify_nonce( $data['nonce'], 'ABD_edit_input_form' ) === false ) {
 				$gen = wp_create_nonce( 'ABD_edit_input_form' );
@@ -310,15 +309,16 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 				$arr = json_decode( $arr );
 			}
 
-			//	Okay, now that array should have 4 fields that we need: 
-			//	$prefix.name, $prefix.noadblock, and $prefix.adblock and _wpnonce
+			//	Okay, now that array should have 6 fields that we need: 
+			//	$prefix.name, $prefix.noadblock, $prefix.adblock, 
+			//	$prefix.adblock_wpautop, $prefix.noadblock_wpautop, and _wpnonce
 			$data = array(
 				'name' => $arr[$prefix . 'name'],
 				'noadblock' => $arr[$prefix . 'noadblock'],
 				'adblock' => $arr[$prefix . 'adblock'],
 				'nonce' => $arr['_wpnonce'],
-				'wpautop_adblock' => $arr['wpautop_adblock'],
-				'wpautop_noadblock' => $arr['wpautop_noadblock']
+				'adblock_wpautop' => $arr[$prefix . 'adblock_wpautop'],
+				'noadblock_wpautop' => $arr[$prefix . 'noadblock_wpautop']
 			);
 
 			//	If we are supposed to strip out slashes, do so

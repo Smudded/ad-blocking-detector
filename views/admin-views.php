@@ -209,6 +209,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							<td><input type='text' name='ABD_new_input_form_name' id='ABD_new_input_form_name' /></td>
 							<td><span id='ABD_new_input_form_name_feedback' class='ABD_input_form_feedback'></span></td>
 						</tr>
+
+
 						<tr>
 							<td><label for='ABD_new_input_form_noadblock'>
 								<b>No Ad Blocker Detected</b> <em>(optional)</em>:<br />
@@ -221,14 +223,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_new_input_form_noadblock' id='ABD_new_input_form_noadblock'></textarea>
 									wp_editor( '', 'ABD_new_input_form_noadblock', 
 										array( 
-											'textarea_name'=>'ABD_new_input_form_noadblock',
-											'wpautop' => true
+											'textarea_name'=>'ABD_new_input_form_noadblock'
 										) 
 									);
 								?>
 							</td>
 							<td><span id='ABD_new_input_form_noadblock_feedback' class='ABD_input_form_feedback'></span></td>
 						</tr>
+
+
 						<tr>
 							<td><label for='ABD_new_input_form_adblock'>
 								<b>Ad Blocker Detected</b>:<br />
@@ -241,14 +244,61 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_new_input_form_adblock' id='ABD_new_input_form_adblock'></textarea>
 									wp_editor( '', 'ABD_new_input_form_adblock', 
 										array( 
-											'textarea_name'=>'ABD_new_input_form_adblock',
-											'wpautop' => true
+											'textarea_name'=>'ABD_new_input_form_adblock'
 										) 
 									);
 								?>
 							</td>
 							<td><span id='ABD_new_input_form_adblock_feedback' class='ABD_input_form_feedback'></span></td>
 						</tr>
+
+
+						<tr>
+							<td><label for='ABD_new_input_form_noadblock_wpautop'>
+								<b>WordPress Editor Content Auto-Styling</b>:<br />
+								<em>
+									Whether to allow the WordPress editor's default
+									styling of your content.<br /><br/>
+
+									Usually, enabling this is desirable. However, if unexpected
+									spacing occurs, or your ad code breaks, after submitting, try
+									disabling this.<br /><br />
+
+									<a href='http://adblockingdetector.jtmorris.net/feature-disable-auto-styling/' target='_blank'>
+										Learn More &rarr;
+									</a>
+								</em>
+							</label></td>
+							<td>
+								<div>
+									<b>Auto-Style <u>No Ad Blocker Detected</u> Content?</b><br />
+									<input type="radio" name="ABD_new_input_form_noadblock_wpautop" 
+										id="ABD_new_input_form_noadblock_wpautop_true" 
+										value="1" />
+									<label for="ABD_new_input_form_noadblock_wpautop_true">Yes. Enable It.</label><br />
+									<input type="radio" name="ABD_new_input_form_noadblock_wpautop" 
+										id="ABD_new_input_form_noadblock_wpautop_false" 
+										value="0" />
+									<label for="ABD_new_input_form_noadblock_wpautop_false">No. Disable It.</label>
+								</div>
+								<br /><br />
+								<div>
+									<b>Auto-Style <u>Ad Blocker Detected</u> Content?</b><br />
+									<input type="radio" name="ABD_new_input_form_adblock_wpautop" 
+										id="ABD_new_input_form_adblock_wpautop_true"
+										value="1"
+										checked="checked" />
+									<label for="ABD_new_input_form_adblock_wpautop_true">Yes. Enable It.</label><br />
+									<input type="radio" name="ABD_new_input_form_adblock_wpautop" 
+										id="ABD_new_input_form_adblock_wpautop_false" 
+										value="0" />
+									<label for="ABD_new_input_form_adblock_wpautop_false">No. Disable It.</label>
+								</div>							
+							</td>
+							<td>
+								<span id='ABD_new_input_form_wpautop_feedback' class='ABD_input_form_feedback'></span>
+							</td>
+						</tr>						
 					</table>
 
 					<?php wp_nonce_field( 'ABD_new_input_form' ); ?>
@@ -266,6 +316,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							<td><input type='text' name='ABD_edit_input_form_name' id='ABD_edit_input_form_name' /></td>
 							<td><span id='ABD_edit_input_form_name_feedback' class='ABD_input_form_feedback'></span></td>
 						</tr>
+
+
 						<tr>
 							<td><label for='ABD_edit_input_form_noadblock'>
 								<b>No Ad Blocker Detected</b> <em>(optional)</em>:<br />
@@ -278,14 +330,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_edit_input_form_noadblock' id='ABD_edit_input_form_noadblock'></textarea>
 									wp_editor( '', 'ABD_edit_input_form_noadblock', 
 										array( 
-											'textarea_name'=>'ABD_edit_input_form_noadblock',
-											'wpautop' => true 
+											'textarea_name'=>'ABD_edit_input_form_noadblock'
 										) 
 									);
 								?>
 							</td>
 							<td><span id='ABD_edit_input_form_noadblock_feedback' class='ABD_input_form_feedback'></span></td>
 						</tr>
+
+
 						<tr>
 							<td><label for='ABD_edit_input_form_adblock'>
 								<b>Ad Blocker Detected</b>:<br />
@@ -298,14 +351,60 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									//	<textarea name='ABD_edit_input_form_adblock' id='ABD_edit_input_form_adblock'></textarea>
 									wp_editor( '', 'ABD_edit_input_form_adblock', 
 										array( 
-											'textarea_name'=>'ABD_edit_input_form_adblock',
-											'wpautop' => true
-										) 
+											'textarea_name'=>'ABD_edit_input_form_adblock'
+										)
 									);
 								?>
 							</td>
 							
 							<td><span id='ABD_edit_input_form_adblock_feedback' class='ABD_input_form_feedback'></span></td>
+						</tr>
+
+
+						<tr>
+							<td><label for='ABD_edit_input_form_noadblock_wpautop'>
+								<b>WordPress Editor Content Auto-Styling</b>:<br />
+								<em>
+									Whether to allow the WordPress editor's default
+									styling of your content.<br /><br/>
+
+									Usually, enabling this is desirable. However, if unexpected
+									spacing occurs, or your ad code is breaking, try
+									disabling this.<br /><br />
+
+									<a href='http://adblockingdetector.jtmorris.net/feature-disable-auto-styling/' target='_blank'>
+										Learn More &rarr;
+									</a>
+								</em>
+							</label></td>
+							<td>
+								<div>
+									<b>Auto-Style <u>No Ad Blocker Detected</u> Content?</b><br />
+									<input type="radio" name="ABD_edit_input_form_noadblock_wpautop" 
+										id="ABD_edit_input_form_noadblock_wpautop_true" 
+										value="1" />
+									<label for="ABD_edit_input_form_noadblock_wpautop_true">Yes. Enable It.</label><br />
+									<input type="radio" name="ABD_edit_input_form_noadblock_wpautop" 
+										id="ABD_edit_input_form_noadblock_wpautop_false" 
+										value="0" />
+									<label for="ABD_edit_input_form_noadblock_wpautop_false">No. Disable It.</label>
+								</div>
+								<br /><br />
+								<div>
+									<b>Auto-Style <u>Ad Blocker Detected</u> Content?</b><br />
+									<input type="radio" name="ABD_edit_input_form_adblock_wpautop" 
+										id="ABD_edit_input_form_adblock_wpautop_true" 
+										value="1" />
+									<label for="ABD_edit_input_form_adblock_wpautop_true">Yes. Enable It.</label><br />
+									<input type="radio" name="ABD_edit_input_form_adblock_wpautop" 
+										id="ABD_edit_input_form_adblock_wpautop_false" 
+										value="0" />
+									<label for="ABD_edit_input_form_adblock_wpautop_false">No. Disable It.</label>
+								</div>							
+							</td>
+							<td>
+								<span id='ABD_edit_input_form_wpautop_feedback' class='ABD_input_form_feedback'></span></span>
+							</td>
 						</tr>
 					</table>
 
@@ -347,11 +446,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						var newNameField = $('#ABD_new_input_form_name');
 						var newAdblockField = $('#ABD_new_input_form_adblock');
 						var newNoAdblockField = $('#ABD_new_input_form_noadblock');
+						var newAdblockWpautopField = $('input:radio[name=ABD_new_input_form_adblock_wpautop]');						
+						var newNoAdblockWpautopField = $('input:radio[name=ABD_new_input_form_noadblock_wpautop]');						
 						var editForm = $('#ABD_edit_input_form');
 						var editFormWrapper = $('#ABD_edit_input_form_wrapper');
 						var editNameField = $('#ABD_edit_input_form_name');
 						var editAdblockField = $('#ABD_edit_input_form_adblock');
 						var editNoAdblockField = $('#ABD_edit_input_form_noadblock');
+						var editAdblockWpautopField = $('input:radio[name=ABD_edit_input_form_adblock_wpautop]');						
+						var editNoAdblockWpautopField = $('input:radio[name=ABD_edit_input_form_noadblock_wpautop]');
 						var editIdField = $('#ABD_edit_input_form_id');
 
 						//	Get Feedback Fields
@@ -359,6 +462,10 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						var newNameFeedback = $('#ABD_new_input_form_name_feedback');
 						var newAdblockFeedback = $('#ABD_new_input_form_adblock_feedback');
 						var newNoAdblockFeedback = $('#ABD_new_input_form_noadblock_feedback');
+						var newAdblockWpautopFeedback = $('#ABD_new_input_form_wpautop_feedback');
+						var newNoAdblockWpautopFeedback = $('#ABD_new_input_form_wpautop_feedback');
+						var editAdblockWpautopFeedback = $('#ABD_edit_input_form_wpautop_feedback');
+						var editNoAdblockWpautopFeedback = $('#ABD_edit_input_form_wpautop_feedback');
 						var editNameFeedback = $('#ABD_edit_input_form_name_feedback');
 						var editAdblockFeedback = $('#ABD_edit_input_form_adblock_feedback');
 						var editNoAdblockFeedback = $('#ABD_edit_input_form_noadblock_feedback');
@@ -578,10 +685,31 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 										var_dump(retrievedData));
 
 
+									// //	Two of the fields (noadblock_wpautop and adblock_wpautop) 
+									// //	are stored as integers in the database, but correspond
+									// //	to a textual value.  Let's convert them now.
+									// if (retrievedData.noadblock_wpautop == 0) {
+									// 	retrievedData.noadblock_wpautop = 'false';
+									// }
+									// else {
+									// 	retrievedData.noadblock_wpautop = 'true';
+									// }
+
+									// if (retrievedData.adblock_wpautop == 0) {
+									// 	retrievedData.adblock_wpautop = 'false';
+									// }
+									// else {
+									// 	retrievedData.adblock_wpautop = 'true';
+									// }
+
+
+									
 									//	Fill in the fields in the edit form with the 
 									//	retrieved data
 									editNameField.val(retrievedData.name);
 									editIdField.val(passedData.id);
+									editNoAdblockWpautopField.val([retrievedData.noadblock_wpautop]);
+									editAdblockWpautopField.val([retrievedData.adblock_wpautop]);
 
 									//	The other fields may have TinyMCE instances
 									//	active...  These require some additional
@@ -747,9 +875,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								var theFormName = newNameField;
 								var theFormNoAdblock = newNoAdblockField;
 								var theFormAdblock = newAdblockField;
+								var theFormNoAdblockWpautop = newNoAdblockWpautopField;
+								var theFormAdblockWpautop = newAdblockWpautopField;
+
 								var theFormNameFeedback = newNameFeedback;
 								var theFormNoAdblockFeedback = newNoAdblockFeedback;
 								var theFormAdblockFeedback = newAdblockFeedback;
+								var theFormNoAdblockWpautopFeedback = newNoAdblockWpautopFeedback;
+								var theFormAdblockWpautopFeedback = newAdblockWpautopFeedback;
 
 								var id = null;
 
@@ -765,10 +898,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								var theForm = editForm;
 								var theFormName = editNameField;
 								var theFormNoAdblock = editNoAdblockField;
-								var theFormAdblock = editAdblockField;
+								var theFormAdblock = editAdblockField;								
+								var theFormNoAdblockWpautop = editNoAdblockWpautopField;
+								var theFormAdblockWpautop = editAdblockWpautopField;
+
 								var theFormNameFeedback = editNameFeedback;
 								var theFormNoAdblockFeedback = editNoAdblockFeedback;
 								var theFormAdblockFeedback = editAdblockFeedback;
+								var theFormNoAdblockWpautopFeedback = editNoAdblockWpautopFeedback;
+								var theFormAdblockWpautopFeedback = editAdblockWpautopFeedback;
 								
 								var id = editIdField.val();
 
@@ -800,6 +938,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								e = true;
 							}
 
+							
 							//	Now, if something did not validate, log it, throw a notification, and quit.
 							if (e) {
 								log("Errors detected in submission.");
@@ -828,33 +967,33 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							//	contents of the tinyMCE fields.
 
 							//	First, we need the field IDs
-							if (passedData.form == 'new') {
-								var aid = newAdblockFieldID;
-								var nid = newNoAdblockFieldID;
-							}
-							else {
-								var aid = editAdblockFieldID;
-								var nid = editNoAdblockFieldID;
-							}
+							// if (passedData.form == 'new') {
+							// 	var aid = newAdblockFieldID;
+							// 	var nid = newNoAdblockFieldID;
+							// }
+							// else {
+							// 	var aid = editAdblockFieldID;
+							// 	var nid = editNoAdblockFieldID;
+							// }
 							
-							if ( typeof tinyMCE != "undefined" ) {
-								var editor_a = tinymce.get(aid);
-								var editor_n = tinymce.get(nid);
+							// if ( typeof tinyMCE != "undefined" ) {
+							// 	var editor_a = tinymce.get(aid);
+							// 	var editor_n = tinymce.get(nid);
 
-								if (editor_a && editor_a instanceof tinymce.Editor) {
-									encodedData += "&wpautop_adblock=true";
-								}
-								else {
-									encodedData += "&wpautop_adblock=false";
-								}
+							// 	if (editor_a && editor_a instanceof tinymce.Editor) {
+							// 		encodedData += "&wpautop_adblock=true";
+							// 	}
+							// 	else {
+							// 		encodedData += "&wpautop_adblock=false";
+							// 	}
 
-								if (editor_n && editor_n instanceof tinymce.Editor) {
-									encodedData += "&wpautop_noadblock=true";
-								}
-								else {
-									encodedData += "&wpautop_noadblock=false";
-								}
-							}
+							// 	if (editor_n && editor_n instanceof tinymce.Editor) {
+							// 		encodedData += "&wpautop_noadblock=true";
+							// 	}
+							// 	else {
+							// 		encodedData += "&wpautop_noadblock=false";
+							// 	}
+							// }
 											
 							
 
@@ -889,8 +1028,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 												retrievedData.action + 
 												'<br /><strong>Failure Reason:</strong> ' + 
 												retrievedData.reason + 
-												'<br /><strong>Contextual Data:</strong> ' + 
-												retrievedData.data
+												'<br /><strong>Contextual Data:</strong><code style="width: 100%; overflow-x: scroll">' + 
+												retrievedData.data + '</code>'
 										);
 										scrollTo(globalFeedback);
 									}

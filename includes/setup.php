@@ -10,7 +10,7 @@ require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
-		protected static $version = '2.0.12';
+		protected static $version = '2.0.13';
 
 		/**
 		 * Registers and enqueues all CSS and JavaScript.
@@ -284,6 +284,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					blog_id mediumint(9) DEFAULT 1,
 					noadblock_count bigint(20) DEFAULT 0,
 					adblock_count bigint(20) DEFAULT 0,
+					noadblock_wpautop boolean NOT NULL DEFAULT 1
+					adblock_wpautop boolean NOT NULL DEFAULT 1
 					PRIMARY KEY (id)
 				);";
 				
