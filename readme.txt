@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 2.0.13
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,8 +28,8 @@ and the other for visitors using ad blockers, such as the popular Adblock Plus. 
 then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode).  
 
 Simply insert this shortcode anywhere shortcodes are supported, such as posts, pages, and the
-sidebar (with a simple tweak), and the plugin will display the appropriate content based on
-whether it detects an ad blocker or not.
+sidebar (with a [simple tweak](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/)), 
+and the plugin will display the appropriate content based on whether it detects an ad blocker or not.
 
 See a working demonstration at the [plugin's website](http://adblockingdetector.jtmorris.net/demo/).
 
@@ -70,12 +70,13 @@ Ad Blocking Detector plugin.
 = How can I use a shortcode in sidebar widget? =
 Copy and paste your desired shortcode into a Text widget added to your sidebar.
 
-**Note: By default, WordPress does not parse shortcodes in widgets.  You must enable that functionality manually.
+
+Note: By default, WordPress does not parse shortcodes in widgets.  You must enable that functionality manually.
 You can find instructions from the folks at WPBeginner.com 
 [here](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/).
 
 The short version is you must add the following code to your theme's *functions.php* file:
-`add_filter('widget_text', 'do_shortcode');`**
+`add_filter('widget_text', 'do_shortcode');`
 
 
 = How does this plugin treat visitors with JavaScript disabled? =
@@ -83,7 +84,7 @@ At this time, this plugin does not treat disabled JavaScript as an ad blocker.
 If the visitor has JavaScript disabled, the plugin displays the content used
 for normal visitors with no ad blockers.
 
-**Note: A future update will allow you to choose what disabled JavaScript means.**
+A future update will allow you to choose what disabled JavaScript means.
 
 
 = Does this plugin prevent visitors with an ad blocker from visiting my site or in any other way obscure the content? =
@@ -120,6 +121,9 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.1.0 =
+* Added ability to disable WordPress editor auto-formatting.
+* Added settings link for Ad Blocking Detector on plugin management page.
 = 2.0.13 =
 * Fix incompatibility with JS & CSS Optimizer plugin.
 * Code improvements.

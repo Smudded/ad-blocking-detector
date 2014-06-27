@@ -10,7 +10,7 @@ require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
-		protected static $version = '2.0.13';
+		protected static $version = '2.1.0';
 
 		/**
 		 * Registers and enqueues all CSS and JavaScript.
