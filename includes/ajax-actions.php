@@ -144,7 +144,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					'status' => false,
 					'action' => "SQL query on database to update a single row in shortcode table.",
 					'reason' => "Query failed.",
-					'data' => 'Error = "' . $wpdb->last_error . '" :: Query = "' . $wpdb->last_query . '"'
+					'data' => 'Error = "' . $wpdb->last_error . '" :: Query = "' . htmlentities( $wpdb->last_query )  . '"'
 				) );
 				return;
 			}
@@ -192,7 +192,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					'status' => false,
 					'action' => "SQL query on database to insert new row in shortcode table.",
 					'reason' => "Query failed.",
-					'data' => 'Error = "' . $wpdb->last_error . '" :: Query = "' . $wpdb->last_query . '"'
+					'data' => 'Error = "' . $wpdb->last_error . '" :: Query = "' . htmlentities( $wpdb->last_query )  . '"'
 				) );
 
 				return;
@@ -223,7 +223,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					'status' => false,
 					'action' => "Attempt to delete a single row in shortcode table.",
 					'reason' => "Query failed.",
-					'data' => 'Error = "' . $wpdb->last_error . '" :: Query = "' . $wpdb->last_query . '"'
+					'data' => 'Error = "' . $wpdb->last_error . '" :: Query = "' . htmlentities( $wpdb->last_query )  . '"'
 				) );
 				return;
 			}
