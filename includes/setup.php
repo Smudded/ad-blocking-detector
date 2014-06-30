@@ -10,7 +10,7 @@ require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
-		protected static $version = '2.1.0';
+		protected static $version = '2.1.1';
 
 		/**
 		 * Registers and enqueues all CSS and JavaScript.
@@ -299,7 +299,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 				//	Make sure the database configuration matches the needed
 				//	configuration by using dbDelta().
-				$tables_to_create[] = "CREATE TABLE " . ABD_Database::get_table_name() . " (
+				$tables_to_create[] = "CREATE TABLE `" . ABD_Database::get_table_name() . "` (
 					id mediumint(9) NOT NULL AUTO_INCREMENT,
 					name text NOT NULL,
 					noadblock text NOT NULL,
@@ -308,8 +308,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					blog_id mediumint(9) DEFAULT 1,
 					noadblock_count bigint(20) DEFAULT 0,
 					adblock_count bigint(20) DEFAULT 0,
-					noadblock_wpautop boolean NOT NULL DEFAULT 1
-					adblock_wpautop boolean NOT NULL DEFAULT 1
+					noadblock_wpautop boolean NOT NULL DEFAULT 1,
+					adblock_wpautop boolean NOT NULL DEFAULT 1,
 					PRIMARY KEY (id)
 				);";
 				
@@ -317,7 +317,6 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				foreach ( $tables_to_create as $sql ) {
 					dbDelta( $sql );
 				}
-
 
 				//	And we update the option in the database to reflect new
 				//	db version
