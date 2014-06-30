@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,9 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.1.1 =
+* UI improvements.
+* MAJOR BUG FIX: No longer gives error to new users when adding shortcodes.
 = 2.1.0 =
 * Added ability to disable WordPress editor auto-formatting.
 * Added settings link for Ad Blocking Detector on plugin management page.
@@ -185,6 +188,8 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Upgrade Notice ==
+= 2.1.1 =
+MAJOR BUG FIX: Addresses problem where new plugin users were unable to add new shortcodes after last update.
 = 2.0.8 =
 IMPORTANT! Addresses unexpected behavior when refreshing the page in Internet Explorer.
 = 2.0.5 =
