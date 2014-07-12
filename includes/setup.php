@@ -263,9 +263,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 		public static function plugin_list_links( ) {
 			$plugin_file = ABD_SUBDIR_AND_FILE;
 
+			//	Individual Site Plugins Page
 			add_filter( "plugin_action_links_{$plugin_file}", 
 				array( 'ABD_Setup', 'plugin_list_links_helper' ) );
 
+			//	Network Admin Plugins Page
 			add_filter( "network_admin_plugin_action_links_{$plugin_file}", 
 				array( 'ABD_Setup', 'plugin_list_links_helper' ) );
 		}
