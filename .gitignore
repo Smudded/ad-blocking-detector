@@ -220,3 +220,5 @@ pip-log.txt
 ## Synctoy
 #################
 SyncToy_*.dat
+*.sublime-workspace
+*.sublime-project
