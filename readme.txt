@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,11 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.1.3 =
+* Code cleanup.
+* Add "Other Plugins By Developer" box to ABD Dashboard
+= 2.1.2 =
+* Fix errors with asynchronous loading of JavaScript.
 = 2.1.1 =
 * UI improvements.
 * MAJOR BUG FIX: No longer gives error to new users when adding shortcodes.
