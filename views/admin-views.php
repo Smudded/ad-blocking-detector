@@ -170,10 +170,18 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<div class='ABD_sidebar_box'>
 					<h3>Other Plugins By This Developer</h3>
 					<p>
-						If you love this plugin, check out some of the others by the same developer!
+						If you love this plugin, check out some of the others by
+						the same developer!
 					</p>						
 					<ul>
-						<li><a target="_blank" href="http://wordpress.org/plugins/tweetthis/">Tweet This</a>: Tweet This offers easily embedded, stylish tweetable content boxes in your posts and pages. Visitors can click on the content and post your message to Twitter, along with a link back to you.</li>						
+						<li>
+							<a target="_blank" href="http://bit.ly/1mYsEOT">
+								Tweet This
+							</a>
+							: <em>Tweet This</em> offers easily embedded, stylish 
+							tweetable content boxes in your posts and pages. Get 
+							your visitors sharing on Twitter today!
+						</li>
 					</ul>
 				</div>
 			</div>
