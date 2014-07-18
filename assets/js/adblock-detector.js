@@ -209,10 +209,56 @@ function Abd_Detector (options) {
 		});
 	};
 
+	/**
+	 * Defers calling of a function until jQuery has loaded or it is impractical to
+	 * wait any longer.
+	 * @param  function funcToRun    The function to run once jQuery has loaded.
+	 * @param  int recurseDepth 	 (optional) The number of times left in recursion. Usually should be omitted.
+	 * @param  int totalTime    	 (optional) The number of milliseconds waited so far. Usually should be omitted.
+	 * @return NONE
+	 */
+	this.jQueryDefer = function( funcToRun, recurseDepth, totalTime ) {
+		//	Setup defaults
+		if( typeof recurseDepth === 'undefined' ) {
+			recurseDepth = 100;
+		}
+		if( typeof totalTime === 'undefined' ) {
+			totalTime = 0;
+		}
+		var waitTime = 25;
+
+
+		//	Does jQuery exist?
+		if( typeof jQuery !== 'undefined' ) {
+			//	Yes, it does, so log any fun messages and run the function.
+			if( totalTime > 0 ) {
+				self.debugMsg( "Asynchronous jQuery detected. ABD waited " + totalTime/1000 + " seconds for jQuery to load." );
+			}
+			funcToRun();
+		}
+		else if( recurseDepth > 0 ) {
+			//	No, it doesn't, and we still have time to wait. Recurse another level.
+			setTimeout( function() {
+				self.jQueryDefer( funcToRun, --recurseDepth, totalTime + waitTime );
+				}, 
+			waitTime );
+		}
+		else {
+			//	No, it doesn't, and we've waited long enough.  Throw an error and die.
+			self.debugMsg( "Cannot run!  jQuery didn't load.  Try adding an exception for jQuery in any asynchronous JavaScript plugins. Total wait time: " + totalTime/1000 + " seconds." );			
+		}
+	}
+
 	////////////////
 	//	Constructor
 	////////////////
-	this.executeFunc(options.noBlockerFunc, options.blockerFunc);
+	this.allonsy = function() {
+		this.executeFunc( options.noBlockerFunc, options.blockerFunc );
+	}
+	//	Wait until jQuery is loaded, then call this.executeFunc which is wrapped
+	//	in this.allonsy so we can pass parameters.
+	this.jQueryDefer( this.allonsy );
+	
 }	//	end Abd_Detector
 
 
