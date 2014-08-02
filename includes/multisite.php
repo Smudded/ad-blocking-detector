@@ -8,7 +8,7 @@ if( !session_id() ) {
 	session_start();
 }
 
-			
+
 
 
 //	Need is_plugin_active_for_network()
@@ -26,20 +26,20 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 		//
 		//	WordPress MultiSite Category
 		//		http://codex.wordpress.org/Category:WPMS
-		//			Contains every page related to WPMS including FUNCTION 
+		//			Contains every page related to WPMS including FUNCTION
 		//			REFERENCES
-		//			
+		//
 		//	Writing a Plugin for WordPress Multisite (considerations article)
 		//		http://shibashake.com/wordpress-theme/write-a-plugin-for-wordpress-multi-site
 		//			Contains a few good plugin design considerations. Far from
 		//			comprehensive, but an okay starting place.
-		//			
+		//
 		//	How To Properly Code Your Plugin FOr A WordPress Multisite
 		//		http://www.onextrapixel.com/2013/01/08/how-to-properly-code-your-plugin-for-a-wordpress-multisite/
 		//			Another article with plugin design considerations and a few
 		//			good examples.  Still not comprehensive, but better than nothing.
 
-		
+
 
 
 		/////////////////////////////////
@@ -64,14 +64,14 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 		}
 
 		/**
-		 * Looks for a previously cached multisite context variable (see 
+		 * Looks for a previously cached multisite context variable (see
 		 * set_current_context()), and returns an associative array with
-		 * each key equal to the corresponding function name from this 
-		 * class.  If no context was cached, then it returns the current 
+		 * each key equal to the corresponding function name from this
+		 * class.  If no context was cached, then it returns the current
 		 * context in the ARRAY_A form.
-		 * 
+		 *
 		 * Example:
-		 * 	returnedarray['is_in_network_admin'] is the cached value of 
+		 * 	returnedarray['is_in_network_admin'] is the cached value of
 		 * 		ABD_Multisite::is_in_network_admin()
 		 *
 		 * @param boolean refresh Whether to reset the cache with current user
@@ -80,7 +80,7 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 		 */
 		public static function get_current_context( $refresh = false ) {
 			if ( $refresh || !array_key_exists( 'abd_multisite_data', $_SESSION ) ) {
-				//	No context available or we want to update it... let's set it 
+				//	No context available or we want to update it... let's set it
 				//	and try again.
 				self::set_current_context();
 
@@ -99,7 +99,7 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 
 		/**
 		 * Used in add_action calls for code to run after a new multisite blog
-		 * is created. 
+		 * is created.
 		 * http://codex.wordpress.org/Function_Reference/wpmu_create_blog
 		 * @var string
 		 */
@@ -115,13 +115,13 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 
 		/**
 		 * Determines whether the current WordPress website is configured as as
-		 * multisite.		 
+		 * multisite.
 		 */
 		public static function is_this_a_multisite() {
 			if ( !function_exists( 'is_multisite' ) ) {
 				return false;
 			}
-			
+
 			return is_multisite();
 		}
 
@@ -149,7 +149,7 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 		}
 
 
-		/** 
+		/**
 		 * Gets ID of currently active site/blog.
 		 */
 		public static function get_current_blog_id() {

@@ -3,7 +3,7 @@
  * This file contains any and all output for the public facing sections of the
  * site.
  */
-require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );			
+require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
 
 if ( !class_exists( 'ABD_Public_Views' ) ) {
 	class ABD_Public_Views {

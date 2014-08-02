@@ -11,10 +11,10 @@ function Abd_Detector (options) {
 	 * in the options object.
 	 */
 	this.debugMsg = function(msg, level) {
-		//	options.debugMessage has either a boolean true if we are supposed 
-		//	to output messages on our own, a boolean false if we are not, or a 
+		//	options.debugMessage has either a boolean true if we are supposed
+		//	to output messages on our own, a boolean false if we are not, or a
 		//	function that deals with debug messages
-		
+
 		if (options.debugMessage) {
 			//	Is it a function to take care of the message?
 			if (typeof(options.debugMessage) == 'function') {
@@ -28,7 +28,7 @@ function Abd_Detector (options) {
 			}
 		}
 		else {
-			//	Then we aren't supposed to have debug messages... Don't do 
+			//	Then we aren't supposed to have debug messages... Don't do
 			//	anything.
 		}
 	};
@@ -47,14 +47,14 @@ function Abd_Detector (options) {
 		//	If you want to load any other ad type material, you can try
 		//	it here.
 
-		
+
 	};	//	end this.loadFakeAds
 
 	/**
-	 * Checks to see if the bait ads inserted by Abd_Detector.loadFakeAds() 
-	 * are present. Note that this function does not wait for the DOM to fully 
-	 * load, the bait to be inserted, or the presumed ad blocker to process 
-	 * anything.  You will likely want to delay the execution of this function 
+	 * Checks to see if the bait ads inserted by Abd_Detector.loadFakeAds()
+	 * are present. Note that this function does not wait for the DOM to fully
+	 * load, the bait to be inserted, or the presumed ad blocker to process
+	 * anything.  You will likely want to delay the execution of this function
 	 * using setTimeout, or similar, to prevent false positives.
 	 * @return boolean true if bait ads are present and unharmed, false if ad is missing or hidden.
 	 */
@@ -179,22 +179,22 @@ function Abd_Detector (options) {
 
 			//	Okay, now we want to detect the Ad Status.
 			//	However, for God only knows what reason, sometimes
-			//	this executes before loadFakeAds has finished appending and 
-			//	inserting the fake ads.  It shouldn't.  But it does. 
-			//	
+			//	this executes before loadFakeAds has finished appending and
+			//	inserting the fake ads.  It shouldn't.  But it does.
+			//
 			//	And to make things worse, it doesn't do it on YOUR web browser,
 			//	only the browsers of other unfortunate souls.  So you can't test.
 			//	You can't experiment.  You can't find the cause.  Only treat the
 			//	symptom.  So let's treat it.
-			//	
+			//
 			//	We need a little timeout to cool our heels before we get
-			//	cracking.  
-			//	
-			//	
-			//	
+			//	cracking.
+			//
+			//
+			//
 			//	I know what you're thinking... this is bullshit.  John's an idiot.
-			//	There's no way on this Earth that this needs a timeout.  
-			//	
+			//	There's no way on this Earth that this needs a timeout.
+			//
 			//	Well, this is bullshit... and John may very well be an idiot.  But
 			//	there needs to be a timeout here.  If you decide to tinker with
 			//	this, be VERY CAREFUL!  Or, you know... don't.
@@ -240,12 +240,12 @@ function Abd_Detector (options) {
 			//	No, it doesn't, and we still have time to wait. Recurse another level.
 			setTimeout( function() {
 				self.jQueryDefer( funcToRun, --recurseDepth, totalTime + waitTime );
-				}, 
+				},
 			waitTime );
 		}
 		else {
 			//	No, it doesn't, and we've waited long enough.  Throw an error and die.
-			self.debugMsg( "Cannot run!  jQuery didn't load.  Try adding an exception for jQuery in any asynchronous JavaScript plugins. Total wait time: " + totalTime/1000 + " seconds." );			
+			self.debugMsg( "Cannot run!  jQuery didn't load.  Try adding an exception for jQuery in any asynchronous JavaScript plugins. Total wait time: " + totalTime/1000 + " seconds." );
 		}
 	}
 
@@ -258,7 +258,7 @@ function Abd_Detector (options) {
 	//	Wait until jQuery is loaded, then call this.executeFunc which is wrapped
 	//	in this.allonsy so we can pass parameters.
 	this.jQueryDefer( this.allonsy );
-	
+
 }	//	end Abd_Detector
 
 
