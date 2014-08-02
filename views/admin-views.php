@@ -44,6 +44,19 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			self::footer();
 		}
 
+		public static function rate_plugin_nag() {
+			?>
+			<div class="updated">
+				<h3>Ad Blocking Detector Alert</h3>
+				<p style="font-size: 1.15em;">Your feedback is important!  If you haven't already, please take a few minutes and share your thoughts about the Ad Blocking Detector plugin.</p>
+				<ul style="list-style-type: disc; margin-left: 35px; font-size: 1.15em;">
+					<li><a target="_blank" href="http://wordpress.org/support/view/plugin-reviews/ad-blocking-detector#postform">Leave a positive rating on WordPress.org.</a></li>
+					<li><a target="_blank" href="http://adblockingdetector.jtmorris.net/feedback/">Fill out a short feedback survey.</a></li>
+				</ul>
+			</div>
+			<?php
+		}
+
 		protected static function header() {
 			?>
 			<div class='wrap'>
