@@ -38,6 +38,9 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	Add fake ads to footer
 			add_action( 'wp_footer',
 				array( 'ABD_Setup', 'enqueue_helper_footer' ), 501 );
+
+			//	Add admin notices as appropriate
+			self::enqueue_helper_admin_notices();
 		}
 			public static function enqueue_helper_admin_css() {
 				wp_register_style( 'abd-admin-css',
@@ -72,6 +75,56 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					Advertisment ad adsense adlogger
 				</div>
 				<?php
+			}
+			public static function enqueue_helper_admin_notices( $force = false, $update_delay = true ) {
+				/////////////////////////
+				/// Feedback Request ///
+				///////////////////////
+
+				//	We don't want to spam the user with feedback requests.
+				//	Therfore, we should setup a delay before asking.
+				//	I'm thinking 1 week initially, then again every year.
+				//	The timeout is stored in the database.
+				$current_time = strtotime( 'now' );
+				$stored_time = get_option( 'abd_feedback_nag_time' );
+
+				//	Did we get anything from the database?  If not, we'll need
+				//	to set a default delay later, so set a flag.
+				if( $stored_time ) {
+					$set_default = false;
+				}
+				else {
+					$set_default = true;
+				}
+
+				//	Are we forcing the update?  If so, let's just set the stored
+				//	time to a low number so it triggers the nag
+				if( $force ) {
+					$stored_time = 5;
+				}
+
+				//	Do we need to set the initial default nag date?
+				if( $set_default ) {
+					//	No nag date in the database. Add one for 1 week from today then return.
+					if( $update_delay ) {
+						update_option( 'abd_feedback_nag_time',
+							strtotime( '+1 week' ) );
+					}
+					return;
+				}
+
+				//	Okay, check if we need to nag now.
+				if( $current_time > $stored_time ) {
+					//	It is passed the stored nag date, so nag damnit.
+					add_action( 'admin_notices',
+						array( 'ABD_Admin_Views', 'rate_plugin_nag' ) );
+
+					//	Now delay it a year.
+					if( $update_delay ) {
+						update_option( 'abd_feedback_nag_time',
+							strtotime( '+1 year' ) );
+					}
+				}
 			}
 
 		/**
