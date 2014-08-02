@@ -159,6 +159,18 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				</div>
 
 				<div class='ABD_sidebar_box'>
+					<script async src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+					<!-- Ad Blocking Detector Dashboard -->
+					<ins class="adsbygoogle"
+					     style="display:inline-block;width:336px;height:280px"
+					     data-ad-client="ca-pub-4623469134243566"
+					     data-ad-slot="1296689336"></ins>
+					<script>
+					(adsbygoogle = window.adsbygoogle || []).push({});
+					</script>
+				</div>
+
+				<div class='ABD_sidebar_box'>
 					<h3>Get Help / Report a Bug</h3>
 					<p>
 						If you're encountering a problem, have a question, or would like to suggest an improvement, be sure to let me know!
