@@ -9,28 +9,28 @@ require_once ( ABD_ROOT_PATH . 'includes/multisite.php' );
 if ( !class_exists( 'ABD_Admin_Views' ) ) {
 	class ABD_Admin_Views {
 		/**
-		 * This function outputs all content for the main plugin page in the 
+		 * This function outputs all content for the main plugin page in the
 		 * correct order.
 		 */
 		public static function output_main() {
-			//	CACHE THIS MULTISITE CONTEXT SO WE CAN GET HANDLE SCREWY AJAX 
+			//	CACHE THIS MULTISITE CONTEXT SO WE CAN GET HANDLE SCREWY AJAX
 			//	BEHAVIOR.  This is very important!  Deleting this without
 			//	knowing what you're doing will cause multisite problems that
 			//	are extraordinarily hard to trace.  Seriously... hours upon hours
 			//	of my life were wasted.
-			//	
+			//
 			//	WHY THIS IS HERE
 			//	=================
 			//	Okay, this plugin does most of its manipulation of the database
-			//	in the form of AJAX calls.  The AJAX handlers, in 
+			//	in the form of AJAX calls.  The AJAX handlers, in
 			//	includes/ajax-actions.php, then calls the approrpiate database
 			//	manipulation functions.
-			//	
+			//
 			//	However, the databse manipulation functions base some of their
 			//	actions on what page the user is on when they want to do the
 			//	database manipulation.  Unfortunately, those database manipulations
 			//	think the user is on the WordPress AJAX handler page, not whatever
-			//	page the AJAX was called from.  So, instead of simply querying 
+			//	page the AJAX was called from.  So, instead of simply querying
 			//	the current user context in the database functions, we must
 			//	get the user's context BEFORE the AJAX calls... meaning here...
 			//	SO, cache the current context!
@@ -52,14 +52,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<?php
 				if ( ABD_Multisite::is_in_network_admin() ) {
 					?>
-					<h2>Ad Blocking Detector - Network Dashboard</h2>						
+					<h2>Ad Blocking Detector - Network Dashboard</h2>
 					<?php
 				}
 				else {
 					?><h2>Ad Blocking Detector - Dashboard</h2><?php
 				}
 				?>
-				
+
 				<div id='ABD_content'>
 					<?php
 					if ( ABD_Multisite::is_in_network_admin() ) {
@@ -89,7 +89,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			protected static function footer_content() {
 				?>
 				<div id='ABD_footer'>
-					Developed By: 
+					Developed By:
 					<a target="_blank" href="http://jtmorris.net">John Morris</a>
 				</div>
 				<?php
@@ -101,10 +101,10 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<h3>Support This Plugin</h3>
 					<p>
 						Is this plugin useful for you?  If so, please help
-						support its ongoing development and improvement 
+						support its ongoing development and improvement
 						with a donation.
 					</p>
-					<table id='ABD_donations'>							
+					<table id='ABD_donations'>
 						<tr>
 							<!--Flattr-->
 							<td>
@@ -132,13 +132,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						<li>Vote "Works" on the plugin's <a target="_blank" href="http://wordpress.org/plugins/ad-blocking-detector/#compatibility">WordPress listing</a></li>
 						<li><a target="_blank" href="http://twitter.com/home?status=I%20love%20this%20WordPress%20plugin!%20http://wordpress.org/plugins/ad-blocking-detector/">Share your thoughts on Twitter</a> and other social sites</li>
 						<li>Improve this plugin on <a target="_blank" href='https://github.com/jtmorris/adblock-detector'>GitHub</a></li>
-					</ul>						
+					</ul>
 				</div>
 
 				<div class='ABD_sidebar_box'>
 					<h3>Example, Tips, &amp; Ideas</h3>
 					<p>
-						If you're having trouble figuring out this 
+						If you're having trouble figuring out this
 						plugin, or want to see some cool ways to use it, check
 						out these links:
 					</p>
@@ -150,6 +150,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							<a target="_blank" href="http://adblockingdetector.jtmorris.net/display-rotating-ads/">Display Rotating Ads</a>: Explains how to combine the power of an ad rotation plugin with Ad Blocking Detector.
 						</li>
 						<li>
+							<a target="_blank" href="http://adblockingdetector.jtmorris.net/ad-blocking-themes-templates/">Ad Blocking in Themes &amp; Templates</a>: A short introduction to using shortcodes in themes &amp; templates.
+						</li>
+						<li>
 							<a target="_blank" href="http://adblockingdetector.jtmorris.net/using-ad-blocking-detector-multisite/">Using Ad Blocking Detector With Multisite</a>: Explains how to take advantage of the new multisite features available to this plugin.
 						</li>
 					</ul>
@@ -159,7 +162,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<h3>Get Help / Report a Bug</h3>
 					<p>
 						If you're encountering a problem, have a question, or would like to suggest an improvement, be sure to let me know!
-					</p>						
+					</p>
 					<ul>
 						<li>Open a thread on the <a target="_blank" href="http://wordpress.org/support/plugin/ad-blocking-detector">plugin support page</a>.</li>
 						<li><a target="_blank" href="http://adblockingdetector.jtmorris.net/contact/">Contact the developer</a> privately.</li>
@@ -172,14 +175,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<p>
 						If you love this plugin, check out some of the others by
 						the same developer!
-					</p>						
+					</p>
 					<ul>
 						<li>
 							<a target="_blank" href="http://bit.ly/1mYsEOT">
 								Tweet This
 							</a>
-							: <em>Tweet This</em> offers easily embedded, stylish 
-							tweetable content boxes in your posts and pages. Get 
+							: <em>Tweet This</em> offers easily embedded, stylish
+							tweetable content boxes in your posts and pages. Get
 							your visitors sharing on Twitter today!
 						</li>
 					</ul>
@@ -193,7 +196,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<?php
 				if ( ABD_Multisite::is_in_network_admin() ) {
 					?>
-					<h3>Your Network Wide Ad Blocking Detector Shortcodes</h3>				
+					<h3>Your Network Wide Ad Blocking Detector Shortcodes</h3>
 					<?php
 				}
 				else {
@@ -202,7 +205,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<?php
 				}
 				?>
-					
+
 				<a class='ABD_button ABD_new_button ABD_alternate_color'>New Shortcode</a>
 				<br /><br />
 				<table id='ABD_shortcode_list' class='ABD_shortcode_list'>
@@ -213,9 +216,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					</tr>
 					<tr>
 						<td id='ABD_shortcode_list_message' colspan='3'>Initializing...</td>
-					</tr>						
+					</tr>
 				</table>
-			</div>					
+			</div>
 
 
 			<div id='ABD_new_input_form_wrapper' class='ABD_logical_block ABD_input_form_wrapper'>
@@ -232,17 +235,17 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						<tr>
 							<td><label for='ABD_new_input_form_noadblock'>
 								<b>No Ad Blocker Detected</b> <em>(optional)</em>:<br />
-								<em>What you want displayed <br />to visitors 
+								<em>What you want displayed <br />to visitors
 								with no ad blocker.</em>
 							</label></td>
 							<td>
 								<?php
 									//	Insert TinyMCE editor here that replaces this textarea:
 									//	<textarea name='ABD_new_input_form_noadblock' id='ABD_new_input_form_noadblock'></textarea>
-									wp_editor( '', 'ABD_new_input_form_noadblock', 
-										array( 
+									wp_editor( '', 'ABD_new_input_form_noadblock',
+										array(
 											'textarea_name'=>'ABD_new_input_form_noadblock'
-										) 
+										)
 									);
 								?>
 							</td>
@@ -253,17 +256,17 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						<tr>
 							<td><label for='ABD_new_input_form_adblock'>
 								<b>Ad Blocker Detected</b>:<br />
-								<em>What you want displayed <br />to visitors 
+								<em>What you want displayed <br />to visitors
 								with ad blockers.</em>
 							</label></td>
 							<td>
 								<?php
 									//	Insert TinyMCE editor here that replaces this textarea:
 									//	<textarea name='ABD_new_input_form_adblock' id='ABD_new_input_form_adblock'></textarea>
-									wp_editor( '', 'ABD_new_input_form_adblock', 
-										array( 
+									wp_editor( '', 'ABD_new_input_form_adblock',
+										array(
 											'textarea_name'=>'ABD_new_input_form_adblock'
-										) 
+										)
 									);
 								?>
 							</td>
@@ -290,33 +293,33 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							<td>
 								<div>
 									<b>Auto-Style <u>No Ad Blocker Detected</u> Content?</b><br />
-									<input type="radio" name="ABD_new_input_form_noadblock_wpautop" 
-										id="ABD_new_input_form_noadblock_wpautop_true" 
+									<input type="radio" name="ABD_new_input_form_noadblock_wpautop"
+										id="ABD_new_input_form_noadblock_wpautop_true"
 										value="1" />
 									<label for="ABD_new_input_form_noadblock_wpautop_true">Yes. Enable It.</label><br />
-									<input type="radio" name="ABD_new_input_form_noadblock_wpautop" 
-										id="ABD_new_input_form_noadblock_wpautop_false" 
+									<input type="radio" name="ABD_new_input_form_noadblock_wpautop"
+										id="ABD_new_input_form_noadblock_wpautop_false"
 										value="0" />
 									<label for="ABD_new_input_form_noadblock_wpautop_false">No. Disable It.</label>
 								</div>
 								<br /><br />
 								<div>
 									<b>Auto-Style <u>Ad Blocker Detected</u> Content?</b><br />
-									<input type="radio" name="ABD_new_input_form_adblock_wpautop" 
+									<input type="radio" name="ABD_new_input_form_adblock_wpautop"
 										id="ABD_new_input_form_adblock_wpautop_true"
 										value="1"
 										checked="checked" />
 									<label for="ABD_new_input_form_adblock_wpautop_true">Yes. Enable It.</label><br />
-									<input type="radio" name="ABD_new_input_form_adblock_wpautop" 
-										id="ABD_new_input_form_adblock_wpautop_false" 
+									<input type="radio" name="ABD_new_input_form_adblock_wpautop"
+										id="ABD_new_input_form_adblock_wpautop_false"
 										value="0" />
 									<label for="ABD_new_input_form_adblock_wpautop_false">No. Disable It.</label>
-								</div>							
+								</div>
 							</td>
 							<td>
 								<span id='ABD_new_input_form_wpautop_feedback' class='ABD_input_form_feedback'></span>
 							</td>
-						</tr>						
+						</tr>
 					</table>
 
 					<?php wp_nonce_field( 'ABD_new_input_form' ); ?>
@@ -339,17 +342,17 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						<tr>
 							<td><label for='ABD_edit_input_form_noadblock'>
 								<b>No Ad Blocker Detected</b> <em>(optional)</em>:<br />
-								<em>What you want displayed to visitors 
+								<em>What you want displayed to visitors
 								with no ad blocker.</em>
 							</label></td>
 							<td>
 								<?php
 									//	Insert TinyMCE editor here that replaces this textarea:
 									//	<textarea name='ABD_edit_input_form_noadblock' id='ABD_edit_input_form_noadblock'></textarea>
-									wp_editor( '', 'ABD_edit_input_form_noadblock', 
-										array( 
+									wp_editor( '', 'ABD_edit_input_form_noadblock',
+										array(
 											'textarea_name'=>'ABD_edit_input_form_noadblock'
-										) 
+										)
 									);
 								?>
 							</td>
@@ -360,21 +363,21 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						<tr>
 							<td><label for='ABD_edit_input_form_adblock'>
 								<b>Ad Blocker Detected</b>:<br />
-								<em>What you want displayed to visitors 
+								<em>What you want displayed to visitors
 								with ad blockers.</em>
 							</label></td>
 							<td>
 								<?php
 									//	Insert TinyMCE editor here that replaces this textarea:
 									//	<textarea name='ABD_edit_input_form_adblock' id='ABD_edit_input_form_adblock'></textarea>
-									wp_editor( '', 'ABD_edit_input_form_adblock', 
-										array( 
+									wp_editor( '', 'ABD_edit_input_form_adblock',
+										array(
 											'textarea_name'=>'ABD_edit_input_form_adblock'
 										)
 									);
 								?>
 							</td>
-							
+
 							<td><span id='ABD_edit_input_form_adblock_feedback' class='ABD_input_form_feedback'></span></td>
 						</tr>
 
@@ -398,27 +401,27 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							<td>
 								<div>
 									<b>Auto-Style <u>No Ad Blocker Detected</u> Content?</b><br />
-									<input type="radio" name="ABD_edit_input_form_noadblock_wpautop" 
-										id="ABD_edit_input_form_noadblock_wpautop_true" 
+									<input type="radio" name="ABD_edit_input_form_noadblock_wpautop"
+										id="ABD_edit_input_form_noadblock_wpautop_true"
 										value="1" />
 									<label for="ABD_edit_input_form_noadblock_wpautop_true">Yes. Enable It.</label><br />
-									<input type="radio" name="ABD_edit_input_form_noadblock_wpautop" 
-										id="ABD_edit_input_form_noadblock_wpautop_false" 
+									<input type="radio" name="ABD_edit_input_form_noadblock_wpautop"
+										id="ABD_edit_input_form_noadblock_wpautop_false"
 										value="0" />
 									<label for="ABD_edit_input_form_noadblock_wpautop_false">No. Disable It.</label>
 								</div>
 								<br /><br />
 								<div>
 									<b>Auto-Style <u>Ad Blocker Detected</u> Content?</b><br />
-									<input type="radio" name="ABD_edit_input_form_adblock_wpautop" 
-										id="ABD_edit_input_form_adblock_wpautop_true" 
+									<input type="radio" name="ABD_edit_input_form_adblock_wpautop"
+										id="ABD_edit_input_form_adblock_wpautop_true"
 										value="1" />
 									<label for="ABD_edit_input_form_adblock_wpautop_true">Yes. Enable It.</label><br />
-									<input type="radio" name="ABD_edit_input_form_adblock_wpautop" 
-										id="ABD_edit_input_form_adblock_wpautop_false" 
+									<input type="radio" name="ABD_edit_input_form_adblock_wpautop"
+										id="ABD_edit_input_form_adblock_wpautop_false"
 										value="0" />
 									<label for="ABD_edit_input_form_adblock_wpautop_false">No. Disable It.</label>
-								</div>							
+								</div>
 							</td>
 							<td>
 								<span id='ABD_edit_input_form_wpautop_feedback' class='ABD_input_form_feedback'></span></span>
@@ -427,7 +430,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					</table>
 
 					<input type='hidden' name='ABD_edit_input_form_id' id='ABD_edit_input_form_id' value='-1' />
-					
+
 					<?php wp_nonce_field( 'ABD_edit_input_form' ); ?>
 
 					<a id='ABD_edit_input_form_submit' class='ABD_button ABD_submit_button'>Save Shortcode</a>
@@ -444,7 +447,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						logLevel: 2,	//	0 = no logging, 1 = log important only, 2 = log everything
 					}
 
-					
+
 					$(document).ready(function() {
 						/********************************
 						**** Make Access Easier *********
@@ -457,21 +460,21 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						var newNoAdblockFieldID = 'ABD_new_input_form_noadblock';
 						var editAdblockFieldID = 'ABD_edit_input_form_adblock';
 						var editNoAdblockFieldID = 'ABD_edit_input_form_noadblock';
-						 
+
 						//	Get all the form fields
 						var newForm = $('#ABD_new_input_form');
 						var newFormWrapper = $('#ABD_new_input_form_wrapper');
 						var newNameField = $('#ABD_new_input_form_name');
 						var newAdblockField = $('#ABD_new_input_form_adblock');
 						var newNoAdblockField = $('#ABD_new_input_form_noadblock');
-						var newAdblockWpautopField = $('input:radio[name=ABD_new_input_form_adblock_wpautop]');						
-						var newNoAdblockWpautopField = $('input:radio[name=ABD_new_input_form_noadblock_wpautop]');						
+						var newAdblockWpautopField = $('input:radio[name=ABD_new_input_form_adblock_wpautop]');
+						var newNoAdblockWpautopField = $('input:radio[name=ABD_new_input_form_noadblock_wpautop]');
 						var editForm = $('#ABD_edit_input_form');
 						var editFormWrapper = $('#ABD_edit_input_form_wrapper');
 						var editNameField = $('#ABD_edit_input_form_name');
 						var editAdblockField = $('#ABD_edit_input_form_adblock');
 						var editNoAdblockField = $('#ABD_edit_input_form_noadblock');
-						var editAdblockWpautopField = $('input:radio[name=ABD_edit_input_form_adblock_wpautop]');						
+						var editAdblockWpautopField = $('input:radio[name=ABD_edit_input_form_adblock_wpautop]');
 						var editNoAdblockWpautopField = $('input:radio[name=ABD_edit_input_form_noadblock_wpautop]');
 						var editIdField = $('#ABD_edit_input_form_id');
 
@@ -487,7 +490,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						var editNameFeedback = $('#ABD_edit_input_form_name_feedback');
 						var editAdblockFeedback = $('#ABD_edit_input_form_adblock_feedback');
 						var editNoAdblockFeedback = $('#ABD_edit_input_form_noadblock_feedback');
-						
+
 
 						//	Get Buttons
 						var newSubmitButton = $('#ABD_new_input_form_submit');
@@ -509,7 +512,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 						/**
 						 * Delete a row from the shortcode table.
-						 * @param  {int} id The ID of the shortcode whose row we 
+						 * @param  {int} id The ID of the shortcode whose row we
 						 * are to remove.
 						 */
 						function deleteRow(id) {
@@ -530,7 +533,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						 * Add a row to the shortcode table.
 						 * @param {int} id The ID of the shortcode we are adding a
 						 * row for.
-						 * @param {string} name The name/description of the 
+						 * @param {string} name The name/description of the
 						 * shortcode we are adding a row for.
 						 */
 						function addRow(data) {
@@ -541,7 +544,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							// Okay, not everyone has permission to edit/delete
 							// all shortcodes.  So, we need to do some permission
 							// checking on those buttons.
-							// 
+							//
 							// In order to do that, we need some info from PHP
 							?>
 							var is_in_network_admin = <?php echo ABD_Multisite::is_in_network_admin() ? "true" : "false"; ?>;
@@ -550,12 +553,12 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 
 							var the_actions = "<a id='ABD_edit_button_" + id + "' class='ABD_button ABD_edit_button' data-id='" + id + "'>Edit</a> &nbsp; | &nbsp; <a id='ABD_delete_button_" + id + "' class='ABD_button ABD_delete_button' data-id='" + id + "'>Delete</a>";
-							
-							if ( is_in_network_admin || 
+
+							if ( is_in_network_admin ||
 									!is_this_a_multisite ||
-										(current_blog_id == data.blog_id && 
+										(current_blog_id == data.blog_id &&
 											data.network_wide == false) ) {
-								
+
 								var actions_to_insert = the_actions;
 							}
 							else {
@@ -563,7 +566,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							}
 
 							var row = $("<tr class='ABD_shortcode' data-id='" + id + "'><td>" + name + "</td><td>[adblockingdetector id=\"" + id + "\"]</td><td>" +  actions_to_insert + "</td></tr>");
-							
+
 							shortcodeTable.append(row);
 
 							//	Setup click listeners for new row.
@@ -587,7 +590,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 
 						/**
-						 * Clears shortcode table and reloads all shortcodes from 
+						 * Clears shortcode table and reloads all shortcodes from
 						 * the database using AJAX.
 						 * @param  {boolean} initial Whether this is the initial
 						 * table population (first load), or a reload. True = first,
@@ -597,13 +600,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							log("Request to populate the shortcode table with all existing shortcodes.");
 
 							if (!initial) {
-								clearTable();			
+								clearTable();
 								shortcodeTableMsg.text('Reloading shortcodes... please wait...');
 							}
 
 							$.post(ajaxurl, {action: 'abd_ajax', abd_action: 'get_all_shortcodes'}, function(response) {
 								log("Retrieve all shortcodes AJAX call completed.");
-								
+
 								var data = json_parse_response(response);
 
 								if (!data) {
@@ -613,9 +616,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 								log("Successfully parsed JSON response for all shortcodes.  Result: " + var_dump(data));
 
-								if (typeof(data) == 'object' && data.length > 0) {	
+								if (typeof(data) == 'object' && data.length > 0) {
 									//	then loop through array and output rows in table
-									shortcodeTableMsg.hide();	
+									shortcodeTableMsg.hide();
 
 									var count = 0;	//	How many rows inserted
 									$.each(data, function(index, value) {
@@ -631,7 +634,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						/**********************************************
 						***********************************************
 						***********************************************/
-						
+
 
 						/*******************************
 						*** Click Listener Handlers ***
@@ -647,7 +650,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 							createNewButton.click(clickCreateNew);
 						}
-						
+
 						/**
 						 * Handler for "New Shortcode" buttons.
 						 * @param  {object} event Standard event object passed by
@@ -680,18 +683,18 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							var passedData = event.data;
 							var retrievedData;
 
-							log("Edit existing shortcode button clicked (ID# = " + 
+							log("Edit existing shortcode button clicked (ID# = " +
 								passedData.id + "). Event handler function fired.");
 
 							displayNotification('notice', 'Loading...');
-							
+
 							$.post(
-								ajaxurl, 
+								ajaxurl,
 								{
-									action: 'abd_ajax', 
-									abd_action: 'get_shortcode_by_id', 
+									action: 'abd_ajax',
+									abd_action: 'get_shortcode_by_id',
 									id: passedData.id
-								}, 
+								},
 								function(response) {
 									retrievedData = json_parse_response(response);
 									if (!retrievedData) {
@@ -699,11 +702,11 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 										return;
 									}
 
-									log("Edit button AJAX request completed.  Result: " + 
+									log("Edit button AJAX request completed.  Result: " +
 										var_dump(retrievedData));
 
 
-									// //	Two of the fields (noadblock_wpautop and adblock_wpautop) 
+									// //	Two of the fields (noadblock_wpautop and adblock_wpautop)
 									// //	are stored as integers in the database, but correspond
 									// //	to a textual value.  Let's convert them now.
 									// if (retrievedData.noadblock_wpautop == 0) {
@@ -721,8 +724,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									// }
 
 
-									
-									//	Fill in the fields in the edit form with the 
+
+									//	Fill in the fields in the edit form with the
 									//	retrieved data
 									editNameField.val(retrievedData.name);
 									editIdField.val(passedData.id);
@@ -767,14 +770,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									else {
 										log("Could not find TinyMCE editor instances!");
 									}
-												
-							
+
+
 
 									//	Clear any old feedback messages
 									clearFeedbackMessages();
 
-									//	If any of the fields are empty, display a 
-									//	notice so that we don't look like we didn't 
+									//	If any of the fields are empty, display a
+									//	notice so that we don't look like we didn't
 									//	do anything.
 									if ($.trim(retrievedData.name) == '') {
 										editNameFeedback.text(
@@ -798,7 +801,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 									editFormWrapper.show(1000);
 
-									//	If a "Add Shortcode" section is open, clear 
+									//	If a "Add Shortcode" section is open, clear
 									//	the form and close it.
 									resetForm(newForm);
 									newFormWrapper.hide();
@@ -817,17 +820,17 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 							var passedData = event.data;
 
-							log("Delete existing shortcode button clicked (ID# = " + 
+							log("Delete existing shortcode button clicked (ID# = " +
 								passedData.id + "). Event handler function fired.");
 
 							displayNotification('notice', 'Deleting shortcode...');
 							$.post(
-								ajaxurl, 
+								ajaxurl,
 								{
-									action: 'abd_ajax', 
-									abd_action: 'delete_shortcode_by_id', 
+									action: 'abd_ajax',
+									abd_action: 'delete_shortcode_by_id',
 									id: passedData.id
-								}, 
+								},
 								function(response) {
 									retrievedData = json_parse_response(response);
 									if (!retrievedData) {
@@ -835,25 +838,25 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 										return;
 									}
 
-									log("Delete button AJAX request completed.  Result: " + 
+									log("Delete button AJAX request completed.  Result: " +
 									var_dump(retrievedData), true);	//	true = important
 
 
 									if (retrievedData.status == false) {
-										displayNotification( 
-											'error', 
+										displayNotification(
+											'error',
 											'Uh oh. Something went wrong. Try deleting the item again or refreshing the page.',
-											'<strong>Failed Action:</strong> ' + 
-												retrievedData.action + 
-												'<br /><strong>Failure Reason:</strong> ' + 
-												retrievedData.reason + 
-												'<br /><strong>Contextual Data:</strong> ' + 
+											'<strong>Failed Action:</strong> ' +
+												retrievedData.action +
+												'<br /><strong>Failure Reason:</strong> ' +
+												retrievedData.reason +
+												'<br /><strong>Contextual Data:</strong> ' +
 												retrievedData.data
 										);
 										scrollTo(globalFeedback);
 									}
 									else {
-										displayNotification('success', 
+										displayNotification('success',
 											'Shortcode deleted!');
 										setTimeout(function() {
 											hideNotification();
@@ -916,7 +919,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								var theForm = editForm;
 								var theFormName = editNameField;
 								var theFormNoAdblock = editNoAdblockField;
-								var theFormAdblock = editAdblockField;								
+								var theFormAdblock = editAdblockField;
 								var theFormNoAdblockWpautop = editNoAdblockWpautopField;
 								var theFormAdblockWpautop = editAdblockWpautopField;
 
@@ -925,7 +928,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								var theFormAdblockFeedback = editAdblockFeedback;
 								var theFormNoAdblockWpautopFeedback = editNoAdblockWpautopFeedback;
 								var theFormAdblockWpautopFeedback = editAdblockWpautopFeedback;
-								
+
 								var id = editIdField.val();
 
 								var abd_action = 'submit_edit_shortcode_by_id';
@@ -937,12 +940,12 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 
 							//	Now let's do some basic validation.
-							//	First, let's make sure we remove any old validation messages.			
+							//	First, let's make sure we remove any old validation messages.
 							clearFeedbackMessages();
 
 							//	Now run the validation
 							var e = false;	//	a flag to indicate whether something didn't validate
-							
+
 							//	The name field is required, make sure it isn't empty.
 							if ($.trim(theFormName.val()).length < 1) {
 								theFormNameFeedback.text('You must provide a name!');
@@ -951,12 +954,12 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							}
 							//	Now let's put some max length limits on the name.
 							if (theFormName.val().length > 40) {
-								theFormNameFeedback.text('This name is too long! It must be 40 characters or less.');				
+								theFormNameFeedback.text('This name is too long! It must be 40 characters or less.');
 								theFormName.addClass('ABD_input_form_highlight');
 								e = true;
 							}
 
-							
+
 							//	Now, if something did not validate, log it, throw a notification, and quit.
 							if (e) {
 								log("Errors detected in submission.");
@@ -968,20 +971,20 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							}
 
 							//	We are using tinyMCE form fields... these do not work
-							//	normally when trying to get data from them without 
+							//	normally when trying to get data from them without
 							//	doing something first... so do that something
 							tinyMCE.triggerSave();
 
 
 							//	If we're here, then the fields are okay to submit.
-							//	Okay, we have our form fields and context, now 
+							//	Okay, we have our form fields and context, now
 							//	encode the form values for sending to AJAX handler
 							encodedData = theForm.serialize();
 
 							//	One more tinyMCE oddity. It's not applying auto paragraphs
 							//	when we extract data using theForm.serialize().  To get around
 							//	this, we are going to add a flag to the end of the encodedData
-							//	that tells the database manipulation functions to wpautop the 
+							//	that tells the database manipulation functions to wpautop the
 							//	contents of the tinyMCE fields.
 
 							//	First, we need the field IDs
@@ -993,7 +996,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							// 	var aid = editAdblockFieldID;
 							// 	var nid = editNoAdblockFieldID;
 							// }
-							
+
 							// if ( typeof tinyMCE != "undefined" ) {
 							// 	var editor_a = tinymce.get(aid);
 							// 	var editor_n = tinymce.get(nid);
@@ -1012,8 +1015,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							// 		encodedData += "&wpautop_noadblock=false";
 							// 	}
 							// }
-											
-							
+
+
 
 
 							//	Notify everyone
@@ -1024,13 +1027,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 							//	Submit that bad boy!
 							$.post(
-								ajaxurl, 
+								ajaxurl,
 								{
-									action: 'abd_ajax', 
-									abd_action: abd_action, 
-									id: id, 
+									action: 'abd_ajax',
+									abd_action: abd_action,
+									id: id,
 									data: encodedData
-								}, 
+								},
 								function(response) {
 									retrievedData = json_parse_response(response);
 									if (!retrievedData) {
@@ -1039,20 +1042,20 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 									if ( retrievedData.status === false ) {
 										//	The operation failed.  Throw up a notification.
-										displayNotification( 
-											'error', 
+										displayNotification(
+											'error',
 											'Uh oh. Something went wrong. Try submitting again or refreshing the page.',
-											'<strong>Failed Action:</strong> ' + 
-												retrievedData.action + 
-												'<br /><strong>Failure Reason:</strong> ' + 
-												retrievedData.reason + 
-												'<br /><strong>Contextual Data:</strong><code style="width: 100%; overflow-x: scroll">' + 
+											'<strong>Failed Action:</strong> ' +
+												retrievedData.action +
+												'<br /><strong>Failure Reason:</strong> ' +
+												retrievedData.reason +
+												'<br /><strong>Contextual Data:</strong><code style="width: 100%; overflow-x: scroll">' +
 												retrievedData.data + '</code>'
 										);
 										scrollTo(globalFeedback);
 									}
 									else {
-										log("Submit button AJAX request completed.  Result: " + 
+										log("Submit button AJAX request completed.  Result: " +
 										var_dump(retrievedData));
 
 										//	Refresh the table
@@ -1067,43 +1070,43 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 										//	Scroll back to the table
 										scrollTo('top');
 										displayNotification(
-											'success', 
-											'Shortcode saved successfully!', 
+											'success',
+											'Shortcode saved successfully!',
 											function() {
 												setTimeout(function() {
 													hideNotification();
-												}, 
+												},
 												5000
-											);				
+											);
 										});
-									}		
+									}
 								}	//	end function(response) {
-							);	//	end $.post(...		
+							);	//	end $.post(...
 						}	//	end function clickSubmitButton(...
 
 
 						/**********************************************
 						***********************************************
 						***********************************************/
-						
+
 
 						/****************************************
 						*** Feedback & Notification Functions ***
 						****************************************/
-						
+
 						/**
 						 * Show a notification message
-						 * @param  {string} type         'error', 'warning', 
-						 * 'success' all style the box appropriately, otherwise it 
+						 * @param  {string} type         'error', 'warning',
+						 * 'success' all style the box appropriately, otherwise it
 						 * gets a generic notice style
 						 * @param  {string} msg          HTML or text to display in the box.
 						 * @param  {string} data         Optional additional data to display.
-						 * @param  {function} runAfterShow A function to execute 
+						 * @param  {function} runAfterShow A function to execute
 						 * once notice is displayed.
 						 */
 						function displayNotification(type, msg, data, runAfterShow) {
 							//	Remove any old remnants
-							globalFeedback.removeClass('ABD_notification_error ABD_notification_warning ABD_notification_success ABD_notification_notice');				
+							globalFeedback.removeClass('ABD_notification_error ABD_notification_warning ABD_notification_success ABD_notification_notice');
 							globalFeedback.html('');
 
 							//	Style the notification box based on new type
@@ -1177,7 +1180,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						/**********************************************
 						***********************************************
 						***********************************************/
-						
+
 
 						/******************************
 						****** HELPER FUNCTIONS *******
@@ -1185,9 +1188,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 						/**
 						 * Writes log message to console.
-						 * @param  {string} msg       The message to write to 
+						 * @param  {string} msg       The message to write to
 						 * console.
-						 * @param  {boolean} important Whether to ignore log 
+						 * @param  {boolean} important Whether to ignore log
 						 * level setting and log anyway.
 						 */
 						function log(msg, important) {
@@ -1201,7 +1204,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 							//	Okay, since we are here, we do want to log this message
 							//	Let's format it a little, then write it to the console.
-							console.log("Ad Blocking Detector Log Message:   " + 
+							console.log("Ad Blocking Detector Log Message:   " +
 								msg);
 						}
 
@@ -1236,7 +1239,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 						/**
 						 * Clears all input values from a form's fields.
-						 * @param  {jQuery object} form The form selected as a 
+						 * @param  {jQuery object} form The form selected as a
 						 * jQuery object.
 						 */
 						function resetForm(form) {
@@ -1247,7 +1250,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						function json_parse_response(response) {
 							try {
 								var data = $.parseJSON(response);
-							} 
+							}
 							catch (e) {
 								log("Error parsing JSON response from server.  |||  Error: " + e.message + "  |||  Raw Result: " + var_dump(response));
 								return;
@@ -1259,7 +1262,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						/**********************************************
 						***********************************************
 						***********************************************/
-						
+
 
 						/********************************
 						***** Initialize Everything *****
