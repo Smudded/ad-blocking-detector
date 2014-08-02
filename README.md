@@ -2,7 +2,7 @@ Ad Blocking Detector - WordPress Plugin.
 ====================
 Tired of missed opportunities and empty spaces because of pesky ad blocking browser extensions, add-ons, and plugins?
 Would you like to determine which of your site visitors use ad blockers and do something about it? Then this plugin
-is for you! Show an ad to those without ad blockers, and something else entirely to those with them. Don't settle for 
+is for you! Show an ad to those without ad blockers, and something else entirely to those with them. Don't settle for
 lost profit!  Use the Ad Blocking Detector WordPress plugin.
 
 - Fully compatible with WordPress multisite networks.
@@ -12,7 +12,7 @@ lost profit!  Use the Ad Blocking Detector WordPress plugin.
 
 How Does It Work?
 --------------------
-This plugin allows you to specify two alternative sections of content.  One for normal visitors, 
+This plugin allows you to specify two alternative sections of content.  One for normal visitors,
 and the other for visitors using ad blockers, such as the popular Adblock Plus.  This content is
 then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode).  
 
@@ -44,7 +44,7 @@ Using WordPress.org's Plugin Repository (recommended)
 
 Manually
 -------------------
-1. Download the latest version of adblock-detector and upload the `adblock-detector.zip` file 
+1. Download the latest version of adblock-detector and upload the `adblock-detector.zip` file
 in the Add New plugin section of your dashboard.
 1. Activate the plugin through the "Plugins" menu in your WordPress admin section.
 1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
@@ -64,8 +64,8 @@ Ad Blocking Detector plugin.
 
 PLEASE REPORT PROBLEMS
 =======================
-Bugs and conflicts aside, ad blockers and the block lists they use are updated frequently.  Eventually, the methods used to detect ad blockers 
-may stop working.  If you discover this happening, please open up an issue.  Knowing what web browser, ad blocker, and content you are displaying 
+Bugs and conflicts aside, ad blockers and the block lists they use are updated frequently.  Eventually, the methods used to detect ad blockers
+may stop working.  If you discover this happening, please open up an issue.  Knowing what web browser, ad blocker, and content you are displaying
 will speed up fixing the plugin.
 
 

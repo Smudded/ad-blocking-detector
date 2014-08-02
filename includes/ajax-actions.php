@@ -1,6 +1,6 @@
 <?php
 /**
- * This file contains the handlers for all AJAX requests. 
+ * This file contains the handlers for all AJAX requests.
  * IT MUST ONLY OUTPUT JSON STRINGS FOR RECOGNITION DURING AJAX CALLS
  */
 
@@ -30,11 +30,11 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					self::delete_shortcode_by_id( $_POST['id'] );
 					break;
 				default:
-					echo json_encode( 
-						array( 
-							'status' => false, 
+					echo json_encode(
+						array(
+							'status' => false,
 							'action' => 'default'
-						) 
+						)
 					);
 			}	//	end switch
 
@@ -47,28 +47,28 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		/////////////////////////
 
 		//	All handler functions are middle-men between the AJAX submitted data
-		//	in $_POST and the appropriate database function. For more 
+		//	in $_POST and the appropriate database function. For more
 		//	information on each function, see the ABD_Database class defined
 		//	in includes/db-manip.php.  Particularly, pay attention to the class
 		//  method called in each function below.
-		//  
+		//
 		//  All functions either output the results of the corresponding
 		//  database manipulation function as a JSON encoded string, an
 		//  error array as a JSON encoded string, or a success array as a JSON
 		//  encoded string.
-		//  
+		//
 		//  Error/Success arrays have the following format:
 		//  	array(
 		//  		'status' => Boolean true for success or false for failure,
-		//  		'action' => Developer meaningful explanation of what process 
+		//  		'action' => Developer meaningful explanation of what process
 		//  					was tried or accomplished,
-		//  		'reason' => (optional) Developer meaningful reason 
+		//  		'reason' => (optional) Developer meaningful reason
 		//  					for any failures.
 		//  		'data' => (optional) String representation of any relevant
 		//  					data.
-		//  		
+		//
 		//  	)
-		
+
 		protected static function get_shortcode_by_id( $id ) {
 			$res = ABD_Database::get_shortcode_by_id( $id, true );
 
@@ -87,7 +87,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			echo json_encode( $res );
 			return;
 		}
-		
+
 		protected static function get_all_shortcodes() {
 			$res = ABD_Database::get_all_shortcodes( true, true );
 
@@ -105,7 +105,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			echo json_encode( $res );
 			return;
 		}
-		
+
 		protected static function submit_edit_shortcode_by_id( $id ) {
 			global $wpdb;
 
@@ -116,9 +116,9 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			//	Before we do anything, check the nonce!
 			if ( wp_verify_nonce( $data['nonce'], 'ABD_edit_input_form' ) === false ) {
 				$gen = wp_create_nonce( 'ABD_edit_input_form' );
-				echo json_encode( array( 
-					'status' => false, 
-					'action' => 'Verify nonce from update shortcode submission.', 
+				echo json_encode( array(
+					'status' => false,
+					'action' => 'Verify nonce from update shortcode submission.',
 					'reason' => 'Nonce did not validate.',
 					'data' => 'Submitted Nonce: ' . $data['nonce'] . ' :: Expected Nonce: ' . $gen
 				) );
@@ -134,10 +134,10 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			//	Okay, now let's do the database manip
 			$res = ABD_Database::update_shortcode_by_id( $_POST['id'], $data );
 
-			//	$res is either an integer idicating how many rows were updated 
-			//	or FALSE. 
-			if ( $res === false ) {	//	"=== false" (boolean false) is important... 
-									//  if data isn't changed and submit clicked, 
+			//	$res is either an integer idicating how many rows were updated
+			//	or FALSE.
+			if ( $res === false ) {	//	"=== false" (boolean false) is important...
+									//  if data isn't changed and submit clicked,
 									//  0 is returned, and 0 == false, but doesn't === false
 									//	(http://codex.wordpress.org/Class_Reference/wpdb#UPDATE_rows)
 				echo json_encode( array(
@@ -168,9 +168,9 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			//	Before we do anything, check the nonce!
 			if ( wp_verify_nonce( $data['nonce'], 'ABD_new_input_form' ) === false ) {
 				$gen = wp_create_nonce( 'ABD_new_input_form' );
-				echo json_encode( array( 
-					'status' => false, 
-					'action' => 'Verify nonce from new shortcode submission.', 
+				echo json_encode( array(
+					'status' => false,
+					'action' => 'Verify nonce from new shortcode submission.',
 					'reason' => 'Nonce did not validate.',
 					'data' => 'Submitted Nonce: ' . $data['nonce'] . ' :: Expected Nonce: ' . $gen
 				) );
@@ -182,7 +182,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 				unset( $data['nonce'] );
 			}
 
-			
+
 			//	Okay, now let's do the database manip
 			$res = ABD_Database::insert_shortcode( $data, true );
 
@@ -199,7 +199,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			}
 
 			else {	//	success
-				//	Return a positive status message with the new id in the 
+				//	Return a positive status message with the new id in the
 				//	data element
 				echo json_encode( array(
 					'status' => true,
@@ -216,7 +216,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 
 			$res = ABD_Database::delete_shortcode_by_id( $_POST['id'] );
 
-			//	$res is either an integer indicating how many rows were updated 
+			//	$res is either an integer indicating how many rows were updated
 			//	or FALSE.
 			if ( !$res ) {	//	error
 				echo json_encode( array(
@@ -251,35 +251,35 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 		////////////////////////
 		/// Helper Functions ///
 		////////////////////////
-		
+
 		/**
-		 * This function pulls out, cleans, and prepares data for use in 
+		 * This function pulls out, cleans, and prepares data for use in
 		 * database manipulation. Pulls from $_POST if the $arr parameter is
 		 * omitted or null.
-		 * @param  string  $prefix       Prefix on form field names. (e.g. If 
-		 * field name is "ABD_new_input_form_field1", "ABD_new_input_form_" is 
+		 * @param  string  $prefix       Prefix on form field names. (e.g. If
+		 * field name is "ABD_new_input_form_field1", "ABD_new_input_form_" is
 		 * the prefix.)
-		 * @param  ARRAY_A/string  $arr         The array, or a JSON encoded 
-		 * string of the array, to extract data from. If omitted or null, 
+		 * @param  ARRAY_A/string  $arr         The array, or a JSON encoded
+		 * string of the array, to extract data from. If omitted or null,
 		 * $_POST['data'] is used.
-		 * @param  boolean $stripslashes Whether the $arr needs to have 
+		 * @param  boolean $stripslashes Whether the $arr needs to have
 		 * stripslashes function run on every field. 99.999999% of the time, the
 		 * answer is no (false). Occasionally WordPress does some funky escaping
-		 * that needs undoing when extracting data (http://goo.gl/PCba3G). This 
+		 * that needs undoing when extracting data (http://goo.gl/PCba3G). This
 		 * means nothing if $arr parameter is omitted.
 		 * @return ARRAY_A                The data formatted as an associative
-		 * array labeled and prepped for insertion in database manipulation 
+		 * array labeled and prepped for insertion in database manipulation
 		 * functions
 		 */
-		public static function extractData( 
-			$prefix = 'ABD_new_input_form_', 
+		public static function extractData(
+			$prefix = 'ABD_new_input_form_',
 			$arr = null,
 			$stripslashes = false ) {
 
 			if ( $arr == null ) {
 				//	We use $_POST instead... if it's not empty.
 				if ( !empty($_POST['data'] ) ) {
-					//	WordPress escapes $_POST data oddly... 
+					//	WordPress escapes $_POST data oddly...
 					//	Unless we strip it, quotes will be escaped.
 					//	http://goo.gl/PCba3G
 					$stripslashes = true;
@@ -289,10 +289,10 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					parse_str( $_POST['data'], $arr );
 				}
 				else {	//	error, no data to extract!
-					echo json_encode( array( 
-						'status' => false, 
-						'action' => 'Extracting form data from POST.', 
-						'reason' => 'No form data available.', 
+					echo json_encode( array(
+						'status' => false,
+						'action' => 'Extracting form data from POST.',
+						'reason' => 'No form data available.',
 						'data' => $_POST)
 					);
 					return;
@@ -301,16 +301,16 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 
 
 			//	Okay, come hell or high water, we should have some data in $arr
-			//	now.  
-			//	
+			//	now.
+			//
 			//	If $arr isn't already an array, then it is a JSON string
 			//	We need an array to continue processsing
 			if ( !is_array( $arr ) ) {
 				$arr = json_decode( $arr );
 			}
 
-			//	Okay, now that array should have 6 fields that we need: 
-			//	$prefix.name, $prefix.noadblock, $prefix.adblock, 
+			//	Okay, now that array should have 6 fields that we need:
+			//	$prefix.name, $prefix.noadblock, $prefix.adblock,
 			//	$prefix.adblock_wpautop, $prefix.noadblock_wpautop, and _wpnonce
 			$data = array(
 				'name' => $arr[$prefix . 'name'],
@@ -327,7 +327,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 					$data[$key] = stripslashes( $value );
 				}
 			}
-			
+
 			//	Return the data array
 			return $data;
 		}
