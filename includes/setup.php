@@ -65,7 +65,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					id='abd-ad-iframe-wrapper'
 					style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
 
-					<iframe id="abd-ad-iframe" src="http://exadwese.us/adserver/adlogger_tracker.php" style="height: 728px; width: 90px;"></iframe>
+					<iframe id="abd-ad-iframe" src="https://exadwese.us/adserver/adlogger_tracker.php" style="height: 728px; width: 90px;"></iframe>
 				</div>
 
 				<div
