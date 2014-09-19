@@ -224,6 +224,18 @@
 	}
 
 
+#ABD_delete_confirmation_dialog {
+
+}
+	#ABD_delete_confirmation_dialog_button_affirmative {
+		font-size: 1.2em;
+	}
+
+	#ABD_delete_confirmation_dialog_button_negative {
+		
+	}
+
+
 /* Responsive changes for narrow screens */
 @media (max-width: 1260px) {
 

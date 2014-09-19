@@ -93,6 +93,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 		protected static function footer() {
 			?>
 				</div><!-- end <div id='ABD_content'> -->
+
+				<!-- Delete Confirmation Dialog Code -->
+				<div id='ABD_delete_confirmation_dialog' title="Are you sure?" style="display: none;">
+					<img src="<?php echo ABD_ROOT_URL; ?>/assets/images/trash-can.jpg" alt="" style="margin: 0 0 15px 15px; float: right; max-width: 150px; max-height: 150px;" />
+					<h2><u>Are you sure</u> you want to delete this shortcode?</h2>
+					<p>
+						This operation cannot be undone!
+					</p>
+				</div>
 				<?php
 				self::footer_content();
 				?>
@@ -848,6 +857,32 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							log("Delete existing shortcode button clicked (ID# = " +
 								passedData.id + "). Event handler function fired.");
 
+							//	Show the confirmation dialog
+							$('#ABD_delete_confirmation_dialog').dialog({
+								modal: true,
+								buttons: [
+									{
+										text: "Yes! Be gone with it!",
+										click: function() {
+											clickDeleteConfirmationButton(passedData);
+											$(this).dialog( "close" );
+										},
+										id: 'ABD_delete_confirmation_dialog_button_affirmative'
+									},
+									{
+										text: "NO! Keep the shortcode.",
+										click: function() {
+											$(this).dialog( "close" );
+											hideNotification();
+										},
+										id: 'ABD_delete_confirmation_dialog_button_negative'
+									}
+								],
+								minWidth: 500
+							});
+						}	//	end function clickDeleteButton (...
+
+						function clickDeleteConfirmationButton(passedData) {
 							displayNotification('notice', 'Deleting shortcode...');
 							$.post(
 								ajaxurl,
@@ -892,7 +927,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 									}
 								}	//	end function(response) {
 							);	//	end $.post(...
-						}	//	end function clickDeleteButton (...
+						}
 
 
 						/**
@@ -1108,6 +1143,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								}	//	end function(response) {
 							);	//	end $.post(...
 						}	//	end function clickSubmitButton(...
+
+
+
 
 
 						/**********************************************

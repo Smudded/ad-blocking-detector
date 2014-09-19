@@ -47,12 +47,19 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					ABD_ROOT_URL . 'assets/css/admin.css' );
 
 				wp_enqueue_style( 'abd-admin-css' );
+
+				wp_enqueue_style('abd-admin-jquery-ui-css',
+                	ABD_ROOT_URL . 'assets/css/jquery/excite-bike-theme/jquery-ui.min.css',
+                	false
+               	 );
 			}
 			public static function enqueue_helper_admin_js() {
-
+				wp_enqueue_script( 'jquery' );
+				wp_enqueue_script( 'jquery-ui-core' );
+				wp_enqueue_script( 'jquery-ui-dialog' );
 			}
 			public static function enqueue_helper_public_js() {
-				wp_enqueue_script( 'jquery' );
+				wp_enqueue_script( 'jquery' );				
 				wp_enqueue_script( 'abd-adblock-detector',
 					ABD_ROOT_URL . 'assets/js/adblock-detector.js' );
 				wp_enqueue_script( 'abd-fake-ad',
