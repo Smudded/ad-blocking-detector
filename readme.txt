@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 4.0
-Stable tag: 2.1.5
+Stable tag: 2.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,10 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.1.6 =
+* Added warning/confirmation before deleting shortcodes to prevent accidental deletions.
+* Added plugin thumbnails.
+* Verified, and so indicated, WordPress 4.0 support.
 = 2.1.5 =
 * Fix browser warnings when using HTTPS.
 = 2.1.4 =
