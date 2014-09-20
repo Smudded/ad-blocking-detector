@@ -23,15 +23,19 @@ if ( !class_exists( 'ABD_Public_Views' ) ) {
 				$noab = do_shortcode( $res['noadblock'] );
 				$ab = do_shortcode( $res['adblock'] );
 
-				//	And now create the return value;
-				$retval = '<div class="ABD_display ABD_display_noadblock">' . $noab . '</div>';
-				$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $ab . '</div>';
+				//	And now create the return value
+				$retval = '<div class="ABD_display_wrapper ABD_shortcode_' . $id . '">';
+					$retval .= '<div class="ABD_display ABD_display_noadblock">' . $noab . '</div>';
+					$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $ab . '</div>';
+				$retval .= '</div>';
 			}
 			else {
 				// Uh-Oh. This means the query failed or, more likely,
 				// their is no shortcode with that ID in the database.
 				// Let's return a generic error message.
-				$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>No shortcode with that ID#.</em></div>';
+				$retval = '<div class="ABD_display_wrapper ABD_shortcode_' . $id . '">';
+					$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>No shortcode with that ID#.</em></div>';				
+				$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $ab . '</div>';
 			}
 
 			return $retval;

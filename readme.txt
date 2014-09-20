@@ -122,6 +122,7 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 == Changelog ==
 = 2.1.6 =
+* Add additional HTML IDs, classes, and wrappers around output for easy CSS targeting.
 * Added warning/confirmation before deleting shortcodes to prevent accidental deletions.
 * Added plugin thumbnails.
 * Verified, and so indicated, WordPress 4.0 support.
