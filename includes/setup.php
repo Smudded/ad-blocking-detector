@@ -59,11 +59,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				wp_enqueue_script( 'jquery-ui-dialog' );
 			}
 			public static function enqueue_helper_public_js() {
-				wp_enqueue_script( 'jquery' );				
+				wp_enqueue_script( 'jquery' );
 				wp_enqueue_script( 'abd-adblock-detector',
-					ABD_ROOT_URL . 'assets/js/adblock-detector.js' );
+					ABD_ROOT_URL . 'assets/js/adblock-detector.min.js' );
 				wp_enqueue_script( 'abd-fake-ad',
-					ABD_ROOT_URL . 'assets/js/advertisement.js' );
+					ABD_ROOT_URL . 'assets/js/advertisement.min.js' );
 			}
 			public static function enqueue_helper_footer() {
 				?>
