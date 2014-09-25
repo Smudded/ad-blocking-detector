@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 4.0
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,8 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.1.8 =
+* Fix update issue.
 = 2.1.7 =
 * Minify JavaScript files to improve load time.
 = 2.1.6 =
