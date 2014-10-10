@@ -6,6 +6,7 @@
 
 require_once( ABD_ROOT_PATH . "includes/ajax-actions.php" );
 require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
+require_once( ABD_ROOT_PATH . "includes/widget.php" );
 
 
 if ( !class_exists( 'ABD_Setup' ) ) {
@@ -156,6 +157,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	New Multisite Blog Created
 			//add_action('wpmu_new_blog',
 			//	array( 'ABD_Setup', 'hooks_helper_new_multisite_blog' );
+
+			//	Widgets
+			add_action( 'widgets_init',
+				array( 'ABD_Setup', 'hooks_helper_widget' ) );
 		}
 			public static function hooks_helper_activation() {
 				global $wpdb;
@@ -252,6 +257,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			public static function hooks_helper_new_multisite_blog( $blog_id ) {
 				//	$blog_id is passed automatically for wpmu_new_blog
 				//	it contains the new blogs/sites id.
+			}
+
+			public static function hooks_helper_widget() {
+				register_widget( 'ABD_Widget' );
 			}
 
 

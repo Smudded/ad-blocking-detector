@@ -34,7 +34,7 @@ if ( !class_exists( 'ABD_Public_Views' ) ) {
 				// their is no shortcode with that ID in the database.
 				// Let's return a generic error message.
 				$retval = '<div class="ABD_display_wrapper ABD_shortcode_' . $id . '">';
-					$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>No shortcode with that ID#.</em></div>';				
+					$retval = '<div class="ABD_error"><b>Ad Blocking Detector Error</b><br /><em>No shortcode with that ID# ( ' . $id . ').</em></div>';
 				$retval .= '<div class="ABD_display ABD_display_adblock" style="display: none;">' . $ab . '</div>';
 			}
 
