@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 4.0
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,10 +25,9 @@ lost profit!
 = How Does It Work? =
 This plugin allows you to specify two alternative sections of content.  One for normal visitors,
 and the other for visitors using ad blockers, such as the popular Adblock Plus.  This content is
-then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode).
+then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode), and sidebar widgets.
 
-Simply insert this shortcode anywhere shortcodes are supported, such as posts, pages, and the
-sidebar (with a [simple tweak](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/)),
+Simply insert this shortcode anywhere shortcodes are supported, such as posts and pages, or add the Ad Blocking Detector widget to your sidebar,
 and the plugin will display the appropriate content based on whether it detects an ad blocker or not.
 
 See a working demonstration at the [plugin's website](http://adblockingdetector.jtmorris.net/demo/).
@@ -68,10 +67,14 @@ Ad Blocking Detector plugin.
 
 == Frequently Asked Questions ==
 = How can I use a shortcode in sidebar widget? =
-Copy and paste your desired shortcode into a Text widget added to your sidebar.
+You have two options.  The first and simplest is to use the built-in sidebar widget.  Simply
+edit your widgets, and add the Ad Blocking Detector widget.
+
+However, if you would prefer greater flexibility, you can copy and paste your desired shortcode into a
+Text widget added to your sidebar.
 
 
-Note: By default, WordPress does not parse shortcodes in widgets.  You must enable that functionality manually.
+Note: By default, WordPress does not parse shortcodes in text widgets.  You must enable that functionality manually.
 You can find instructions from the folks at WPBeginner.com
 [here](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/).
 
@@ -121,6 +124,8 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.1.9 =
+* Add sidebar widget capabilities.
 = 2.1.8 =
 * Fix update issue.
 = 2.1.7 =
@@ -208,6 +213,8 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Upgrade Notice ==
+= 2.1.9 =
+NEW FEATURE: WIDGETS. This plugin now offers a widget for displaying your shortcodes. You'll no longer need to use text widgets and theme edits (unless you want to).
 = 2.1.1 =
 MAJOR BUG FIX: Addresses problem where new plugin users were unable to add new shortcodes after last update.
 = 2.0.8 =
