@@ -273,8 +273,11 @@ Abd_Detector({
 		//	Add class to body tag
 		jQuery('body').addClass('ABD_noadblock');
 
-		//	Add JavaScript flag
-		window.abdStatus = 'noadblock';
+		//	Throw event
+		jQuery(document).trigger('abd_status_change', {
+			blockerDetected: false,
+			status: 'noadblock'
+		});
 	},
 	//	What do we want to do if we detect an ad blocker?
 	blockerFunc: function() {
@@ -284,8 +287,11 @@ Abd_Detector({
 		//	Add class to body tag
 		jQuery('body').addClass('ABD_adblock');
 
-		//	Add JavaScript flag
-		window.abdStatus = 'adblock';
+		//	Throw event
+		jQuery(document).trigger('abd_status_change', {
+			blockerDetected: true,
+			status: 'adblock'
+		});
 	},
 	//	Do we want to see debug messages?
 	debugMessage: true
