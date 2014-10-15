@@ -285,7 +285,7 @@ Abd_Detector({
 		jQuery('body').addClass('ABD_adblock');
 
 		//	Add JavaScript flag
-		window.abdStatus = 'noadblock';
+		window.abdStatus = 'adblock';
 	},
 	//	Do we want to see debug messages?
 	debugMessage: true

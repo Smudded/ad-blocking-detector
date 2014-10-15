@@ -43,7 +43,7 @@ if( !class_exists( ABD_Widget ) ) {
 
             echo $output;
 
-            echo $arts['after_widget'];
+            echo $args['after_widget'];
         }
 
         public function form( $instance ) {
