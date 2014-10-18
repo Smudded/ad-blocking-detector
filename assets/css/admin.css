@@ -67,7 +67,13 @@
 			margin-left: 30px;
 
 			line-height: normal;
+
+			font-size: 1.05em;
 		}
+
+			#ABD_sidebar div.ABD_sidebar_box ul li {
+				margin-bottom: 10px;
+			}
 
 		#ABD_donations td {
 			vertical-align: bottom;
@@ -232,7 +238,7 @@
 	}
 
 	#ABD_delete_confirmation_dialog_button_negative {
-		
+
 	}
 
 

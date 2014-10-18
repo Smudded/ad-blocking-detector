@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 4.0
-Stable tag: 2.1.10
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,34 +12,44 @@ Tired of missed opportunities because of pesky ad blocker browser extensions, ad
 back with Ad Blocking Detector today!
 
 == Description ==
-Tired of missed opportunities and empty spaces because of pesky ad blocking browser extensions, add-ons, and plugins?
-Would you like to determine which of your site visitors use ad blockers and do something about it? Then this plugin
-is for you! Show an ad to those without ad blockers, and something else entirely to those with them. Don't settle for
-lost profit!
+Tired of missed opportunities and empty spaces because of pesky ad blocking browser extensions,
+add-ons, and plugins? Would you like to determine which of your site visitors use ad blockers and
+do something about it? Then this highly rated plugin is for you!
 
-- Fully compatible with WordPress multisite networks.
-- Detects all major ad blocking browser extensions, including Ad Block Plus.
-- Works with all major web browsers.
-- Integrates with some other popular ad management plugins, such as AdRotate.
+Use the simple [built-in tool](http://adblockingdetector.jtmorris.net/using-ad-blocking-detector/) to substitute
+alternative content in place of blocked ads.  Or, hook
+into the ad block detection mechanism with CSS and JavaScript and customize your site any way you want!
 
-= How Does It Work? =
-This plugin allows you to specify two alternative sections of content.  One for normal visitors,
-and the other for visitors using ad blockers, such as the popular Adblock Plus.  This content is
-then tied to a WordPress [shortcode](http://codex.wordpress.org/Shortcode), and sidebar widgets.
+= Built-in Tool =
+This plugin includes a tool for specifying two alternative collections of content.  One collection
+to display to visitors without ad blockers (such as an ad).  The other to display to ad block
+wielding visitors (such as a message or image).
+Then, using the shortcode, [sidebar widget](http://adblockingdetector.jtmorris.net/new-feature-sidebar-widgets/),
+or other method, let Ad Blocking Detector intelligently
+determine which to display to the user.  [Check out the demo](http://adblockingdetector.jtmorris.net/demo/) on the plugin’s
+website, or [look at the
+screenshots](https://wordpress.org/plugins/ad-blocking-detector/screenshots/) for an example.
 
-Simply insert this shortcode anywhere shortcodes are supported, such as posts and pages, or add the Ad Blocking Detector widget to your sidebar,
-and the plugin will display the appropriate content based on whether it detects an ad blocker or not.
+Use this power to, in place of a blocked ad, display a signup form for your email newsletter, a link
+and description to your eBook, a plea to your visitors, and much more.   Don’t let ad blockers waste
+prime real estate on your site!
 
-See a working demonstration at the [plugin's website](http://adblockingdetector.jtmorris.net/demo/).
+= Hook In With JavaScript and CSS =
+If the built-in tool isn’t what you’re looking for, ignore it and use the ad block detection for your
+own purposes.  With this plugin, you can easily modify the appearance of your site with CSS or execute
+JavaScript code based on the ad block detection results!  The sky is the limit!
+For ideas and information on how to use this power, look at the following articles on the plugin’s website.
 
-= What Can I Display To Ad Block Wielding Visitors? =
-Anything that ad blockers won't block. There is no way to turn off the visitor's ad blocker; however,
-you can use the knowledge that they have an ad blocker to your advantage.  Display a signup form for
-your email newsletter.  Pop in a description and link to your new eBook.  Even display a plea for
-the user to disable their ad blockers if necessary.
+- [Combine CSS and Ad Blocking Detector](http://adblockingdetector.jtmorris.net/combine-css-ad-blocking-detector/)
+- [Unleash Your Inner Geek With JavaScript and Ad Blocking Detector](http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/)
 
-There are other ways of engaging your site's visitors, when you can't display an ad, take advantage
-of those other methods.
+= Features =
+- Detects all major ad blocking browser extensions on all major web browsers.  Including AdBlock Plus!
+- Full [compatibility with WordPress multisite](http://adblockingdetector.jtmorris.net/using-ad-blocking-detector-multisite/) networks!
+- Regular feature enhancements and additions!
+- Excellent support from the plugin developer.
+
+
 
 
 == Installation ==
@@ -67,7 +77,7 @@ Ad Blocking Detector plugin.
 
 == Frequently Asked Questions ==
 = How can I use a shortcode in sidebar widget? =
-You have two options.  The first and simplest is to use the built-in sidebar widget.  Simply
+You have two options.  The first and simplest is to use the [built-in sidebar widget](http://adblockingdetector.jtmorris.net/new-feature-sidebar-widgets/).  Simply
 edit your widgets, and add the Ad Blocking Detector widget.
 
 However, if you would prefer greater flexibility, you can copy and paste your desired shortcode into a
@@ -87,18 +97,19 @@ At this time, this plugin does not treat disabled JavaScript as an ad blocker.
 If the visitor has JavaScript disabled, the plugin displays the content used
 for normal visitors with no ad blockers.
 
-A future update will allow you to choose what disabled JavaScript means.
-
 
 = Does this plugin prevent visitors with an ad blocker from visiting my site or in any other way obscure the content? =
-No.  In an indirect and inefficient way, you *can* obscure large portions of content from visitors using this plugin,
-but that is not what it was designed to do.  It simply places alternative content in the space the ad would have displayed.
+It was not designed to do so, but it is possible to replicate that behavior in an indirect way.
+This plugin's purpose is to simply places alternative content in the space the ad would have displayed.
+
+If you want more information on how to replicate the obscuring of content, check out this blog post
+on the plugin's website: [http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/](http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/)
 
 
 = Why doesn't this plugin detect the _______________ ad blocker? =
 Not all ad blockers operate the same way.  This plugin was tested with the most common ad blockers, but it is
-possible we missed one.  If you find an ad blocker we aren't detecting, [contact us](http://adblockingdetector.jtmorris.net/contact/) and let us know the
-ad blocker, web browser, and operating system you are using.  We will then investigate the problem.
+possible I missed one.  If you find an ad blocker this plugin doesnt detect, [contact me](http://adblockingdetector.jtmorris.net/contact/) and let me know the
+ad blocker, web browser, and operating system you are using.  I will then investigate detecting it.
 
 
 = Can this plugin integrate with other ad management plugins? =
@@ -124,6 +135,10 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.2.0 =
+* Included JavaScript events for developer tie-ins. [Click here for more info!](http://adblockingdetector.jtmorris.net/)
+* Fix typos and a bug introduced by last update.
+* Update plugin listing and tutorial/tip links.
 = 2.1.10 =
 * Added CSS and JavaSript selectors and flags for easier end-user targeting.
 = 2.1.9 =
@@ -215,6 +230,8 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Upgrade Notice ==
+= 2.2.0 =
+Increases Ad Blocking Detector's capabilities allowing you to use ad block detection any way you want. Install the update to receive more information.
 = 2.1.9 =
 NEW FEATURE: WIDGETS. This plugin now offers a widget for displaying your shortcodes. You'll no longer need to use text widgets and theme edits (unless you want to).
 = 2.1.1 =
