@@ -133,6 +133,35 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 							strtotime( '+1 year' ) );
 					}
 				}
+
+
+
+				///////////////////
+				/// Update News ///
+				//////////////////
+
+				//	We only want to show this once, and only for a short period
+				//	of time from the update.
+				$end_date_for_update_news = strtotime( '31 October 2014' );
+
+				if( $current_time < $end_date_for_update_news ) {
+					//	It's within the window to show the notice.
+					//	Have we already showed it?
+					$update_notice_date = get_option( 'abd_update_news_showed' );
+					if( !$update_notice_date ) {
+						//	No, we haven't already shown it.  So, show it!
+						add_action( 'admin_notices',
+							array( 'ABD_Admin_Views', 'plugin_update_news' ) );
+
+						update_option( 'abd_update_news_showed', $current_time );
+					}
+				}
+				else {
+					//	It's not within the window. Let's make sure we remove
+					//	all update notice traces so we don't interfere with future
+					//	ones.
+					delete_option( 'abd_update_news_showed' );
+				}
 			}
 
 		/**

@@ -57,6 +57,25 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			<?php
 		}
 
+		public static function plugin_update_news() {
+			?>
+			<div class="updated">
+				<h3>Ad Blocking Detector Update News</h3>
+				<p style="font-size: 1.15em;">Ad Blocking Detector now offers a lot more power!</p>
+				<p>
+					If you know CSS and/or JavaScript, you can now hook into the ad block detection used by this plugin
+					for your own purposes.  Check out the articles below for examples
+					of what you can do and how!
+				</p>
+				<ul style="list-style-type: disc; margin-left: 35px; font-size: 1.15em;">
+					<li><a target="_blank" href="http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/">Unleash Your Inner Geek with JavaScript</a>: How to hook into the ad blocker detection mechanism using JavaScript.</li>
+					<li><a target="_blank" href="http://adblockingdetector.jtmorris.net/combine-css-ad-blocking-detector/">Combine CSS and Ad Blocking Detector</a>: How to alter the style of your site based on the ad block detection status.</li>
+					<li><a target="_blank" href="http://adblockingdetector.jtmorris.net/open-letter-to-your-better-judgment/">An Open Letter to Your Better Judgment</a>: Cautions regarding how to use this newfound power.</li>
+				</ul>
+			</div>
+			<?php
+		}
+
 		protected static function header() {
 			?>
 			<div class='wrap'>
@@ -151,31 +170,37 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					</p>
 					<ul>
 						<li>Leave a positive review on the plugin's <a target="_blank" href="http://wordpress.org/support/view/plugin-reviews/ad-blocking-detector">WordPress listing</a></li>
-						<li>Vote "Works" on the plugin's <a target="_blank" href="http://wordpress.org/plugins/ad-blocking-detector/#compatibility">WordPress listing</a></li>
 						<li><a target="_blank" href="http://twitter.com/home?status=I%20love%20this%20WordPress%20plugin!%20http://wordpress.org/plugins/ad-blocking-detector/">Share your thoughts on Twitter</a> and other social sites</li>
 						<li>Improve this plugin on <a target="_blank" href='https://github.com/jtmorris/adblock-detector'>GitHub</a></li>
 					</ul>
 				</div>
 
 				<div class='ABD_sidebar_box'>
-					<h3>Example, Tips, &amp; Ideas</h3>
+					<h3>Tutorials, Tips, &amp; Ideas</h3>
 					<p>
 						If you're having trouble figuring out this
 						plugin, or want to see some cool ways to use it, check
-						out these links:
+						out these posts on the plugin's website:
 					</p>
+					<h4>The Basics</h4>
 					<ul>
 						<li>
 							<a target="_blank" href="http://adblockingdetector.jtmorris.net/using-ad-blocking-detector/">How To Display a Simple Ad with Ad Block Detection</a>: A basic, step-by-step tutorial, of how to use this plugin.  Includes screenshots.
 						</li>
 						<li>
-							<a target="_blank" href="http://adblockingdetector.jtmorris.net/display-rotating-ads/">Display Rotating Ads</a>: Explains how to combine the power of an ad rotation plugin with Ad Blocking Detector.
+							<a target="_blank" href="http://adblockingdetector.jtmorris.net/using-ad-blocking-detector-multisite/">Using Ad Blocking Detector With Multisite</a>: Explains how to take advantage of the new multisite features available to this plugin.
+						</li>
+					</ul>
+					<h4>Power Users</h4>
+					<ul>
+						<li>
+							<strong>*NEW* <a target="_blank" href="http://adblockingdetector.jtmorris.net/combine-css-ad-blocking-detector/">Combine CSS and Ad Blocking Detector</a></strong>: In addition to the primary goal of substituting content in place of blocked ads, this plugin also gives you tools to style your website based on whether ad blockers are detected.
+						</li>
+						<li>
+							<strong>*NEW* <a target="_blank" href="http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/">Unleash Your Inner Geek with JavaScript</a></strong>: If the plugin isn't doing what you want, why not use its detection powers for your own purposes?  This post explains how to tie into this plugin using JavaScript.
 						</li>
 						<li>
 							<a target="_blank" href="http://adblockingdetector.jtmorris.net/ad-blocking-themes-templates/">Ad Blocking in Themes &amp; Templates</a>: A short introduction to using shortcodes in themes &amp; templates.
-						</li>
-						<li>
-							<a target="_blank" href="http://adblockingdetector.jtmorris.net/using-ad-blocking-detector-multisite/">Using Ad Blocking Detector With Multisite</a>: Explains how to take advantage of the new multisite features available to this plugin.
 						</li>
 					</ul>
 				</div>
