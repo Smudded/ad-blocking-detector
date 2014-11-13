@@ -67,13 +67,14 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					ABD_ROOT_URL . 'assets/js/advertisement.min.js' );
 			}
 			public static function enqueue_helper_footer() {
+				$iframe_url = get_site_url(null, 'abd/adserver/adlogger_tracker.php');
 				?>
 
 				<div
 					id='abd-ad-iframe-wrapper'
 					style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
 
-					<iframe id="abd-ad-iframe" src="https://exadwese.us/adserver/adlogger_tracker.php" style="height: 728px; width: 90px;"></iframe>
+					<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" style="height: 728px; width: 90px;"></iframe>
 				</div>
 
 				<div
