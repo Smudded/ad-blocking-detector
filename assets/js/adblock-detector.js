@@ -47,7 +47,18 @@ function Abd_Detector (options) {
 		//	If you want to load any other ad type material, you can try
 		//	it here.
 
-
+		//////////////////////////////////////
+		//	IFRAME FRAME BUST PREVENTION	//
+		//////////////////////////////////////
+		//	The iframe is only written to the page if JavaScript is present and
+		//	the browser supports some important iframe attributes that will prevent
+		//	a the iframe from busting out and redirecting the parent page.  Check the
+		//	file mentioned above to see how that is done specifically.
+		//
+		//	To make debugging simpler, let's output a log message if the iframe is missing.
+		if( !this.iframeSecurityPresent() ) {
+			self.debugMsg( "Browser lacks necessary iframe security attributes. Omitting iframe checks!" );
+		}
 	};	//	end this.loadFakeAds
 
 	/**
@@ -66,45 +77,54 @@ function Abd_Detector (options) {
 		var div = jQuery('#abd-ad-div');
 		var divNoJq = document.getElementById("abd-ad-div");
 
+
 		var retVal = true;
 
 		//	Ad blockers can hide things in numerous ways. Check every way I
 		//	can think of.
 
 		//	Check for the appended frame
-		if (frame.length === 0) {	//	jQuery couldn't find it in the DOM
-			retVal = false;
+		//
+		//	Okay, we have a problem... We might not have loaded the iframe if the browser
+		//	doesn't support some security features that prevent frame busting.  If
+		//	the iframe is missing for this reason, the checks we're about to run will
+		//	yield a false positive.  So, make sure the iframe was inserted before
+		//	running the checks!
+		if( this.iframeSecurityPresent() ) {	//	The iframe should be there! Run the checks.
+			if (frame.length === 0) {	//	jQuery couldn't find it in the DOM
+				retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: jQuery selector empty - $('#abd-ad-iframe').length === 0)");
-		}
-		else if (frameNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
-			retval = false;
+				self.debugMsg("iframe removal detected! (Detection Method: jQuery selector empty - $('#abd-ad-iframe').length === 0)");
+			}
+			else if (frameNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
+				retval = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: no element with id found - document.getElementById == undefined");
-		}
-		else if (frame.height < 50) { //	Frame resized too small
-			retVal = false;
+				self.debugMsg("iframe removal detected! (Detection Method: no element with id found - document.getElementById == undefined");
+			}
+			else if (frame.height < 50) { //	Frame resized too small
+				retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: iframe height resized to near 0 - $('#abd-ad-iframe').height < 50");
-		}
-		else if (frame.is("hidden")) {	//	Frame hidden via visibility or display
-			retVal = false;
+				self.debugMsg("iframe removal detected! (Detection Method: iframe height resized to near 0 - $('#abd-ad-iframe').height < 50");
+			}
+			else if (frame.is("hidden")) {	//	Frame hidden via visibility or display
+				retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('#abd-ad-iframe').is('hidden')");
-		}
-		else if (frame.find(":hidden").length !== 0) {	//	Yet another way to look for hidden frame in case blockers are tricky
-			retVal = false;
+				self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('#abd-ad-iframe').is('hidden')");
+			}
+			else if (frame.find(":hidden").length !== 0) {	//	Yet another way to look for hidden frame in case blockers are tricky
+				retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('$abd-ad-iframe').find(':hidden').length === 0");
-		}
-		else if (frame.css('visibility') === 'hidden' || frame.css('display') === 'none') {	//	and again... another way to look for hidden frame
-			retVal = false;
+				self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('$abd-ad-iframe').find(':hidden').length === 0");
+			}
+			else if (frame.css('visibility') === 'hidden' || frame.css('display') === 'none') {	//	and again... another way to look for hidden frame
+				retVal = false;
 
-			self.debugMsg("iframe removal detected! (Detection Method: iframe css changed to hidden - frame.css('visibility') === 'hidden' || frame.css('display') === 'none')");
-		}
+				self.debugMsg("iframe removal detected! (Detection Method: iframe css changed to hidden - frame.css('visibility') === 'hidden' || frame.css('display') === 'none')");
+			}
 
-		else {	//	Well... I'm out of ideas... the damn thing must be there.
-			self.debugMsg("No iframe removal detected.");
+			else {	//	Well... I'm out of ideas... the damn thing must be there.
+				self.debugMsg("No iframe removal detected.");
+			}
 		}
 
 
@@ -247,6 +267,20 @@ function Abd_Detector (options) {
 			//	No, it doesn't, and we've waited long enough.  Throw an error and die.
 			self.debugMsg( "Cannot run!  jQuery didn't load.  Try adding an exception for jQuery in any asynchronous JavaScript plugins. Total wait time: " + totalTime/1000 + " seconds." );
 		}
+	}
+
+	/**
+	 * Determines whether the browser supports either the sandbox or the security
+	 * attribute for iframes.  This is important for detecting frame busting in
+	 * the bait ad iframe.
+	 */
+	this.iframeSecurityPresent = function() {
+		var frm = document.createElement('iframe');
+		if( ('sandbox' in frm) || ('security' in frm) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	////////////////

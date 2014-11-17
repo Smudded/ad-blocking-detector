@@ -70,12 +70,26 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				$iframe_url = get_site_url(null, 'abd/adserver/adlogger_tracker.php');
 				?>
 
-				<div
-					id='abd-ad-iframe-wrapper'
-					style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
-
-					<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" style="height: 728px; width: 90px;"></iframe>
-				</div>
+				<script type="text/javascript">
+					(function() {
+						//	Insert iframe only if we can prevent it from frame busting simply.
+						//	We prevent frame busting using either the security="restricted" or sandbox""
+						//	attributes in the iframe tag.  So, check if we can do that!
+						var frm = document.createElement('iframe');
+						if( 'sandbox' in frm || 'security' in frm ) {
+							//	Okay, we can use the iframe... Here's the HTML we want:
+							//	<div
+							//		id='abd-ad-iframe-wrapper'
+							//		style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
+							//
+							//		<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" security="restricted" style="height: 728px; width: 90px;"></iframe>
+							//	</div>
+							//
+							//	So, output it using document.write()
+							document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" security=\"restricted\" style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
+						}
+					})();
+				</script>
 
 				<div
 					id="abd-ad-div"
