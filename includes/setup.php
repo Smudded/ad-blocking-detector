@@ -82,11 +82,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 							//		id='abd-ad-iframe-wrapper'
 							//		style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
 							//
-							//		<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" security="restricted" style="height: 728px; width: 90px;"></iframe>
+							//		<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" security="restricted" sandbox="" style="height: 728px; width: 90px;"></iframe>
 							//	</div>
 							//
 							//	So, output it using document.write()
-							document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" security=\"restricted\" style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
+							document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" security=\"restricted\" sandbox=\"\" style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
 						}
 					})();
 				</script>
