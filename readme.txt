@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 4.0
-Stable tag: 2.2.3
+Stable tag: 2.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,10 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.2.5 =
+* Even further refinements to https certificate errors and frame busting in response to bug reports.
+= 2.2.4 =
+* Further refinements to https certificate errors and frame busting in response to bug reports.
 = 2.2.3 =
 * Fix frame busting prevention introduced in last update.
 = 2.2.2 =

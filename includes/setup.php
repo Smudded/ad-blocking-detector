@@ -67,7 +67,24 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					ABD_ROOT_URL . 'assets/js/advertisement.min.js' );
 			}
 			public static function enqueue_helper_footer() {
-				$iframe_url = get_site_url(null, 'abd/adserver/adlogger_tracker.php');
+				//	We need a fake iframe URL.  Ideally, this is to some completely random
+				//	location on a site that doesn't exist.  However, SSL users will experience
+				//	content warnings on their site if we do that.  For them, it would be best if
+				//	we used their own URL and thus their own SSL certificate.  However, using
+				//	a nonexistent page on their own site leads to problems if 404 redirection
+				//	occurs because redirects can frame bust.  So, again, it would be better to
+				//	point at some other site that doesn't exist.
+				//
+				//	Long story short, optimally, we would use a nonexistent URL to a nonexistent
+				//	site. For SSL users, however, we NEED to stay on their domain.
+				if( is_ssl() ) {
+					$iframe_url = get_site_url(null, 'abd/adserver/adlogger_tracker.php');
+					$sec = 'security=\"restricted\" sandbox=\"\"';
+				}
+				else {
+					$iframe_url = "http://exadwese.us/adserver/adlogger_tracker.php";
+					$sec = '';
+				}
 				?>
 
 				<script type="text/javascript">
@@ -86,7 +103,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 							//	</div>
 							//
 							//	So, output it using document.write()
-							document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" security=\"restricted\" sandbox=\"\" style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
+							document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" <?php echo $sec; ?> style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
 						}
 					})();
 				</script>
