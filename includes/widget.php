@@ -6,7 +6,7 @@
 require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
 require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
 
-if( !class_exists( ABD_Widget ) ) {
+if( !class_exists( 'ABD_Widget' ) ) {
     class ABD_Widget extends WP_Widget {
         function __construct() {
             parent::__construct(
