@@ -41,6 +41,7 @@ ABD_Setup::initialize();
 //      Don't Forget Error Prevention: http://goo.gl/Acm9oY
 function abd_my_session_start()
 {
+    if(session_id() == '' || !isset($_SESSION)) {
         if (isset($_COOKIE['PHPSESSID'])) {
                 $sessid = $_COOKIE['PHPSESSID'];
         }
@@ -58,5 +59,6 @@ function abd_my_session_start()
         session_start();
 
         return true;
+    }
 }
 abd_my_session_start();
