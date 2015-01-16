@@ -1065,7 +1065,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								log("Could not find TinyMCE editor instances!");
 								displayNotification(
 									'error',
-									'Unexpected WordPress error! tinyMCE is not defined.'
+									'WordPress error! tinyMCE is not defined.'
 								);
 								return;
 							}
