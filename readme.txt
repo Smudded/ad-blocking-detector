@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9
 Tested up to: 4.1
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,9 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Changelog ==
+= 2.2.7 =
+* Notify users about the rare, but dreaded, "tinyMCE is not defined" error, when it occurs, instead of failing silently.
+* Attempt fix for "tinyMCE is not defined" errors.
 = 2.2.6 =
 * Fix PHP warnings and errors.
 = 2.2.5 =
