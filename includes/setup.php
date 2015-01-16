@@ -58,6 +58,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				wp_enqueue_script( 'jquery' );
 				wp_enqueue_script( 'jquery-ui-core' );
 				wp_enqueue_script( 'jquery-ui-dialog' );
+				wp_enqueue_script( 'tiny_mce' );
 			}
 			public static function enqueue_helper_public_js() {
 				wp_enqueue_script( 'jquery' );

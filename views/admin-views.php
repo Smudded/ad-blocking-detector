@@ -1058,7 +1058,17 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							//	We are using tinyMCE form fields... these do not work
 							//	normally when trying to get data from them without
 							//	doing something first... so do that something
-							tinyMCE.triggerSave();
+							if ( typeof tinyMCE != "undefined" ) {
+								tinyMCE.triggerSave();
+							}
+							else {
+								log("Could not find TinyMCE editor instances!");
+								displayNotification(
+									'error',
+									'Unexpected WordPress error! tinyMCE is not defined.'
+								);
+								return;
+							}
 
 
 							//	If we're here, then the fields are okay to submit.
@@ -1345,7 +1355,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							}
 
 							return data;
-						}
+						}						
 
 						/**********************************************
 						***********************************************
