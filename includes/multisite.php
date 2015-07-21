@@ -4,9 +4,7 @@
  * class... because multisite is a pain-in-the-ass
  */
 
-if( !session_id() ) {
-	session_start();
-}
+abd_my_session_start();	//	Make sure we have a $_SESSION.  It's absolutely necessary for parts of this.
 
 
 
@@ -38,59 +36,6 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 		//		http://www.onextrapixel.com/2013/01/08/how-to-properly-code-your-plugin-for-a-wordpress-multisite/
 		//			Another article with plugin design considerations and a few
 		//			good examples.  Still not comprehensive, but better than nothing.
-
-
-
-
-		/////////////////////////////////
-		/// Workflow Easing Functions ///
-		/////////////////////////////////
-
-		/**
-		 * Occasionally, such as with AJAX action PHP files, the current multisite
-		 * status functions don't respond appropriately. If this happens, it would
-		 * be useful to cache the value from a previous page/step and then retrieve
-		 * it later, when appropriate.  This function caches the context in a
-		 * $_SESSION variable for later retrieval using get_current_context()
-		 */
-		public static function set_current_context() {
-			$_SESSION['abd_multisite_data'] = array(
-				'is_in_network_admin' => self::is_in_network_admin(),
-				'is_this_a_multisite' => self::is_this_a_multisite(),
-				'is_plugin_active_network_wide' => self::is_plugin_active_network_wide(),
-
-				'current_blog_id' => self::get_current_blog_id()
-			);
-		}
-
-		/**
-		 * Looks for a previously cached multisite context variable (see
-		 * set_current_context()), and returns an associative array with
-		 * each key equal to the corresponding function name from this
-		 * class.  If no context was cached, then it returns the current
-		 * context in the ARRAY_A form.
-		 *
-		 * Example:
-		 * 	returnedarray['is_in_network_admin'] is the cached value of
-		 * 		ABD_Multisite::is_in_network_admin()
-		 *
-		 * @param boolean refresh Whether to reset the cache with current user
-		 * context data first.
-		 * @return ARRAY_A An associative array containing the current context.
-		 */
-		public static function get_current_context( $refresh = false ) {
-			if ( $refresh || !array_key_exists( 'abd_multisite_data', $_SESSION ) ) {
-				//	No context available or we want to update it... let's set it
-				//	and try again.
-				self::set_current_context();
-
-				return self::get_current_context();
-			}
-
-			//	Okay, then we have the context
-			return $_SESSION['abd_multisite_data'];
-		}
-
 
 
 		////////////////////////////////////////////
@@ -160,6 +105,39 @@ if ( !class_exists( 'ABD_Multisite' ) ) {
 			}
 
 			return 1;
+		}
+
+
+		/**
+		 * Wrappers around WordPress multisite functions add_blog_option(), update_blog_option(),
+		 * delete_blog_option(), and get_blog_option that don't die miserably if the user isn't
+		 * using Multisite.  These functions call the non _blog_ versions of those functions
+		 * if they don't exist.  For example, get_blog_option() will call get_option() if 
+		 * get_blog_option() is not defined.
+		 */
+		public static function update_blog_option( $id, $option, $value ) {
+			if( function_exists( 'update_blog_option' ) ) {
+				return update_blog_option( $id, $option, $value );
+			}
+			return update_option( $option, $value );
+		}
+		public static function get_blog_option( $id, $option, $default=false ) {
+			if( function_exists( 'get_blog_option' ) ) {
+				return get_blog_option( $id, $option, $default );
+			}
+			return get_option( $option, $default );
+		}
+		public static function add_blog_option( $id, $option, $value ) {
+			if( function_exists( 'add_blog_option' ) ) {
+				return add_blog_option( $id, $option, $default );
+			}
+			return add_option( $option, $default );
+		}
+		public static function delete_blog_option( $id, $option ) {
+			if( function_exists( 'delete_blog_option' ) ) {
+				return delete_blog_option( $id, $option );
+			}
+			return delete_option( $option );
 		}
 	}	//	end class
 }	//	end if (  !class_exists( ...

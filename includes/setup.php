@@ -4,19 +4,18 @@
  * register, and other related WordPress items.
  */
 
-require_once( ABD_ROOT_PATH . "includes/ajax-actions.php" );
-require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
+require_once( ABD_ROOT_PATH . 'includes/log.php' );
+require_once( ABD_ROOT_PATH . 'includes/wpsm/settings-manager.php' );
+require_once( ABD_ROOT_PATH . 'includes/anti-adblock.php' );
+require_once( ABD_ROOT_PATH . 'views/admin-views.php' );
+require_once( ABD_ROOT_PATH . 'views/public-views.php' );
 require_once( ABD_ROOT_PATH . "includes/widget.php" );
-
+require_once( ABD_ROOT_PATH . "includes/click-handler.php" );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
-		protected static $version = '2.1.1';
-
 		/**
-		 * Registers and enqueues all CSS and JavaScript.
-		 * @todo If minimum PHP version for WordPress hits 5.3.0, switch to
-		 * anonymous functions in add_action calls: http://goo.gl/pZnUYV
+		 * Registers and enqueues all CSS and JavaScript. 
 		 */
 		protected static function enqueue() {
 			//	Enqueue admin CSS
@@ -31,43 +30,118 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			add_action( 'wp_enqueue_scripts',
 				array( 'ABD_Setup', 'enqueue_helper_public_js' ) );
 
-			//	Add AJAX listeners
-			add_action( 'wp_ajax_abd_ajax',
-				array( 'ABD_Ajax_Actions', 'navigate' ) );
-
-
 			//	Add fake ads to footer
 			add_action( 'wp_footer',
+				array( 'ABD_Setup', 'enqueue_helper_footer' ), 501 );
+			add_action( 'admin_footer',
 				array( 'ABD_Setup', 'enqueue_helper_footer' ), 501 );
 
 			//	Add admin notices as appropriate
 			self::enqueue_helper_admin_notices();
 		}
 			public static function enqueue_helper_admin_css() {
-				wp_register_style( 'abd-admin-css',
-					ABD_ROOT_URL . 'assets/css/admin.css' );
+				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers
+				//	from blocking our assets. If it exists, use those files. Otherwise,
+				//	use ours.
+				if( defined( 'ABDBLC_ROOT_URL' ) ) {
+					//	Then our plugin is loaded because it defines this constant.
+					$prefix = ABDBLC_ROOT_URL;
+				}
+				else {
+					$prefix = ABD_ROOT_URL;
+				}
 
+				wp_register_style( 'abd-admin-css',
+					$prefix . 'assets/css/admin.css' );
 				wp_enqueue_style( 'abd-admin-css' );
 
+
+				wp_register_style( 'abd-admin-codemirror-css',
+					$prefix . 'assets/js/codemirror/lib/codemirror.css' );
+				wp_enqueue_style( 'abd-admin-codemirror-css' );
+
+
+				//	jQuery UI theme.
 				wp_enqueue_style('abd-admin-jquery-ui-css',
-                	ABD_ROOT_URL . 'assets/css/jquery/excite-bike-theme/jquery-ui.min.css',
-                	false
-               	 );
+	               	$prefix . 'assets/css/jquery/smoothness-theme/jquery-ui.min.css',
+	               	false
+	            );
 			}
 			public static function enqueue_helper_admin_js() {
+				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers
+				//	from blocking our assets. If it exists, use those files. Otherwise,
+				//	use ours.
+				if( defined( 'ABDBLC_ROOT_URL' ) ) {
+					//	Then our plugin is loaded because it defines this constant.
+					$prefix = ABDBLC_ROOT_URL;
+				}
+				else {
+					$prefix = ABD_ROOT_URL;
+				}
+
+				//	Now do the enqueueing
 				wp_enqueue_script( 'jquery' );
 				wp_enqueue_script( 'jquery-ui-core' );
 				wp_enqueue_script( 'jquery-ui-dialog' );
+				wp_enqueue_script( 'jquery-ui-accordion' );
 				wp_enqueue_script( 'tiny_mce' );
+				
+
+				// Ad Blocking Detector
+				wp_enqueue_script( 'abd-adblock-detector',
+					$prefix . 'assets/js/adblock-detector.min.js', array('jquery') );
+				wp_enqueue_script( 'abd-fake-ad',
+					$prefix . 'assets/js/advertisement.min.js' );
+				
+
+				//	CodeMirror
+				wp_enqueue_script( 'abd-codemirror',
+					$prefix . 'assets/js/codemirror/lib/codemirror.js', array('jquery') );
+				wp_enqueue_script( 'abd-codemirror-mode-css',
+					$prefix . 'assets/js/codemirror/mode/css/css.js',
+					'abd-codemirror' );
+				wp_enqueue_script( 'abd-codemirror-mode-xml',
+					$prefix . 'assets/js/codemirror/mode/xml/xml.js',
+					'abd-codemirror' );
+				wp_enqueue_script( 'abd-codemirror-mode-javascript',
+					$prefix . 'assets/js/codemirror/mode/javascript/javascript.js',
+					'abd-codemirror' );
+				wp_enqueue_script( 'abd-codemirror-mode-htmlmixed',
+					$prefix . 'assets/js/codemirror/mode/htmlmixed/htmlmixed.js',
+					'abd-codemirror' );
+
+
+				//	Masonry
+				wp_enqueue_script( 'abd-masonry',
+					$prefix . 'assets/js/jquery.masonry.min.js',
+					'jquery' );
+
+				wp_enqueue_script( 'abd-admin-view',
+					$prefix . 'assets/js/admin-view.js', array('jquery') );
+				wp_localize_script( 'abd-admin-view', 'objectL10n', ABD_Admin_Views::get_js_localization_array() );
 			}
-			public static function enqueue_helper_public_js() {
+			public static function enqueue_helper_public_js( $prefix = ABD_ROOT_URL ) {
+				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers
+				//	from blocking our assets. If it exists, use those files. Otherwise,
+				//	use ours.
+				if( defined( 'ABDBLC_ROOT_URL' ) ) {
+					//	Then our plugin is loaded because it defines this constant.
+					$prefix = ABDBLC_ROOT_URL;
+				}
+				else {
+					$prefix = ABD_ROOT_URL;
+				}
+
+				//	Now do the enqueueing
 				wp_enqueue_script( 'jquery' );
 				wp_enqueue_script( 'abd-adblock-detector',
-					ABD_ROOT_URL . 'assets/js/adblock-detector.min.js' );
+					$prefix . 'assets/js/adblock-detector.min.js', array('jquery') );
 				wp_enqueue_script( 'abd-fake-ad',
-					ABD_ROOT_URL . 'assets/js/advertisement.min.js' );
+					$prefix . 'assets/js/advertisement.min.js' );
 			}
 			public static function enqueue_helper_footer() {
+				$abd_settings = ABD_Database::get_settings( true );
+
 				//	We need a fake iframe URL.  Ideally, this is to some completely random
 				//	location on a site that doesn't exist.  However, SSL users will experience
 				//	content warnings on their site if we do that.  For them, it would be best if
@@ -83,39 +157,74 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					$sec = 'security=\"restricted\" sandbox=\"\"';
 				}
 				else {
-					$iframe_url = "http://exadwese.us/adserver/adlogger_tracker.php";
+					$iframe_url = "http://YHrSUDwvRGxPpWyM-ad.us/adserver/adlogger_tracker.php";
 					$sec = '';
 				}
-				?>
 
+				if( !empty( $abd_settings['iframe_url'] ) ) {
+					$iframe_url = $abd_settings['iframe_url'];					
+				}
+
+
+
+				//	Okay, our global user-defined wrapper css selectors may be empty... however, 
+				//	it will come back as an JSON encoded array with one empty string... [""]
+				//	We don't want this... this should mean utterly blank
+				if( $abd_settings['user_defined_selectors'] == '[""]' ) {
+					$abd_settings['user_defined_selectors'] = '';
+				}
+				
+				?>
 				<script type="text/javascript">
-					(function() {
-						//	Insert iframe only if we can prevent it from frame busting simply.
-						//	We prevent frame busting using either the security="restricted" or sandbox""
-						//	attributes in the iframe tag.  So, check if we can do that!
-						var frm = document.createElement('iframe');
-						if( 'sandbox' in frm || 'security' in frm ) {
-							//	Okay, we can use the iframe... Here's the HTML we want:
-							//	<div
-							//		id='abd-ad-iframe-wrapper'
-							//		style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
-							//
-							//		<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" security="restricted" sandbox="" style="height: 728px; width: 90px;"></iframe>
-							//	</div>
-							//
-							//	So, output it using document.write()
-							document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" <?php echo $sec; ?> style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
-						}
-					})();
+					<?php
+					if( $abd_settings['enable_iframe'] == 'yes' || $abd_settings['enable_iframe'] == '' ) {
+						?>
+						(function() {
+							//	Insert iframe only if we can prevent it from frame busting simply.
+							//	We prevent frame busting using either the security="restricted" or sandbox""
+							//	attributes in the iframe tag.  So, check if we can do that!
+							var frm = document.createElement('iframe');
+							if( 'sandbox' in frm || 'security' in frm ) {
+								//	Okay, we can use the iframe... Here's the HTML we want:
+								//	<div
+								//		id='abd-ad-iframe-wrapper'
+								//		style="position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;">
+								//
+								//		<iframe id="abd-ad-iframe" src="<?php echo $iframe_url; ?>" security="restricted" sandbox="" style="height: 728px; width: 90px;"></iframe>
+								//	</div>
+								//
+								//	So, output it using document.write()
+								document.write("<div id='abd-ad-iframe-wrapper' style=\"position: fixed !important; bottom: -999em !important; left: -999em !important; width: 0 !important; height: 0 !important; overflow: hidden !important;\"><iframe id=\"abd-ad-iframe\" src=\"<?php echo $iframe_url; ?>\" <?php echo $sec; ?> style=\"height: 728px; width: 90px;\"><\/iframe><\/div>");
+							}
+						})();
+						<?php
+					}
+					?>
+
+					var ABDSettings = {
+						cssSelectors: '<?php echo $abd_settings['user_defined_selectors']; ?>',
+						enableIframe: "<?php echo $abd_settings['enable_iframe']; ?>",
+						enableDiv:    "<?php echo $abd_settings['enable_div']; ?>",
+						enableJsFile: "<?php echo $abd_settings['enable_js_file']; ?>"
+					}
+
+					//	Make sure ABDSettings.cssSelectors is an array... might be a string
+					if(typeof ABDSettings.cssSelectors == 'string') {
+						ABDSettings.cssSelectors = [ABDSettings.cssSelectors];
+					}
 				</script>
 
-				<div
-					id="abd-ad-div"
-					style="position: fixed !important; bottom: -999em !important; left: -999em !important; display: block !important; visibility: visible !important; width: 0 !important; height: 0 !important;">
-
-					Advertisment ad adsense adlogger
-				</div>
 				<?php
+				if( $abd_settings['enable_div'] == 'yes' || $abd_settings['enable_div'] == '' ) {
+					?>
+					<div
+						id="abd-ad-div"
+						style="position: fixed !important; bottom: -999em !important; left: -999em !important; display: block !important; visibility: visible !important; width: 0 !important; height: 0 !important;">
+
+						Advertisment ad adsense adlogger
+					</div>
+					<?php
+				}
 			}
 			public static function enqueue_helper_admin_notices( $force = false, $update_delay = true ) {
 				/////////////////////////
@@ -127,7 +236,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	I'm thinking 1 week initially, then again every year.
 				//	The timeout is stored in the database.
 				$current_time = strtotime( 'now' );
-				$stored_time = get_option( 'abd_feedback_nag_time' );
+				$stored_time = get_site_option( 'abd_feedback_nag_time' );
 
 				//	Did we get anything from the database?  If not, we'll need
 				//	to set a default delay later, so set a flag.
@@ -148,7 +257,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				if( $set_default ) {
 					//	No nag date in the database. Add one for 1 week from today then return.
 					if( $update_delay ) {
-						update_option( 'abd_feedback_nag_time',
+						update_site_option( 'abd_feedback_nag_time',
 							strtotime( '+1 week' ) );
 					}
 					return;
@@ -156,13 +265,13 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 				//	Okay, check if we need to nag now.
 				if( $current_time > $stored_time ) {
-					//	It is passed the stored nag date, so nag damnit.
-					add_action( 'admin_notices',
-						array( 'ABD_Admin_Views', 'rate_plugin_nag' ) );
+					//	It is past the stored nag date, so nag damnit.
+					// add_action( 'admin_notices',
+					// 	array( 'ABD_Admin_Views', 'rate_plugin_nag' ) );
 
 					//	Now delay it a year.
 					if( $update_delay ) {
-						update_option( 'abd_feedback_nag_time',
+						update_site_option( 'abd_feedback_nag_time',
 							strtotime( '+1 year' ) );
 					}
 				}
@@ -180,20 +289,20 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				if( $current_time < $end_date_for_update_news ) {
 					//	It's within the window to show the notice.
 					//	Have we already showed it?
-					$update_notice_date = get_option( 'abd_update_news_showed' );
+					$update_notice_date = get_site_option( 'abd_update_news_showed' );
 					if( !$update_notice_date ) {
 						//	No, we haven't already shown it.  So, show it!
 						add_action( 'admin_notices',
 							array( 'ABD_Admin_Views', 'plugin_update_news' ) );
 
-						update_option( 'abd_update_news_showed', $current_time );
+						update_site_option( 'abd_update_news_showed', $current_time );
 					}
 				}
 				else {
 					//	It's not within the window. Let's make sure we remove
 					//	all update notice traces so we don't interfere with future
 					//	ones.
-					delete_option( 'abd_update_news_showed' );
+					delete_site_option( 'abd_update_news_showed' );
 				}
 			}
 
@@ -223,98 +332,51 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	Widgets
 			add_action( 'widgets_init',
 				array( 'ABD_Setup', 'hooks_helper_widget' ) );
+
+
+			//	Register WPSM Settings
+			add_action( 'admin_init', 
+				array( 'ABD_Admin_Views', 'wpsm_settings' ) );
+
+
+			//	Button Click and Form Handlers
+			add_action( 'admin_post_create_bcc_plugin', 
+				array( 'ABD_Click_Handler', 'create_bcc_plugin' ) );
+			add_action( 'admin_post_reset_bcc_plugin_name', 
+				array( 'ABD_Click_Handler', 'reset_bcc_plugin_name' ) );
+			add_action( 'admin_post_delete_bcc_plugin', 
+				array( 'ABD_Click_Handler', 'delete_bcc_plugin' ) );
+			add_action( 'admin_post_delete_manual_bcc_plugin',
+				array( 'ABD_Click_Handler', 'delete_manual_bcc_plugin' ) );
+			add_action( 'admin_post_clear_log',
+				array( 'ABD_Click_Handler', 'clear_log' ) );
+			add_action( 'admin_post_delete_shortcode',
+				array( 'ABD_Click_Handler', 'delete_shortcode' ) );
+
+			//	Admin notices
+			add_action( 'admin_notices', 
+				array( 'ABD_Admin_Views', 'add_action_notices' ) );
+
+			
 		}
 			public static function hooks_helper_activation() {
-				global $wpdb;
+				ABD_Log::info( 'Plugin activation.' );
 
-				//	We're going to be doing some database manipulation, include
-				//	the database class
-				require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
-
-
-				//	Will contain SQL queries for any tables we need to create
-				//	ARRAY_N: each value = SQL query
-				$tables_to_create = array();
-
-				//	Will contain SQL queries to add default values to the table
-				//	ARRAY_N: each value = SQL query
-				$shortcodes_to_add = array();
-
-				//	Will contain options to save in the database
-				//	ARRAY_A: 'option_name'=>'option_value'
-				$settings_to_add = array();
-
-
-
-				//	All right, now we need to create some default shortcodes if
-				//	we haven't before. If we have, then there should be an
-				//	option set.
-				if ( get_option( 'abd_defaults_input' ) != true ) {
-					$shortcodes_to_add[] = array(
-						'name' => 'Sample Shortcode',
-						'noadblock' => '<div style="text-align: center; padding: 10px;border-radius: 15px; background-color: #585858; color: #FFFFFF; width: 300px; height: 250px"><p><b>Ad Blocking Detector</b></p><p>Right now, the plugin is not detecting any ad blocking browser plugin/extension/add-on.</p></div>',
-						'adblock' => '<div style="text-align: center; padding: 10px;border-radius: 15px; background-color: #585858; color: #FFFFFF; width: 300px; height: 250px"><p><b>Ad Blocking Detector</b></p><p>CAUGHT! The plugin has detected an ad blocking browser plugin/extension/add-on.</p></div>',
-
-						// Must set network_wide explicitly so that it isn't
-						// auto-determined when we insert the shortcode (see
-						// ABD_Database::insert_shortcode in db-manip.php).
-						'network_wide' => true
-					);
-
-					//	Now we insert the sample shortcodes
-					foreach ( $shortcodes_to_add as $data ) {
-						ABD_Database::insert_shortcode( $data );
-					}
-
-					//	And we update the option in the database to reflect new
-					//	defaults
-					update_option( 'abd_defaults_input', true );
-				}
-
-
-				//	And lastly, if we need to put in any default settings, do
-				//	so now.  Here is the format:
-				//	$settings_to_add['setting_name'] = setting_value;
-
-
-
-				//	And now loop through and input them
-				foreach ( $settings_to_add as $name=>$value ) {
-					//	Let's use add_option so that we don't clobber any
-					//	settings already in the database. Also, if this is
-					//	network-wide in a multisite, we need to put it in the
-					//	main network database.  Otherwise, it can just go in the
-					//	normal one.
-					if ( is_network_admin() ) {
-						add_site_option( $name, $value );
-					}
-					else {
-						add_option( $name, $value );
-					}
-				}
+				//	Try to create the fallback anti-adblock plugin
+				ABD_Anti_Adblock::create_bcc_plugin();
 			}
 			public static function hooks_helper_deactivation() {
-
+				ABD_Log::info( 'Plugin deactivation.' );
 			}
 			public static function hooks_helper_uninstall() {
 				self::nuke_plugin();
 			}
 				protected static function nuke_plugin() {
-					global $wpdb;
+					ABD_Database::nuke_all_options();
+					ABD_Database::drop_v2_table();	//	Compatibility for upgraded v2 installs
 
-					//	Drop the table
-					$sql = "DROP TABLE IF EXISTS " . ABD_Database::get_table_name() . ";";
-					$wpdb->query( $sql );
-
-					//	Clear all the options
-					delete_option( 'abd_defaults_input' );
-					delete_site_option( 'abd_defaults_input' );
-
-					delete_option( 'abd_cur_db_version' );
-					delete_site_option( 'abd_cur_db_version' );
-
-					delete_option( 'abd_current_version' );
-					delete_site_option( 'abd_current_version' );
+					ABD_Anti_Adblock::delete_bcc_plugin();
+					ABD_Anti_Adblock::delete_bcc_manual_plugin();
 				}
 			public static function hooks_helper_new_multisite_blog( $blog_id ) {
 				//	$blog_id is passed automatically for wpmu_new_blog
@@ -345,8 +407,9 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	Now we can try adding the menu
 			if ( function_exists( 'is_plugin_active_for_network' ) &&
 				is_plugin_active_for_network( ABD_SUBDIR_AND_FILE ) ) {
-				add_action( 'network_admin_menu',
-					array( 'ABD_Setup', 'menus_helper' ) );
+				
+				// add_action( 'network_admin_menu',
+				// 	array( 'ABD_Setup', 'menus_helper' ) );
 			}
 		}
 			public static function menus_helper() {
@@ -357,7 +420,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					'ABD Dashboard',	//	Title tag value
 					'Ad Blocking',	//	Menu Text
 					'administrator',	//	Required privileges/capability
-					'adblock-detector',	//	Menu Slug
+					'ad-blocking-detector',	//	Menu Slug
 					array( 'ABD_Admin_Views', 'output_main' ), // Content Function
 					'dashicons-forms'	//	Menu Icon (http://goo.gl/vN3FjZ)
 				);
@@ -379,10 +442,12 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 		}
 			public static function shortcodes_helper( $atts ) {
 				extract( shortcode_atts( array(
-					'id' => null
+					'id' => null,
+					'adblock' => '',
+					'noadblock' => ''
 				 ), $atts ) );
 
-				return ABD_Public_Views::get_shortcode_output( $id );
+				return ABD_Public_Views::get_shortcode_output( $id, $noadblock, $adblock );
 			}
 
 
@@ -405,7 +470,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			public static function plugin_list_links_helper( $old_links ) {
 				$new_links = array(
 					//	Settings
-					'<a href="' . admin_url( 'options-general.php?page=adblock-detector' ) .'">Settings</a>'
+					'<a href="' . admin_url( 'admin.php?page=ad-blocking-detector' ) .'">Settings</a>'
 				);
 
 				return array_merge( $new_links, $old_links );
@@ -417,43 +482,199 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 		 * upgrade code.
 		 */
 		public static function upgrade() {
+			/**
+			 *     )     (                    (     (                      )     ) (     
+			 *	 ( /(     )\ )        (        )\ )  )\ )   (     (      ( /(  ( /( )\ )  
+			 *	 )\())(  (()/((     ( )\ (    (()/( (()/(   )\    )\ )   )\()) )\()|()/(  
+			 *	((_)\ )\  /(_))\    )((_))\    /(_)) /(_)|(((_)( (()/(  ((_)\ ((_)\ /(_)) 
+			 *	 _((_|(_)(_))((_)  ((_)_((_)  (_))_ (_))  )\ _ )\ /(_))_  ((_) _((_|_))   
+			 *	| || | __| _ \ __|  | _ ) __|  |   \| _ \   /_\  / __|/ _ \| \| / __|  
+			 *	| __ | _||   / _|   | _ \ _|   | |) |   /  / _ \| (_ | (_) | .` \__ \  
+			 *	|_||_|___|_|_\___|  |___/___|  |___/|_|_\ /_/ \_\\___|\___/|_|\_|___/  
+             *                                                            
+			 * 
+			 * Okay, here's the deal.  WordPress doesn't have a built-in method for detecting
+			 * plugin updates, like it does activation for example.  Even if it did, that 
+			 * would be problematic because it wouldn't take into account file overwrites
+			 * that can effectively upgrade the plugin (e.g. FTP plugin updates)
+			 *
+			 * So, upgrade detection is entirely ours to manage.  The first tool used 
+			 * to manage this is a constant, named ABD_VERSION, defined at the 
+			 * top of the file which contains the current plugin version number (e.g. "3.0.0")
+			 * as a string.  This constant MUST BE UPDATED EVERY TIME THE VERSION CHANGES or it
+			 * will break this homebrew upgrade detection, as well as other parts of the plugin
+			 * that depend on it.
+			 *
+			 * The second tool is a WordPress option, entitled 'abd_current_version' which,
+			 * is updated to match the ABD_VERSION constant.  
+			 * 
+			 * This function is responsible for keeping this option up to date.  However, here's
+			 * the cool part.  Before this function updates
+			 * the database option with the new ABD_VERSION number, there will be a discrepancy 
+			 * between the option and ABD_VERSION.  The option will contain the last ABD_VERSION
+			 * written to the database, which is the version number of the last installed
+			 * plugin version.  So, before we update the database option, we can check
+			 * for this discrepancy, and, if it exists, exploit it.
+			 *
+			 * Based on the version number, we can take specific actions in going from one
+			 * version to another, or just some generic action that occurs in every update.
+			 * 
+			 *
+			 * ********************************NOTE**************************************** 
+			 * Prior to version 3.0.0, the abd_current_version option and
+			 * ABD_VERSION constant were not synchronized with the plugin version.  Instead,
+			 * they represented a sort of database version, and were only changed when the 
+			 * plugin needed to do something to the database.
+			 *
+			 * None of the versions less than 2.0.0 used this at all.
+			 *
+			 * As such, do not rely on precise version numbering prior to version 3.0.0.  
+			 * In version 3.0.0+, these should remain in sync with the plugin version. Before
+			 * that, the best you can hope for is major version detection by checking the
+			 * first number.  e.g. the following pseudo-ish-code:
+			 * $old_version = get_site_option( 'abd_current_version' );
+			 * $major_old_version = $old_version[0];	//	First character in version string
+			 * if( $major_old_version == 3 ) {
+			 * 		//	Version 3
+			 * 		//	Specific version comparisons are okay here
+			 * }
+			 * else if ( $major_old_version == 2 ) {
+			 * 		//	Version 2
+			 * 		//	No specific version comparisons should be relied on... v2 branch is all we know
+			 * }
+			 * else {
+			 * 		//	Something besides Versions 2 or 3... if plugin is still in version
+			 * 		//	3 branch when you're reading this, then the only possibility is Version
+			 * 		//	1.  If it's in Version 4+, then you'll need another conditional. 
+			 * 		//	Update the comments FFS!
+			 * }
+			 * ********************************END NOTE************************************
+			 */
+
+			/**
+			 * An associative array where the key is a plugin version, and the value is
+			 * a function, passed to admin_notices WordPress action that outputs the content
+			 * of an upgrade message for that version.  This will be checked later on,
+			 * and if we are upgrading, and there is a mapped function, it will be tied
+			 * to an admin_notices action.
+			 */
+			$notification_map = array(
+				'3.0.0'  => array( 'ABD_Admin_Views', 'v2_to_v3_migration_notice' )
+			);	//	Maps a version number to a function to call with an upgrade notice.			
+			
+
 			//	Does the stored plugin version equal the current version?
 			//	If so, then we shouldn't need to do anything.
 			//	If not, then we have to run through any upgrade processes.
-			if ( get_site_option( 'abd_current_version') != self::$version ) {
-				//	We're going to be using the dbDelta function, but we need
-				//	the appropriate file included to do so.
-				require_once ( ABSPATH . 'wp-admin/includes/upgrade.php' );
-				//	We're going to be doing some database manipulation, include
-				//	the database class
-				require_once ( ABD_ROOT_PATH . 'includes/db-manip.php' );
+			$upgrading_version = get_site_option( 'abd_current_version' );
+			if( !$upgrading_version ) {
+				ABD_Log::info( 'Checking whether plugin upgrade is needed. No version information stored in database. Assuming upgrade from version 2.2.8 (last stable release of v2 branch) required.' );
+				$upgrading_version = '2.2.8';
+			}
 
+			$upgrading_major_version = $upgrading_version[0];
+			$new_version = ABD_VERSION;
+			$new_major_version = $new_version[0];
 
+			if (  $upgrading_version != $new_version ) {
+				ABD_Log::info( 'Running plugin update. Old version: ' . $upgrading_version . ', new version: ' . $new_version );
+				///////////////////////////////
+				//	Do our updating here!!!	///
+				///////////////////////////////
 
-				//	Make sure the database configuration matches the needed
-				//	configuration by using dbDelta().
-				$tables_to_create[] = "CREATE TABLE `" . ABD_Database::get_table_name() . "` (
-					id mediumint(9) NOT NULL AUTO_INCREMENT,
-					name text NOT NULL,
-					noadblock text NOT NULL,
-					adblock text NOT NULL,
-					network_wide boolean NOT NULL DEFAULT 0,
-					blog_id mediumint(9) DEFAULT 1,
-					noadblock_count bigint(20) DEFAULT 0,
-					adblock_count bigint(20) DEFAULT 0,
-					noadblock_wpautop boolean NOT NULL DEFAULT 1,
-					adblock_wpautop boolean NOT NULL DEFAULT 1,
-					PRIMARY KEY (id)
-				);";
-
-				//	Okay, now we create the tables
-				foreach ( $tables_to_create as $sql ) {
-					dbDelta( $sql );
+				///////////////////////////////
+				//	MAJOR VERSION JUMPS 	//
+				//////////////////////////////
+				if( $upgrading_major_version != $new_major_version ) {
+					ABD_Log::info( 'Detecting major version jump from v' . $upgrading_major_version	. ' branch to v' . $new_major_version . ' branch.' );
+					
+					
+					//////////////////////////////
+					//	VERSION 2 -> VERSION 3	//
+					//////////////////////////////
+					//	If we're updating from version 2, run the database upgrade function
+					if( $upgrading_major_version == 2 ) {
+						ABD_Database::v2_to_v3_database_transfer();
+					}
+					
+					//////////////////////////////
+					//	VERSION 1 -> VERSION 3	//
+					//////////////////////////////
+					else if( $upgrading_major_version < 2 ) {
+						//	Damn... that's old! I don't plan on supporting that version.
+						//	Show special notice about how terrible it is that version 2 was
+						//	skipped and how nothing was transferred... they're starting
+						//	with a clean slate.
+						add_action( 'network_admin_notices', 
+							array( 'ABD_Admin_Views', 'v1_to_v3_migration_notice' ) );
+						add_action( 'admin_notices',
+							array( 'ABD_Admin_Views', 'v1_to_v3_migration_notice' ) );
+					}
 				}
 
-				//	And we update the option in the database to reflect new
-				//	db version
-				update_site_option( 'abd_current_version', self::$version );
+				//////////////////////////
+				//	ALL VERSION JUMPS	//
+				//////////////////////////
+				//	Update the Block List Countermeasure Plugin if automatic
+				$blcp_status = ABD_Anti_Adblock::bcc_plugin_status();
+				if( !$blcp_status['manual_plugin_exists'] ) {
+					//	Auto upgrade it
+					ABD_Log::info( 'Attempting upgrade of automatic Block List Countermeasure plugin.' );
+					ABD_Anti_Adblock::create_bcc_plugin();
+				}
+				else {
+					ABD_Log::info( 'Manual Block List Countermeasure plugin update needed!' );
+
+					//	Notify user
+					add_action( 'admin_notices',
+						array( 'ABD_Admin_Views', 'update_manual_blcp_notice' ) );
+
+					//	Deactivate manual plugin
+					if( defined( ABDBLC_SUBDIR_AND_FILE ) ) {	//	Block List Countermeasure plugin is activated
+						deactivate_plugins( ABDBLC_SUBDIR_AND_FILE );
+					}
+				}
+
+				
+				//	And we update the option in the database to reflect that the upgrade was processed
+				update_site_option( 'abd_current_version', ABD_VERSION );
+			}	//	end if (  $upgrading_version != $new_version ) {
+
+
+			//////////////////////////////////////
+			//	UPGRADE NOTIFICATION MANAGEMENT	//
+			//////////////////////////////////////
+			/**
+			 * Okay, here's what sucks. For non-multisite setups, this would be easy.  Just
+			 * flash the message after an update.  The problem is, that in multisites, only
+			 * the person updating the plugins would see a notification that we just tossed
+			 * into the admin_notices action.  We want every site administrator, AND the 
+			 * plugin updater to see our notices.  So, we need to get sneaky.  
+			 *
+			 * We're going to create an option (not a network wide option) that stores the
+			 * version number that last showed a notification update.  If we have a notification
+			 * in our $notification_map for this version, and this version does not match the
+			 * verison in the option, then we need to display the message.
+			 *
+			 * After display our message, we will update the option with this version.  This
+			 * means every site acts independently, and it will not splash up only once immediately
+			 * after the plugin is updated for whoever happens to see it.  It will show on every
+			 * site the first time somebody goes to that site's dashboard after the update.
+			 */
+			$last_notice_version = get_option( 'abd_last_upgrade_notice_seen', '0.0.0' );
+
+			if( array_key_exists( ABD_VERSION, $notification_map ) && 
+				version_compare( $last_notice_version, ABD_VERSION ) != 0 ) {	
+				//	Version mismatch and notification message available for this version
+				//	Display the notifications
+				ABD_Log::info( 'Displaying upgrade notice for plugin version ' . ABD_VERSION . '.' );
+				if( ABD_Multisite::is_this_a_multisite() && ABD_Multisite::is_in_network_admin() ) {	//	Multisite
+					add_action( 'network_admin_notices', $notification_map[ABD_VERSION] );
+				}
+				add_action( 'admin_notices', $notification_map[ABD_VERSION] );
+
+				//	Update our option
+				update_option( 'abd_last_upgrade_notice_seen', ABD_VERSION );
 			}
 		}
 

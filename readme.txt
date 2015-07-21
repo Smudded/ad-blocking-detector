@@ -1,10 +1,10 @@
 === Ad Blocking Detector ===
 Contributors: jtmorris
-Donate link: http://adblockingdetector.jtmorris.net/
+Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
-Requires at least: 3.9
-Tested up to: 4.1
-Stable tag: 2.2.8
+Requires at least: 4.2
+Tested up to: 4.2
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Tired of missed opportunities and empty spaces because of pesky ad blocking brow
 add-ons, and plugins? Would you like to determine which of your site visitors use ad blockers and
 do something about it? Then this highly rated plugin is for you!
 
-Use the simple [built-in tool](http://adblockingdetector.jtmorris.net/using-ad-blocking-detector/) to substitute
+Use the simple [built-in tool](http://adblockingdetector.johnmorris.me/how-to-display-a-simple-ad-using-alternative-content-shortcodes/) to substitute
 alternative content in place of blocked ads.  Or, hook
 into the ad block detection mechanism with CSS and JavaScript and customize your site any way you want!
 
@@ -24,9 +24,9 @@ into the ad block detection mechanism with CSS and JavaScript and customize your
 This plugin includes a tool for specifying two alternative collections of content.  One collection
 to display to visitors without ad blockers (such as an ad).  The other to display to ad block
 wielding visitors (such as a message or image).
-Then, using the shortcode, [sidebar widget](http://adblockingdetector.jtmorris.net/new-feature-sidebar-widgets/),
+Then, using the shortcode, sidebar widget,
 or other method, let Ad Blocking Detector intelligently
-determine which to display to the user.  [Check out the demo](http://adblockingdetector.jtmorris.net/demo/) on the plugin’s
+determine which to display to the user.  [Check out the demo](http://adblockingdetector.johnmorris.me/demo/) on the plugin’s
 website, or [look at the
 screenshots](https://wordpress.org/plugins/ad-blocking-detector/screenshots/) for an example.
 
@@ -40,12 +40,12 @@ own purposes.  With this plugin, you can easily modify the appearance of your si
 JavaScript code based on the ad block detection results!  The sky is the limit!
 For ideas and information on how to use this power, look at the following articles on the plugin’s website.
 
-- [Combine CSS and Ad Blocking Detector](http://adblockingdetector.jtmorris.net/combine-css-ad-blocking-detector/)
-- [Unleash Your Inner Geek With JavaScript and Ad Blocking Detector](http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/)
+- [Combine CSS and Ad Blocking Detector](http://adblockingdetector.johnmorris.me/combine-css-and-ad-blocking-detector/)
+- [Combine JavaScript and Ad Blocking Detector](http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/)
 
 = Features =
-- Detects all major ad blocking browser extensions on all major web browsers.  Including AdBlock Plus!
-- Full [compatibility with WordPress multisite](http://adblockingdetector.jtmorris.net/using-ad-blocking-detector-multisite/) networks!
+- Detects all major ad blocking browser extensions on all major web browsers.  Including AdBlock Plus and Ghostery!
+- Compatible with WordPress multisite networks!
 - Regular feature enhancements and additions!
 - Excellent support from the plugin developer.
 
@@ -67,31 +67,15 @@ in the Add New plugin section of your dashboard.
 
 
 = From Source =
-1. Visit the plugin's [GitHub repository](https://github.com/jtmorris/adblock-detector).
-1. Select the branch you want to download (leaving the default master branch is highly recommended).
+1. Visit the plugin's [GitHub repository](https://github.com/jtmorris/ad-blocking-detector).
+1. Select the branch you want to download (choosing a stable version branch is highly recommended).
 1. Click the download ZIP button on the lower right side of the page.
-1. Upload the contents of the adblock-detector-**branch name** directory to a directory named 'adblock-detector'
+1. Upload the contents of the ad-blocking-detector-**branch name** directory to a directory named 'ad-blocking-detector'
 in your WordPress site's './wp-content/plugins/' directory.
 1. Visit your WordPress site's Plugins menu in the admin section, and activate the newly listed
 Ad Blocking Detector plugin.
 
 == Frequently Asked Questions ==
-= How can I use a shortcode in sidebar widget? =
-You have two options.  The first and simplest is to use the [built-in sidebar widget](http://adblockingdetector.jtmorris.net/new-feature-sidebar-widgets/).  Simply
-edit your widgets, and add the Ad Blocking Detector widget.
-
-However, if you would prefer greater flexibility, you can copy and paste your desired shortcode into a
-Text widget added to your sidebar.
-
-
-Note: By default, WordPress does not parse shortcodes in text widgets.  You must enable that functionality manually.
-You can find instructions from the folks at WPBeginner.com
-[here](http://www.wpbeginner.com/wp-tutorials/how-to-use-shortcodes-in-your-wordpress-sidebar-widgets/).
-
-The short version is you must add the following code to your theme's *functions.php* file:
-`add_filter('widget_text', 'do_shortcode');`
-
-
 = How does this plugin treat visitors with JavaScript disabled? =
 At this time, this plugin does not treat disabled JavaScript as an ad blocker.
 If the visitor has JavaScript disabled, the plugin displays the content used
@@ -103,20 +87,19 @@ It was not designed to do so, but it is possible to replicate that behavior in a
 This plugin's purpose is to simply places alternative content in the space the ad would have displayed.
 
 If you want more information on how to replicate the obscuring of content, check out this blog post
-on the plugin's website: [http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/](http://adblockingdetector.jtmorris.net/unleash-your-inner-geek-with-javascript/)
+on the plugin's website: [http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/]http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/)
 
 
 = Why doesn't this plugin detect the _______________ ad blocker? =
 Not all ad blockers operate the same way.  This plugin was tested with the most common ad blockers, but it is
-possible I missed one.  If you find an ad blocker this plugin doesnt detect, [contact me](http://adblockingdetector.jtmorris.net/contact/) and let me know the
-ad blocker, web browser, and operating system you are using.  I will then investigate detecting it.
+possible I missed one.  If you find an ad blocker this plugin doesnt detect, visit the Report a Problem tab in the plugin's dashboard
+for information on testing and reporting undetected ad blockers.  I will then investigate detecting it.
 
 
 = Can this plugin integrate with other ad management plugins? =
-This plugin recognizes shortcodes from other sources.  Some ad management plugins, like the popular *[Ad Rotate](http://wordpress.org/plugins/adrotate/)* plugin, use
+This plugin recognizes shortcodes from other sources.  Some ad management plugins use
 shortcodes to output their ads.  You can use the shortcode generated by other plugins inside *Ad Block Detector*, allowing you
-to display ads from ad management plugins while harnessing the power of ad block detection.  You can find more information at the [plugin
-website](http://adblockingdetector.jtmorris.net/display-rotating-ads/).
+to display ads from ad management plugins while harnessing the power of ad block detection.
 
 
 = Why are certain items, like screenshots and banners, missing from the WordPress plugin repository page for this plugin? =
@@ -127,14 +110,23 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Screenshots ==
-1. Administration Dashboard for Ad Blocking Detector
-2. New Shortcode Form in Administration Dashboard
-3. Example Content in New Shortcode Form in Administration Dashbaord
-4. Demo of This Plugin **With** an Active Ad Blocker
-5. Demo of This Plugin **Without** an Active Ad Blocker
+1. Administration Dashboard (Getting Started Tab)
+2. Administration Dashboard (Manage Shortcodes Tab)
+3. Administration Dashboard (Add New Shortcode Tab)
+4. Administration Dashboard (Advanced Settings Tab)
+5. Administration Dashboard (Report a Problem Tab)
+6. Demo of Alternative Shortcode w/ Enabled Ad Blocker ([click here to test a live demo](http://adblockingdetector.johnmorris.me/demo/))
+7. Demo of Alternative Shortcode w/ Disabled Ad Blocker ([click here to test a live demo](http://adblockingdetector.johnmorris.me/demo/))
 
 
 == Changelog ==
+= 3.0.0 =
+* NEW FEATURES: [Block List Countermeasure](http://adblockingdetector.johnmorris.me/what-is-the-block-list-countermeasure-plugin/), [Detection Improvement Options (now detects Ghostery)](http://adblockingdetector.johnmorris.me/detection-improvement-user-defined-wrapper-css-selectors/)
+* Revamped user interface that more closely matches WordPress' styling, quashes several bugs, and supports more advanced features
+* Added numerous behavior customization options
+* Added troubleshooting information, support request guides, logging and reporting, and more to expedite the support process
+* Numerous bugs fixed, feature requests integrated, and improved the foundation for future features
+* Much more!
 = 2.2.8 =
 * Fix update issue.
 = 2.2.7 =
@@ -153,7 +145,7 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 = 2.2.1 =
 * Fixes https certificate errors. Hopefully.
 = 2.2.0 =
-* Included JavaScript events for developer tie-ins. [Click here for more info!](http://adblockingdetector.jtmorris.net/)
+* Included JavaScript events for developer tie-ins.
 * Fix typos and a bug introduced by last update.
 * Update plugin listing and tutorial/tip links.
 = 2.1.10 =
@@ -247,6 +239,8 @@ creating a whole new plugin listing.  If you want to see the screenshots and ban
 
 
 == Upgrade Notice ==
+= 3.0.0 =
+MASSIVE UPDATE! Lots of new features and improvements, numerous code improvements. As always, it is [highly recommended to test](http://lifeinthegrid.com/do-you-localhost-your-wordpress/) before installing major plugin updates!
 = 2.2.0 =
 Increases Ad Blocking Detector's capabilities allowing you to use ad block detection any way you want. Install the update to receive more information.
 = 2.1.9 =

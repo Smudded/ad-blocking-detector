@@ -1,0 +1,43 @@
+Hi John,
+
+I recently installed your plugin, Ad Blocking Detector, on my WordPress website, and encountered a problem.
+
+Whenever I click the "Get Shortcode" button on the Manage Shortcodes tab, nothing happens.  Per the instructions on the Report a Problem tab, here are the answers to the questions and included info:
+
+QUESTIONS:
+
+What am I clicking?
+    Get Shortcode button on Manage Shortcodes tab.
+What does nothing mean specifically?
+	Literally nothing.  Nothing happens at all.
+Have I noticed similar behavior elsewhere?
+	Nope. Only this button, only in your plugin.
+Does this problem occur in a different web browser too?
+	Yes.  Tried in Chrome and Firefox on my Windows desktop.
+
+
+INFORMATION:
+
+Operating System and Web Browser
+	Microsoft Windows 10, Google Chrome (latest update)
+
+
+Session Log
+	SESSION LOG
+	============
+	============
+
+	INFO      :: 06/12/15 @ 17:18:52 (+00:00 GMT) ::   Successfully created anti-adblock fallback plugin in directory eager-trick
+
+	DEBUG     :: 06/12/15 @ 17:18:51 (+00:00 GMT) ::   Request to delete directory that does not exist: C:\Users\John\Downloads\UniServerZ\www\wordpress-single\wp-content\plugins\ad-blocking-detector/../eager-trick
+
+	DEBUG     :: 06/12/15 @ 17:18:51 (+00:00 GMT) ::   Generated new anti-adblock fallback plugin name: eager-trick
+
+
+JavaScript Console
+	Screenshot link: http://1drv.ms/1IP4Tob
+
+
+Thanks,
+
+Jane Doe

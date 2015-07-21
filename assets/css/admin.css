@@ -1,267 +1,266 @@
-#ABD_sidebar,
-#ABD_content,
-#ABD_sidebar p,
-#ABD_content p {
-	font-size: 14px;
-	line-height: 150%;
+#abdwpsm_content, 
+#abdwpsm_content p {
+	font-size: 1em;
 }
 
-#ABD_sidebar {
-	font-size: .9em;
-
-	position: absolute;
-	top: 30px;
-	right: 30px;
-
-	width: 400px;
-
-	padding-left: 30px;
-	border-left: 2px solid #AAA;
+div.abdwpsm_display_description {
+	font-size: 1.15em;
 }
-	#ABD_sidebar div.ABD_sidebar_box,
-	div.ABD_footer_box {
-		margin-bottom: 25px;
-		padding-bottom: 25px;
 
-		border-top: 1px solid #AAA;
+#abdwpsm_content div.wp-editor-wrap {
+	max-width: 700px;
+}
+
+#abdwpsm_content textarea {
+	min-width: 600px;
+	min-height: 350px;
+}
+
+#abdwpsm_content div.CodeMirror {
+	width: 700px !important;
+
+	border: 1px solid #DDD;
+}
+
+#abdwpsm_content ul {
+	margin-left: 2em;
+	list-style-type: disc;
+	font-size: inherit;
+}
+
+
+.abd_dev_sig {
+	font-size: 0.9em;
+}
+	.abd_dev_sig span {
+		font-size: 1em;
+		font-weight: bold;
 	}
-	#ABD_sidebar h3 {
+
+.abd_failure_message {
+	color: #A00 !important;
+	font-weight: bold;
+}
+	ul.abd_failure_message:before,
+	ol.abd_failure_message:before,
+	li.abd_failure_message:before {
+		content: '\2717  ';
+		color: #F00;
+		margin-right: 8px;
+	}
+
+.abd_success_message {
+	color: #006B00 !important;
+	font-weight: normal;
+}
+	.abd_success_message:before {
+		content: '\2713  ';
+		color: #0C0;
+		margin-right: 8px;
+	}
+
+.abd_unknown_message {
+	color: #B58C09 !important;
+}
+	.abd_unknown_message:before {
+		content: '?  ';
+		margin-right: 8px;
+	}
+
+
+/**********************
+ * Tab, Options Group, and Section Generic Formatting
+ *********************/
+.abdwpsm_tab_wrapper {	/* Each shortcode section */
+	padding-left: 50px;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+	.abdwpsm_tab_wrapper h3 {
+		margin-left: -50px;  /* Offset padding to create indentation look */
 		font-size: 1.4em;
-
-		text-decoration: underline;
 	}
-	#ABD_sidebar h4 {
+		.abdwpsm_tab_wrapper h3:before {
+			content:'\21D2  ';
+			font-size: 1.5em;
+			color: #0073AA;
+		}
+
+.abdwpsm_tab_display_description {
+	border-bottom: 3px solid #CCC;
+
+	margin-bottom: 50px;
+
+	padding-bottom: 20px;
+}
+
+
+/**********************
+ * Manage Shortcodes Tab Specific
+ *********************/
+#abdwpsm_tab-manage-shortcodes div.CodeMirror {
+	height: auto !important;
+
+	border: 1px solid #DDD;
+}
+#abdwpsm_tab-manage-shortcodes form {
+	border-bottom: 3px solid #CCC;
+}	
+	#abdwpsm_tab-manage-shortcodes form .abd-shortcode-get-button {
+		background-color: #78d639;
 		font-size: 1.2em;
+
+		border: 1px solid #555;
+
+		color: #222;
 	}
-		#ABD_sidebar div.ABD_sidebar_box:first-of-type {
-			border: 0;
+		#abdwpsm_tab-manage-shortcodes form .abd-shortcode-get-button:before {
+			content:'\2713 \0020';
 		}
-		#ABD_sidebar div.ABD_sidebar_box.ABD_highlight,
-		div.ABD_highlight {
-			background-color: #282828;
-			border: 3px solid #FFAA44;
-
-			color: #CCC;
-
-			padding: 10px 20px;
-
-			border-radius: 15px;
-
-			box-shadow: 8px 10px 13px 0 #444;
-		}
-			#ABD_sidebar div.ABD_sidebar_box.ABD_highlight h3,
-			div.ABD_highlight h3 {
-				color: #EEE;
-			}
-
-			#ABD_sidebar div.ABD_sidebar_box.ABD_highlight a,
-			#ABD_sidebar div.ABD_sidebar_box.ABD_highlight a:visited,
-			div.ABD_highlight a,
-			div.ABD_highlight a:visited {
-				color: #99CCFF;
-			}
-
-		#ABD_sidebar div.ABD_sidebar_box ul {
-			list-style-type: square;
-
-			margin-left: 30px;
-
-			line-height: normal;
-
-			font-size: 1.05em;
-		}
-
-			#ABD_sidebar div.ABD_sidebar_box ul li {
-				margin-bottom: 10px;
-			}
-
-		#ABD_donations td {
-			vertical-align: bottom;
-		}
-
-#ABD_content {
-	margin-right: 450px;
-
-	min-height: 1500px;	/*	Keeps absolutely positioned sidebar from running off the page. */
-}
-	#ABD_notification {
-
-	}
-
-	#ABD_content table.ABD_shortcode_list {
-		min-width: 600px;
-		max-width: 800px;
-
-		border-collapse: collapse;
-
-		border: 2px solid #999;
-	}
-		#ABD_content table.ABD_shortcode_list td,
-		#ABD_content table.ABD_shortcode_list th {
-			border: 1px solid #AAA;
-			text-align: center;
-
-			padding: 10px;
-		}
-		#ABD_content table.ABD_shortcode_list th {
-			font-size: 1.1em;
-
-			background-color: #ddd;
-
-			border-bottom-width: 2px;
-		}
-
-	#ABD_content a.ABD_button {
-		display: inline-block;
-		padding: 4px 12px;
-
-		background-color: #3399FF;
-
-		border-radius: 5px;
-
-		box-shadow: 2px 2px 3px 0 #444;
-
-		color: #000;
-
-		text-decoration: none;
-
-		font-size: 18px;
-
-		cursor: pointer;
-	}
-	#ABD_content a.ABD_button.ABD_alternate_color {
-		background-color: #FA4;
-	}
-	#ABD_content a.ABD_button:hover {
-		color: #000;
-
-		background-color: #33CC33;
-	}
-
-	.ABD_input_form_wrapper {
-
-	}
-		.ABD_input_form_wrapper table.ABD_form_layout {
-			border-collapse: collapse;
-		}
-
-		.ABD_input_form_wrapper table.ABD_form_layout td {
-			padding: 20px 20px 20px 20px;
-
-			border: 1px solid #999;
-		}
-
-		.ABD_input_form_wrapper table.ABD_form_layout tr td:first-child {
-			max-width: 300px;
-		}
-
-		.ABD_input_form_wrapper input[type=text],
-		.ABD_input_form_wrapper input[type=radio],
-		.ABD_input_form_wrapper textarea,
-		.ABD_input_form_wrapper select {
-			border: 1px solid #333;
-			border-radius: 3px;
-		}
-
-		.ABD_input_form_wrapper textarea {
-
-		}
-
-		 .ABD_input_form_wrapper span.ABD_input_form_feedback {
-		 	color: #5A0000;
-		 	font-style: italic;
-		 }
-
-		 .ABD_input_form_wrapper .ABD_input_form_highlight {
-		 	background-color: #FFCCCC;
-		 	border: 2px solid #5A0000;
-		 }
-
-	#ABD_content div.ABD_logical_block {
-		margin-bottom: 25px;
-		padding-bottom: 25px;
-
-		border-bottom: 1px solid #AAA;
-	}
-
-#ABD_notification {
-	background-repeat: no-repeat;
-	background-position: 10px;
-	background-size: 50px;
-
-	border: 2px solid #003366;
-	border-radius: 5px;
-
-	padding: 30px 30px 30px 100px;
-}
-	#ABD_notification span.ABD_notification_message {
-		font-size: 1.3em;
-		display: block;
-	}
-	#ABD_notification span.ABD_notification_supplemental {
-		font-size: .8em;
-		display: block;
-
-		margin: 10px 0 0 20px;
-	}
-	#ABD_notification.ABD_notification_error {
-		background-color: #FFCCCC;
-		border-color: #5A0000;
-		background-image: url(../images/notification_x.png);
-		color: #5A0000;
-	}
-	#ABD_notification.ABD_notification_warning {
-		background-color: #FFFFCC;
-		border-color: #3D1F00;
-		background-image: url(../images/notification_exclamation.png);
-		color: #3D1F00;
-	}
-	#ABD_notification.ABD_notification_success {
-		background-color: #CCFFCC;
-		border-color: #002400;
-		background-image: url(../images/notification_check.png);
-		color: #002400;
-	}
-	#ABD_notification.ABD_notification_notice {
-		background-color: #D1FFFF;
-		border-color: #003366;
-		background-image: url(../images/notification_exclamation_2.png);
-		color: #003366;
-	}
-
-
-#ABD_delete_confirmation_dialog {
-
-}
-	#ABD_delete_confirmation_dialog_button_affirmative {
+	#abdwpsm_tab-manage-shortcodes form .abd-shortcode-delete-button {
+		background-color: #FF7F7F;
 		font-size: 1.2em;
+
+		border: 1px solid #555;
+
+		color: #222;
 	}
+		#abdwpsm_tab-manage-shortcodes form .abd-shortcode-delete-button:before {
+			content:'\2717 \0020';
+		}
 
-	#ABD_delete_confirmation_dialog_button_negative {
-
-	}
 
 
-/* Responsive changes for narrow screens */
-@media (max-width: 1260px) {
+/*************
+ * Getting Started Message
+ *************/
+ #abd_getting_started_message {
+ 	
+ }
 
-	/* Move sidebar below main content */
-	#ABD_sidebar {
-		position: relative;
 
-		width: auto;
-	}
-	#ABD_content {
-		margin-right: auto;
-		min-height: 0;
-	}
+ /************
+  * Settings Tab Specific
+  ***********/
+  #abd-fallback-plugin-controls a.button {
+  	color: #222 !important;
+  }
+  #abd-fallback-plugin-controls a.button-primary {
+  	color: #FFF !important;
+  }
+  #abd-fallback-plugin-controls .abd-fallback-pluign-delete-button {
+  	background-color: #FF7F7F;		
+  }
+
+
+/********************
+ * Masonry
+ *******************/
+ span.abd-masonry-header-charm {
+ 	color: #F00;
+ }
+div.abd-masonry-block {
+	width: 460px;	
+	max-width: 800px;
+
+	float: left;
+	margin: 0 60px 60px 0;
+	padding: 20px;
+
+	background-color: #FFF;
+	border: 1px solid #CCC;
+	border-radius: 2px;
+
+	box-shadow: 2px 2px 8px 0 #444;
+
+	box-sizing: border-box; /* Prevent border thickenss changes from breaking Masonry layout */
 }
+ 	div.abd-masonry-block>h3 {
+ 		font-size: 15px;
+ 		margin: -20px -20px 10px -20px;
+ 		padding: 15px 10px;
 
-@media (min-width: 1700px) {
-	#ABD_content {
-		margin-right: 530px;
-	}
-	#ABD_sidebar {
-		width: 500px;
-	}
-}
+ 		border-bottom: 1px solid #CCC;
+ 	}
+
+ 	div.abd-masonry-block>img.abd-masonry-image {
+ 		max-width: 150px;
+ 		max-height: 150px;
+
+ 		float: left;
+
+ 		margin: 0 20px 10px 0;
+ 	}
+
+ 	div.abd-masonry-block p,
+ 	div.abd-masonry-block li {
+ 	font-size: 1.05em;
+ 	color: #484848;
+
+ 	line-height: 1.5;
+ 	}
+
+ 	div.abd-masonry-block p {
+ 		margin-bottom: 15px;
+ 	}
+ 	div.abd-masonry-block textarea {
+ 		width: 400px !important;
+ 		min-width: 100px !important;
+ 		min-height: 200px;
+ 	}
+
+
+ 	div.abd-masonry-block table {
+ 		width: auto;
+ 		border-collapse: collapse;
+ 	}
+ 		div.abd-masonry-block table th,
+ 		div.abd-masonry-block table td {
+ 			padding: 10px 15px;
+ 			text-align: left;
+
+ 			border: 1px solid #AAA;
+ 		}
+
+ 	div.abd-masonry-block.abd-stark-highlight {
+ 		background-color: #282828;
+ 		border-color: #FFAA44;
+ 		border-width: 3px;
+ 		color: #DDD;
+ 		box-shadow: 8px 10px 13px 0 #444;
+ 	}
+ 		div.abd-masonry-block.abd-stark-highlight p,
+ 		div.abd-masonry-block.abd-stark-highlight li {
+ 			color: #DDD;
+ 		}
+ 		div.abd-masonry-block.abd-stark-highlight a,
+ 		div.abd-masonry-block.abd-stark-highlight a:visited {
+ 			color: #99CCFF;
+ 		}
+ 		div.abd-masonry-block.abd-stark-highlight h3 {
+ 			color: #FFF;
+ 		}
+
+ 	div.abd-masonry-block.abd-subtle-highlight {
+ 		border-color: #41B7FF;
+ 		border-width: 3px;
+ 	}
+
+ 	@media (max-width: 1380px) {
+ 		div.abd-masonry-block {
+			width: auto;
+			min-width: 460px;
+		}
+ 	}
+
+
+ /********************
+ * jQuery UI Fixes
+ ********************/
+ /* Dialog overlay not over certain elements */
+ .ui-front {
+ 	z-index: 10001 !important;
+ }
+ .ui-dialog {
+ 	z-index: 10002 !important;
+ }

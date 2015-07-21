@@ -3,8 +3,10 @@
  * extensions and display/hide the appropriate content.
  */
 
+window.Abd_Detector_Debug_Messages = [];
+
 function Abd_Detector (options) {
-	var self = this;	//	Pointer to main object at any scope below this.
+	var self = this;	//	Pointer to main object at any scope below this.	
 
 	/**
 	 * A function used to output debugging information. This can be overloaded
@@ -31,6 +33,10 @@ function Abd_Detector (options) {
 			//	Then we aren't supposed to have debug messages... Don't do
 			//	anything.
 		}
+
+
+		//	Save a running tally of log messages.
+		Abd_Detector_Debug_Messages.push(msg);
 	};
 
 	/**
@@ -56,7 +62,7 @@ function Abd_Detector (options) {
 		//	file mentioned above to see how that is done specifically.
 		//
 		//	To make debugging simpler, let's output a log message if the iframe is missing.
-		if( !this.iframeSecurityPresent() ) {
+		if( !self.iframeSecurityPresent() ) {
 			self.debugMsg( "Browser lacks necessary iframe security attributes. Omitting iframe checks!" );
 		}
 	};	//	end this.loadFakeAds
@@ -78,103 +84,121 @@ function Abd_Detector (options) {
 		var divNoJq = document.getElementById("abd-ad-div");
 
 
-		var retVal = true;
+		var retVal = {
+			blockerDetected: false,
+			status: 'noadblock',
+			detectionMethod: 'N/A'
+		};
 
 		//	Ad blockers can hide things in numerous ways. Check every way I
 		//	can think of.
-
-		//	Check for the appended frame
-		//
-		//	Okay, we have a problem... We might not have loaded the iframe if the browser
-		//	doesn't support some security features that prevent frame busting.  If
-		//	the iframe is missing for this reason, the checks we're about to run will
-		//	yield a false positive.  So, make sure the iframe was inserted before
-		//	running the checks!
-		if( this.iframeSecurityPresent() ) {	//	The iframe should be there! Run the checks.
-			if (frame.length === 0) {	//	jQuery couldn't find it in the DOM
-				retVal = false;
-
-				self.debugMsg("iframe removal detected! (Detection Method: jQuery selector empty - $('#abd-ad-iframe').length === 0)");
-			}
-			else if (frameNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
-				retval = false;
-
-				self.debugMsg("iframe removal detected! (Detection Method: no element with id found - document.getElementById == undefined");
-			}
-			else if (frame.height < 50) { //	Frame resized too small
-				retVal = false;
-
-				self.debugMsg("iframe removal detected! (Detection Method: iframe height resized to near 0 - $('#abd-ad-iframe').height < 50");
-			}
-			else if (frame.is("hidden")) {	//	Frame hidden via visibility or display
-				retVal = false;
-
-				self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('#abd-ad-iframe').is('hidden')");
-			}
-			else if (frame.find(":hidden").length !== 0) {	//	Yet another way to look for hidden frame in case blockers are tricky
-				retVal = false;
-
-				self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('$abd-ad-iframe').find(':hidden').length === 0");
-			}
-			else if (frame.css('visibility') === 'hidden' || frame.css('display') === 'none') {	//	and again... another way to look for hidden frame
-				retVal = false;
-
-				self.debugMsg("iframe removal detected! (Detection Method: iframe css changed to hidden - frame.css('visibility') === 'hidden' || frame.css('display') === 'none')");
-			}
-
-			else {	//	Well... I'm out of ideas... the damn thing must be there.
-				self.debugMsg("No iframe removal detected.");
+		if(ABDSettings.enableIframe == 'yes' || ABDSettings.enableIframe == '') {
+			//	Check for the appended frame
+			//
+			//	Okay, we have a problem... We might not have loaded the iframe if the browser
+			//	doesn't support some security features that prevent frame busting.  If
+			//	the iframe is missing for this reason, the checks we're about to run will
+			//	yield a false positive.  So, make sure the iframe was inserted before
+			//	running the checks!
+			if( self.iframeSecurityPresent() ) {	//	The iframe should be there! Run the checks.
+				retVal = self.checkAdStatusIframeHelper('#abd-ad-iframe', frame, frameNoJq, retVal);
 			}
 		}
-
-
-		//	Check for appended div
-		if (div.length === 0) {	//	jQuery couldn't find it in the DOM
-			retVal = false;
-
-			self.debugMsg("div removal detected! (Detection Method: jQuery selector empty)");
-		}
-		else if (divNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
-			retval = false;
-
-			self.debugMsg("div removal detected! (Detection Method: no element with id found - document.getElementById == undefined");
-		}
-		else if (div.height === 0) { //	Frame resized too small
-			retVal = false;
-
-			self.debugMsg("div removal detected! (Detection Method: height resized to 0");
-		}
-		else if (div.is("hidden")) {	//	Frame hidden via visibility or display
-			retVal = false;
-
-			self.debugMsg("div removal detected! (Detection Method: div hidden");
-		}
-		else if (div.find(":hidden").length !== 0) {	//	Yet another way to look for hidden div in case blockers are tricky
-			retVal = false;
-
-			self.debugMsg("iframe removal detected! (Detection Method: iframe hidden - $('$abd-ad-iframe').find(':hidden').length === 0");
-		}
-		else if (div.css('visibility') === 'hidden' || div.css('display') === 'none') {	//	Yet another way to look for hidden div in case blockers are tricky
-			retVal = false;
-
-			self.debugMsg("div removal detected! (Detection Method: CSS visibility or display altered!)");
-		}
-
-		else {	//	Well... I'm out of ideas... the damn thing must be there.
-			self.debugMsg("No div removal detected");
+		else {
+			self.debugMsg("iframe detection disabled");
 		}
 
 
-		//	Check for bait javascript file (assets/js/advertisement.js) flags
-		if (window.abd_script_load_flag !== true) {
-			//	Then the bait javascript file, advertisement.js, was not loaded or run
-			retVal = false;
+		if( ABDSettings.enableDiv == 'yes' || ABDSettings.enableDiv == '' ) {
+			retVal = self.checkAdStatusDivHelper(div, divNoJq, retVal);
+		}
+		else {
+			self.debugMsg("div detection disabled");
+		}
 
-			self.debugMsg("js removal detected! (Detection Method: Bait javascript file prevented from loading and execution!)");
+
+		if( ABDSettings.enableJsFile == 'yes' || ABDSettings.enableJsFile == '' ) {
+			//	Check for bait javascript file (assets/js/advertisement.js) flags
+			if (window.abd_script_load_flag !== true) {
+				//	Then the bait javascript file, advertisement.js, was not loaded or run
+				mthd_text = "js removal detected! (Detection Method: Bait javascript file prevented from loading and execution!)";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else {	//	It's there
+				self.debugMsg("No js removal detected");
+			}
 		}
-		else {	//	It's there
-			self.debugMsg("No js removal detected");
+		else {
+			self.debugMsg("js detection disabled");
 		}
+
+
+		//	Now, go through user defined selectors checks
+		if( ABDSettings.cssSelectors ) {
+			var selectors = ABDSettings.cssSelectors;
+		}
+		else {
+			var selectors = [];
+		}
+		jQuery.each(selectors, function(index, value) {
+			//	Is this empty or not a string?
+			if(!value || typeof value != 'string') {
+				return true;	//	jQuery each() equivalent of continue;
+			}
+
+			self.debugMsg("checking user defined selector: " + value);
+
+			//	Select this item, and make sure it exists
+			var item = jQuery(value);
+			if( item.length ) {	//	item exists
+				self.debugMsg("found " + item.length + " matches for the specified selector");
+			}
+			else {
+				self.debugMsg("specified selector doesn't match any element on page");
+				return;	//	jQuery.each equivalent of continue statement
+			}
+
+			//	Iterate through each match
+			jQuery(value).each(function() {				
+				//	Is the wrapper height shrunk to zero?
+				if(jQuery(this).height() < 50) {
+					mthd_text = "user defined wrapper removal detected! (Detection Method: wrapper height resized to near 0 - $(selector).height < 50";
+
+					retVal = {
+						blockerDetected: true,
+						status: 'adblock',
+						detectionMethod: mthd_text
+					}
+
+					self.debugMsg(mthd_text);
+				}
+
+				//	Is the wrapper empty?
+				if(jQuery.trim(jQuery(this).html()) == '') {
+					mthd_text = "user defined wrapper removal detected! (Detection Method: wrapper is empty - $.trim($(selector).html()) == ''";
+
+					retVal = {
+						blockerDetected: true,
+						status: 'adblock',
+						detectionMethod: mthd_text
+					}
+
+					self.debugMsg(mthd_text);
+				}
+
+				//	If there is an iframe within the wrapper, is it screwed up?
+				jQuery(this).find('iframe').each(function() {
+					retVal = self.checkAdStatusIframeHelper(value, jQuery(this), 'skip', retVal);
+				});
+			});
+		});
 
 
 		//	Okay, retVal should still be true from its declaration above if no
@@ -182,6 +206,156 @@ function Abd_Detector (options) {
 		//	Which is what we want to return.
 		return retVal;
 	};	//	end this.checkAdStatus
+
+		this.checkAdStatusIframeHelper = function( selector, frameJq, frameNoJq, retVal ) {
+			if (frameJq.length === 0) {	//	jQuery couldn't find it in the DOM
+				mthd_text = "iframe removal detected! (Detection Method: jQuery selector empty - $('" + selector + "').length === 0)";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (frameNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
+				mthd_text = "iframe removal detected! (Detection Method: no element with id found - document.getElementById(" + selector + ") == undefined";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (frameJq.height < 50) { //	Frame resized too small
+				mthd_text = "iframe removal detected! (Detection Method: iframe height resized to near 0 - $('" + selector + "').height < 50";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (frameJq.is("hidden")) {	//	Frame hidden via visibility or display
+				mthd_text = "iframe removal detected! (Detection Method: iframe hidden - $('" + selector + "').is('hidden')";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (frameJq.find(":hidden").length !== 0) {	//	Yet another way to look for hidden frame in case blockers are tricky
+				mthd_text = "iframe removal detected! (Detection Method: iframe hidden - $('" + selector + "').find(':hidden').length === 0";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (frameJq.css('visibility') === 'hidden' || frameJq.css('display') === 'none') {	//	and again... another way to look for hidden frame
+				mthd_text = "iframe removal detected! (Detection Method: iframe css changed to hidden - $('" + selector + "').css('visibility') === 'hidden' || $('" + selector + "').css('display') === 'none')";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+
+			else {	//	Well... I'm out of ideas... the damn thing must be there.
+				self.debugMsg("No iframe removal detected.");
+			}
+
+			return retVal;
+		}	//	end this.checkAdStatusIframeHelper
+		this.checkAdStatusDivHelper = function( div, divNoJq, retVal ) {
+			//	Check for appended div
+			if (div.length === 0) {	//	jQuery couldn't find it in the DOM
+				mthd_text = "div removal detected! (Detection Method: jQuery selector empty)";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (divNoJq == undefined) {	//	JavaScript (no jQuery) couldn't find it
+				mthd_text = "div removal detected! (Detection Method: no element with id found - document.getElementById == undefined";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (div.height === 0) { //	Frame resized too small
+				mthd_text = "div removal detected! (Detection Method: height resized to 0";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (div.is("hidden")) {	//	Frame hidden via visibility or display
+				mthd_text = "div removal detected! (Detection Method: div hidden";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (div.find(":hidden").length !== 0) {	//	Yet another way to look for hidden div in case blockers are tricky
+				mthd_text = "iframe removal detected! (Detection Method: iframe hidden - $('$abd-ad-iframe').find(':hidden').length === 0";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+			else if (div.css('visibility') === 'hidden' || div.css('display') === 'none') {	//	Yet another way to look for hidden div in case blockers are tricky
+				mthd_text = "div removal detected! (Detection Method: CSS visibility or display altered!)";
+
+				retVal = {
+					blockerDetected: true,
+					status: 'adblock',
+					detectionMethod: mthd_text
+				}
+
+				self.debugMsg(mthd_text);
+			}
+
+			else {	//	Well... I'm out of ideas... the damn thing must be there.
+				self.debugMsg("No div removal detected");
+			}
+
+			return retVal;
+		}	//	end this.checkAdStatusDivHelper
 
 	/**
 	 * Loads bait ads, checks to see if they were blocked, and executes the appropriate action.
@@ -219,11 +393,13 @@ function Abd_Detector (options) {
 			//	there needs to be a timeout here.  If you decide to tinker with
 			//	this, be VERY CAREFUL!  Or, you know... don't.
 			setTimeout(function() {
-				if (self.checkAdStatus()) {
-					noBlockerFunc();
+				var res = self.checkAdStatus();
+				
+				if (!res.blockerDetected) {
+					noBlockerFunc(res);
 				}
 				else {
-					blockerFunc();
+					blockerFunc(res);
 				}
 			}, 500);
 		});
@@ -235,7 +411,7 @@ function Abd_Detector (options) {
 	 * @param  function funcToRun    The function to run once jQuery has loaded.
 	 * @param  int recurseDepth 	 (optional) The number of times left in recursion. Usually should be omitted.
 	 * @param  int totalTime    	 (optional) The number of milliseconds waited so far. Usually should be omitted.
-	 * @return NONE
+	 * @return int                   The total time spent waiting in milliseconds AFTER RECURSION HAS FINISHED. Not available during recursion.  -1 If defer failed
 	 */
 	this.jQueryDefer = function( funcToRun, recurseDepth, totalTime ) {
 		//	Setup defaults
@@ -255,6 +431,7 @@ function Abd_Detector (options) {
 				self.debugMsg( "Asynchronous jQuery detected. ABD waited " + totalTime/1000 + " seconds for jQuery to load." );
 			}
 			funcToRun();
+			return totalTime;
 		}
 		else if( recurseDepth > 0 ) {
 			//	No, it doesn't, and we still have time to wait. Recurse another level.
@@ -266,6 +443,7 @@ function Abd_Detector (options) {
 		else {
 			//	No, it doesn't, and we've waited long enough.  Throw an error and die.
 			self.debugMsg( "Cannot run!  jQuery didn't load.  Try adding an exception for jQuery in any asynchronous JavaScript plugins. Total wait time: " + totalTime/1000 + " seconds." );
+			return -1;
 		}
 	}
 
@@ -300,7 +478,7 @@ function Abd_Detector (options) {
 //	Run the ad blocker.
 Abd_Detector({
 	//	What do we want to do if no ad blockers are detected?
-	noBlockerFunc: function() {
+	noBlockerFunc: function(res) {
 		jQuery('div.ABD_display_noadblock').show();
 		jQuery('div.ABD_display_adblock').hide();
 
@@ -308,24 +486,18 @@ Abd_Detector({
 		jQuery('body').addClass('ABD_noadblock');
 
 		//	Throw event
-		jQuery(document).trigger('abd_status_change', {
-			blockerDetected: false,
-			status: 'noadblock'
-		});
+		jQuery(document).trigger('abd_status_change', res);
 	},
 	//	What do we want to do if we detect an ad blocker?
-	blockerFunc: function() {
+	blockerFunc: function(res) {
 		jQuery('div.ABD_display_noadblock').hide();
 		jQuery('div.ABD_display_adblock').show();
 
 		//	Add class to body tag
 		jQuery('body').addClass('ABD_adblock');
 
-		//	Throw event
-		jQuery(document).trigger('abd_status_change', {
-			blockerDetected: true,
-			status: 'adblock'
-		});
+		//	Throw event		
+		jQuery(document).trigger('abd_status_change', res);
 	},
 	//	Do we want to see debug messages?
 	debugMessage: true

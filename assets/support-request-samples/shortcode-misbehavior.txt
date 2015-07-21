@@ -1,0 +1,54 @@
+Hi John,
+
+Ad Blocking Detector isn't working correctly.
+
+My shortcodes do not display the appropriate content when an blockers are enabled. I have
+visited the demo page on the plugin website as instructed, and the demo works.  I do not 
+use any performance plugins at this time.
+
+Answers to the questions:
+
+Does a simple shortcode work?
+    Yes. If I create a shortcode with only simple text, it works.
+What ad blocker do you use?
+	AdGuard: https://extensions.apple.com/details/?id=com.adguard.safari-N33TQXN8C7
+What theme?
+	A modified child theme of Simple Catch. The modifications are very minor.
+What specifically is wrong?
+	When the ad blocker is enabled, my no ad blocker detected content does not show up.
+
+
+INFORMATION:
+
+Operating System and Web Browser:
+Apple OS X and Safari
+
+
+Ad Blocking Detection Results:
+DETECTION RESULTS
+==================
+==================
+
+Blocker Detected:
+    true
+
+Last Successful Detection Method:
+      js removal detected! (Detection Method: Bait javascript file prevented from loading and execution!)
+
+Ad Block Detection Script Log:
+       [0] No iframe removal detected.
+
+       [1] No div removal detected
+
+       [2] js removal detected! (Detection Method: Bait javascript file prevented from loading and execution!)
+
+
+
+Screenshot from Manage Shortcodes Tab:
+http://s11.postimg.org/fk1sst6sz/abd_bug.jpg
+
+
+
+Thanks,
+
+Captain James Tiberius Kirk
