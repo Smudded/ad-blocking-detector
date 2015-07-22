@@ -485,6 +485,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 		}
 
 		protected static function getting_started_tab_content() {
+			if( defined( 'ABDBLC_ROOT_URL' ) ) {
+				//	Then our block list countermeasure plugin is loaded because it defines this constant.
+				$prefix = ABDBLC_ROOT_URL;
+			}
+			else {
+				$prefix = ABD_ROOT_URL;
+			}
+
 			$fallback_status = ABD_Anti_Adblock::bcc_plugin_status();
 			$abd_settings = ABD_Database::get_settings();
 
@@ -494,7 +502,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<div class="abd-subtle-highlight abd-masonry-block">
 					<h3><span class="abd-masonry-header-charm">!!!</span> &nbsp; <?php ABD_L::_e( 'The Ad Blockers Are Coming! '); ?></h3>
 
-					<img class='abd-masonry-image' src="<?php echo ABD_ROOT_URL . 'assets/images/targeted.png'; ?>" />
+					<img class='abd-masonry-image' src="<?php echo $prefix . 'assets/images/targeted.png'; ?>" />
 
 					<p>
 						<?php ABD_L::_e( 'Ad Blocking Detector is now targeted by ad blockers. A characteristic of WordPress plugin installation makes it very simple for them to block crucial plugin files, preventing detector from working.' ); ?>
@@ -1510,6 +1518,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 
 		protected static function settings_user_defined_selectors_section_header() {
+			if( defined( 'ABDBLC_ROOT_URL' ) ) {
+				//	Then our plugin is loaded because it defines this constant.
+				$prefix = ABDBLC_ROOT_URL;
+			}
+			else {
+				$prefix = ABD_ROOT_URL;
+			}
+
 			ob_start();
 			?>
 
@@ -1539,13 +1555,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<tr><th><?php ABD_L::_e( 'Ghostery Disabled' ); ?>:</th><th><?php ABD_L::_e( 'Ghostery Enabled' ); ?>:</th></tr>
 					<tr>
 						<td>
-							<a href="<?php echo ABD_ROOT_URL . 'assets/images/examples/user-defined-selectors-explanation.jpg'; ?>" class='abd-popup'>
-								<img style="width: 200px;" src="<?php echo ABD_ROOT_URL . 'assets/images/examples/user-defined-selectors-explanation.jpg'; ?>" />
+							<a href="<?php echo $prefix . 'assets/images/examples/user-defined-selectors-explanation.jpg'; ?>" class='abd-popup'>
+								<img style="width: 200px;" src="<?php echo $prefix . 'assets/images/examples/user-defined-selectors-explanation.jpg'; ?>" />
 							</a>
 						</td>
 						<td>
-							<a href="<?php echo ABD_ROOT_URL . 'assets/images/examples/user-defined-selectors-explanation-2.jpg'; ?>" class='abd-popup'>
-								<img style="width: 200px;" src="<?php echo ABD_ROOT_URL . 'assets/images/examples/user-defined-selectors-explanation-2.jpg'; ?>" />
+							<a href="<?php echo $prefix . 'assets/images/examples/user-defined-selectors-explanation-2.jpg'; ?>" class='abd-popup'>
+								<img style="width: 200px;" src="<?php echo $prefix . 'assets/images/examples/user-defined-selectors-explanation-2.jpg'; ?>" />
 							</a>
 						</td>
 					</tr>
