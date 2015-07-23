@@ -419,7 +419,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							new ABDWPSM_Section( array(  
 								'id'                 => 'shortcode_section_' . $sc_id,
 								'display_name'       => ABD_Database::array_value( 'display_name', $sc ),
-								'display_description'=> self::manage_shortcodes_shortcode_section_header( $sc_id, $sc['readonly'] ),
+								'display_description'=> self::manage_shortcodes_shortcode_section_header( $sc_id, $readonly ),
 								'field_object_array' => array(
 									new ABDWPSM_Field( array( 
 										'field_name'           => 'display_name',
@@ -1157,6 +1157,73 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					</a>
 				</div>
 
+
+
+
+
+
+
+
+				<div class="abd-masonry-block">
+					<h3><?php ABD_L::_e( 'Plugin, WordPress, and Server Configuration Data' ); ?></h3>
+
+					<?php 
+						//	Gather Data
+						$blc = ABD_Anti_Adblock::bcc_plugin_status(); 
+						if( $blc['auto_plugin_activated'] || $blc['manual_plugin_activated'] ) {
+							$blcactive = 'true';
+						}
+						else {
+							$blcactive = 'false';
+						}
+
+						if( $blc['auto_plugin_exists'] ) {
+							$blcexists = 'true';
+							$blctype = 'auto';
+						}
+						else if( $blc['manual_plugin_exists'] ) {
+							$blcexists = 'true';
+							$blctype = 'manual';
+						}
+						else {
+							$blcexists = 'false';
+							$blctype = 'N/A';
+						}
+
+						$blcdir = ABD_Anti_Adblock::get_bcc_plugin_dir_name();
+						if( !$blcdir ) { $blcdir = 'No BLC Plugin Directory'; }
+
+						$mem_usage = memory_get_peak_usage( true );
+						if( $mem_usage < 1024 ) { $mem_usage = $mem_usage . ' bytes'; }
+						else if( $mem_usage < 1048576 ) { $mem_usage = round( $mem_usage/1024, 2 ) . ' KB'; }
+						else { $mem_usage = round( $mem_usage/1048576, 2 ) . ' MB'; }
+					?>
+
+					<textarea id="abd-server-config-textarea">
+ENVIRONMENT DATA&#13;&#10;==================&#13;&#10;==================&#13;&#10;
+System: <?php echo php_uname(); ?>&#13;&#10;
+PHP Version: <?php echo phpversion(); ?>&#13;&#10;
+PHP/WordPress Memory Limit: <?php echo ini_get( 'memory_limit' ); ?>&#13;&#10;
+Memory Used: <?php echo $mem_usage; ?>&#13;&#10;
+PHP Max Execution Time: <?php echo ini_get( 'max_execution_time' ); ?>&#13;&#10;&#13;&#10;
+WordPress Version: <?php echo get_bloginfo('version'); ?>&#13;&#10;
+Total # of wp_options Entries: <?php echo ABD_Database::size_of_wp_options_table(); ?>&#13;&#10;
+Plugin Version: <?php echo ABD_VERSION; ?>&#13;&#10;
+BLC Plugin Exists?: <?php echo $blcexists; ?>&#13;&#10;
+BLC Plugin Active?: <?php echo $blcactive; ?>&#13;&#10;
+BLC Plugin Type?: <?php echo $blctype; ?>&#13;&#10;
+BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
+					</textarea>
+				</div>
+
+				
+
+
+
+
+
+
+
 				<div class="abd-masonry-block">
 					<h3><?php ABD_L::_e( 'Ad Blocking Detection Results' ); ?></h3>
 
@@ -1635,6 +1702,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			//	Reset shortcode cache
 			ABD_Log::info( 'Forcing shortcode cache update after new shortcode submission, or existing shortcode edit by deleting existing cache.' );
 			ABD_Database::nuke_shortcode_cache();
+
+			
+			//	Add shortcode to shortcode list
+			$scs = get_option( 'abd_list_of_shortcodes', array() );
+			$scs[] = $OG->get_db_option_name();
+			update_option( 'abd_list_of_shortcodes', $scs );
+			ABD_Log::info( 'Adding ' . $OG->get_db_option_name() . ' to list of shortcodes.' );
 
 			//	Run normal automatic validation and return results
 			return $OG->default_validation_function( $input );

@@ -13,10 +13,11 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		 *
 		 * @param    int   $site_id              The ID# of the multisite website to filter the results by.
 		 * @param    bool  $force_cache_refresh  Whether to ignore cached values and hit the database again.
+		 * @param    bool  $ignore_list          Whether to search all options for shortcode matches or use the list stored in the database
 		 *
 		 * @return   ARRAY_A   An assosciative array of every shortcode. The key is the ID, the value is the database option value (an assosciative array).
 		 */
-		public static function get_all_shortcodes( $force_cache_refresh = false ) {
+		public static function get_all_shortcodes( $force_cache_refresh = false, $ignore_list = false ) {
 			/**
 			*     )     (                    (     (                      )     ) (     
 			*	 ( /(     )\ )        (        )\ )  )\ )   (     (      ( /(  ( /( )\ )  
@@ -77,8 +78,26 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				$cache_status = true;
 			}
 			else {	
-				//		Damn... we can't use the cache...  Gotta filter ALL options			
-				$options = wp_load_alloptions();	//	Get all WP options
+				//		Damn... we can't use the cache...
+				if( $ignore_list ) {
+					ABD_Log::info( 'Forced ignore of shortcode list option. Searching all wp_options for matching shortcodes.' );
+					//	Get every database option, which we'll search through later
+					//	This is slow and takes a crap-ton of memory if the options table is
+					//	big with lots of objects and arrays.
+					$options = wp_load_alloptions();	//	Get all WP options
+				}
+				else {
+					//	Okay, we can use the list of shortcodes, so get the list, loop
+					//	through it, and get each individual shortcode.
+					$sclist = get_option( 'abd_list_of_shortcodes', array() );
+					$options = array();
+					foreach( $sclist as $scon ) {
+						$sc = get_option( $scon );
+						if( $sc ) {
+							$options[$scon] = $sc;
+						}
+					}
+				}
 				$cache_status = false;	//	Flag indicating there was no cache
 			}
 
@@ -146,7 +165,8 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		}
 
 		public static function delete_shortcode( $id ) {
-			$res = delete_option( self::get_shortcode_prefix() . $id );
+			$scname = self::get_shortcode_prefix() . $id;
+			$res = delete_option( $scname );
 
 			if( $res ) {
 				ABD_Log::info( 'Shortcode with ID=' . $id . ' deleted from database.' );
@@ -155,11 +175,20 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				ABD_Log::info( 'Attempt to delete shortcode with ID=' . $id . ' from database unsuccessful. Query failure or no corresponding option in database.' );
 			}
 
+			//	Delete the shortcode from the list of shortcodes
+			$scs = get_option( 'abd_list_of_shortcodes', array() );
+			$key = array_search( $scname, $scs );
+			if( $key !== false ) {
+				unset( $scs[$key] );				
+				ABD_Log::info( 'Removing ' . $sc . ' from list of shortcodes option.' );
+			}
+			update_option( 'abd_list_of_shortcodes', $scs );
+
 			//		Make sure we update the cache when we retrieve shortcodes next
 			self::nuke_shortcode_cache();
 			ABD_Log::info( 'Forcing shortcode cache update after shortcode deletion by deleting existing cache.' );
-			
 
+			
 			return $res;
 		}
 
@@ -266,6 +295,25 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 
 
+		//	Stats gathering
+		public static function size_of_wp_options_table() {
+			global $wpdb;
+			$prefix = $wpdb->base_prefix;
+
+			$res = $wpdb->get_results( 'SELECT COUNT(*) FROM ' . $prefix . 'options', ARRAY_N );
+			if( $res) {
+				return $res[0][0];
+			}
+			else {
+				return -1;
+			}
+		}
+
+
+
+
+
+
 
 
 
@@ -349,6 +397,9 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 							if( $res ) {
 								ABD_Log::info( 'Successfully copied network wide shortcode "' . $osc['name'] . '" to multisite site "' . ABD_Multisite::get_blog_option( $id, 'blogname' ) );
+
+								update_option( 'abd_list_of_shortcodes', $scs );
+								ABD_Log::info( 'Adding ' . $osc['name'] . ' to list of shortcodes.' );
 							}
 							else {
 								ABD_Log::error( 'Unknown failure transferring shortcode "' . $osc['name'] . '" to multisite site "' . ABD_Multisite::get_blog_option( $id, 'blogname' ) . '"' );
@@ -363,6 +414,9 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 					if( $res ) {
 						ABD_Log::info( 'Successfully transferred shortcode "' . $osc['name'] . '" from version 2 database table to version 3 WordPress option.' );
+
+						update_option( 'abd_list_of_shortcodes', $scs );
+						ABD_Log::info( 'Adding ' . $osc['name'] . ' to list of shortcodes.' );
 					}
 					else {
 						ABD_Log::error( 'Unknown failure transferring shortcode "' . $osc['name'] . '" from version 2 database table to version 3 WordPress option.' );
@@ -376,6 +430,27 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				add_action( 'network_admin_notices',
 					array( 'ABD_Admin_Views', 'deprecated_network_wide_shortcodes_notice' ) );
 			}
+		}
+
+		public static function v31_to_v32_database_update() {
+			//	Versions 3.0.0 and 3.0.1 did not utilize the list of shortcodes database
+			//	option which improves performance and reduces memory usage. This was introduced
+			//	in version 3.0.2.  So, if we're using versions 3.0.0 and 3.0.1, we need to look
+			//	for shortcodes the old way, and add them to the list.
+			ABD_Log::info( 'Update Progress - Initializing search of wp_options table for existing shortcodes.' );
+			$of_scs = self::get_all_shortcodes( true, true );
+			$list = get_option( 'abd_list_of_shortcodes', array() );
+
+			foreach( $of_scs as $key=>$of_sc ) {
+				if( array_search( $key, $list ) === false ) {	//	Not in list
+					ABD_Log::info( 'Update Progress - Found unlisted shortcode in database, adding ' . self::$our_shortcode_prefix . $key . ' to list.' );
+					$list[] = self::$our_shortcode_prefix . $key;
+				}
+			}
+
+			update_option( 'abd_list_of_shortcodes', $list );
+
+			ABD_Log::info( 'Update Progress - Finished search of wp_options table for existing shortcodes.' );
 		}
 
 		public static function drop_v2_table() {

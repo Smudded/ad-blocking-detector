@@ -348,11 +348,15 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 							throw new Exception( 'Delete operation failed.' );
 						}
 					}
-					else {
+					else if ( is_file( $file ) ) {
 						if( !unlink( $file ) ) {
 							ABD_Log::debug( 'ABD_Anti_Adblock::delete_dir() failure point: unlink() call on ' . $file );
 							throw new Exception( 'Delete operation failed.' );
 						}
+					}
+					else {
+						ABD_Log::debug( 'ABD_Anti_Adblock::delete_dir() failure point: PHP does not recognize ' . $file . ' as a directory, or a file. Can not delete/unlink it.' );
+						throw new Exception( 'Delete operation failed' );
 					}
 				}
 

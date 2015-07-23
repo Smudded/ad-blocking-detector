@@ -612,6 +612,14 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					}
 				}
 
+
+				//////////////////////////////////////////////
+				//	VERSION 3.0.0/3.0.1 -> VERSION 3.0.2	//
+				//////////////////////////////////////////////
+				if( $upgrading_version == '3.0.1' || $upgrading_version == '3.0.0' ) {
+					ABD_Database::v31_to_v32_database_update();
+				}
+
 				//////////////////////////
 				//	ALL VERSION JUMPS	//
 				//////////////////////////
