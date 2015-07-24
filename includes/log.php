@@ -218,9 +218,9 @@ if ( !class_exists( 'ABD_Log' ) ) {
 
 			if( !empty( $suffix ) ) {
 				$suffix = ' #####' . $suffix . '#####';
-			}			
+			}
 
-			self::perf( $prefix . $func_name . ' -- Exec Time = ' . self::time_diff( $start_time ) . 'ms, Mem Usage = ' . self::mem_diff( $start_mem ) . $suffix, $sub_entry );
+			self::perf( $func_name . ' -- Exec Time = ' . self::time_diff( $start_time ) . 'ms, Mem Usage = ' . self::mem_diff( $start_mem ) . $suffix, $sub_entry );
 		}
 	}	//	end class
 }	//	end if ( !class_exists( ...
