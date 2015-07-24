@@ -3,8 +3,8 @@ Contributors: jtmorris
 Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
-Tested up to: 4.2
-Stable tag: 3.0.2
+Tested up to: 4.2.3
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,10 @@ screenshots.
 
 
 == Changelog ==
+= 3.1.0 =
+* Add performance statistics logging to help track down performance related bugs and problems.
+* Refactored WPSM framework to eliminate [circular reference PHP memory leaks](http://paul-m-jones.com/archives/262), by removing circular references. Should eliminate the sporadic "Allowed Memory Size ... Exhausted" related plugin errors.  Particularly with older versions of PHP.
+* Fixed jQuery UI theme scoping issues.
 = 3.0.2 =
 * Performance improvement: Cache shortcode option names rather than search entire wp_options table. 
 * Catch PHP Warning when recursively deleting directories.
@@ -247,6 +251,8 @@ screenshots.
 
 
 == Upgrade Notice ==
+= 3.1.0 =
+Dramatic performance improvements! If versions 3.0.0 through 3.0.2 were displaying errors, or was not functioning correctly, install this update!
 = 3.0.1 =
 MASSIVE UPDATE! Lots of new features and improvements, numerous code improvements. As always, it is [highly recommended to test](http://lifeinthegrid.com/do-you-localhost-your-wordpress/) before installing major plugin updates!
 = 3.0.0 =
