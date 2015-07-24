@@ -87,14 +87,6 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
                 $Section->ip_uniqueness_check();
             }
 
-            //  Children construct IP uniqueness check
-            $children = $Section->get_fields();
-            if( !empty( $children ) ) {
-                foreach( $children as $c ) {
-                    $c->ip_uniqueness_check();
-                }
-            }
-
             //  Okay, add the bastard.
             $this->my_sections[] = $Section;
 
@@ -507,6 +499,8 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
             settings_fields( $dbon );
 
             foreach( $this->my_sections as $Section ) {
+                $Section->ip_uniqueness_check();
+
                 //  Register Section
                 add_settings_section(
                     $Section->get_id(),

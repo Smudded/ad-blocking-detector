@@ -128,6 +128,9 @@ if( !class_exists( 'ABDWPSM_Settings_Manager' ) ) {
                         continue;
                     }
 
+                    //  Uniqueness Check
+                    $Tab->ip_uniqueness_check();
+
                     //  Extract tab data
                     $query_arg = $Tab->get_url_slug();
                     $name = $Tab->get_display_name();

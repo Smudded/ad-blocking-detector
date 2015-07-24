@@ -95,7 +95,7 @@ if( !class_exists( 'ABDWPSM_Section' ) ) {
 
             //  Update the field's section
             $Field->set_section_reference( $this->get_id() );
-
+            
 
             //  IP uniqueness check
             if( !$skip_ip_check ) {
@@ -108,8 +108,6 @@ if( !class_exists( 'ABDWPSM_Section' ) ) {
 
             //  And add it to ABDWPSM_Settings_Manager
             ABDWPSM_Settings_Manager::$fields[] = $Field;
-
-            echo '*****************************************************************' . $Field->get_field_name() . '***<br />';
         }   //  end add_field()
 
         /**
@@ -250,6 +248,8 @@ if( !class_exists( 'ABDWPSM_Section' ) ) {
          */
         public function register_fields( $og_identifier ) {
             foreach( $this->my_fields as $Field ) {
+                $Field->ip_uniqueness_check();
+
                 add_settings_field(
                     uniqid(),
                     $Field->get_display_name(),
@@ -308,6 +308,16 @@ if( !class_exists( 'ABDWPSM_Section' ) ) {
             //  Merge together the two arrays with the passed array taking precedence
             $soa = $section_options_array + $defaults;
 
+            //  Set the ID
+            $this->set_id( $soa['id'] );
+
+            //  Set the display name/heading
+            $this->set_display_name( $soa['display_name'] );
+
+            //  Set the display description
+            $this->set_display_description( $soa['display_description'] );
+
+
             //  Add field objects
             if( is_array( $soa['field_object_array'] ) ) {
                 //  Loop through the field objects and add individually so we
@@ -317,15 +327,6 @@ if( !class_exists( 'ABDWPSM_Section' ) ) {
                     $this->add_field( $Field, true );
                 }
             }
-
-            //  Set the ID
-            $this->set_id( $soa['id'] );
-
-            //  Set the display name/heading
-            $this->set_display_name( $soa['display_name'] );
-
-            //  Set the display description
-            $this->set_display_description( $soa['display_description'] );
         }   //  end __construct()
 
         public function get_fields() {

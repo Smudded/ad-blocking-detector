@@ -50,7 +50,8 @@ define( 'ABD_VERSION', '3.0.2' );
  *     ||      ||      ||      ||                         */
  
 
-
+$start_time = microtime( true );
+$start_mem = memory_get_usage( true );
 
 define ( 'ABD_ROOT_PATH', plugin_dir_path( __FILE__ ) );
 define ( 'ABD_ROOT_URL', plugin_dir_url( __FILE__ ) );
@@ -99,3 +100,5 @@ function abd_is_session_started()
     return FALSE;
 }
 abd_my_session_start();
+
+ABD_Log::perf_summary( 'Entire Plugin Init', $start_time, $start_mem );

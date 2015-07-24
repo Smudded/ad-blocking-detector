@@ -147,7 +147,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					}
 				}
 			}
-			ABD_Log::perf_summary( 'ABD_Database::get_all_shortcodes() // foreach( $options as $key=>$o ){ ... }', $time_bfl, $mem_bfl );
+			ABD_Log::perf_summary( 'ABD_Database::get_all_shortcodes() // foreach( $options as $key=>$o ){ ... }', $time_bfl, $mem_bfl, true );
 
 			//wp_die( print_r( $abd_scs, true ) );
 
@@ -252,15 +252,12 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		}
 
 		public static function get_settings( $json_array = false ) {
-			//		Collect start state for performance logging
-			$start_time = microtime( true );
-			$start_mem = memory_get_usage( true );
-
 			$abd_settings = get_option( 'abd_user_settings', array(
 					'user_defined_selectors' => '',
 					'enable_iframe'          => 'yes',
 					'enable_div'             => 'yes',
-					'enable_js_file'         => 'yes'
+					'enable_js_file'         => 'yes',
+					'enable_perf_logging'    => 'yes'
 				)
 			);
 
@@ -269,10 +266,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				$abd_settings['user_defined_selectors'] = json_encode( 
 					array_map( 'trim', explode( ';', $abd_settings['user_defined_selectors'] ) )
 				);
-			}	
-
-			//		Performance log
-			ABD_Log::perf_summary( 'ABD_Database::get_settings()', $start_time, $start_mem );		
+			}
 
 			return $abd_settings;
 		}

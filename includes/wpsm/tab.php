@@ -94,14 +94,6 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
                 $Options_group_object->ip_uniqueness_check();
             }
 
-            //  Children construct IP uniqueness check
-            $children = $Options_group_object->get_sections();
-            if( !empty( $children ) ) {
-                foreach( $children as $c ) {
-                    $c->ip_uniqueness_check();
-                }
-            }
-
 
             $this->my_options_groups[] = $Options_group_object;
             ABDWPSM_Settings_Manager::$options_groups[] = $Options_group_object;
@@ -134,6 +126,7 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
 
             echo '<div class="ABDWPSM_options_group_wrapper">';
                 foreach( $this->get_options_groups() as $OG ) {
+                    $OG->ip_uniqueness_check();
                     ?>
                     <form action="options.php" method="post">
                         <?php

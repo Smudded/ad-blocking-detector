@@ -8,20 +8,24 @@ if ( !class_exists( 'ABD_Log' ) ) {
 	class ABD_Log {
 		protected static $our_option_name = 'abd_event_log';
 
-		public static function error( $msg ) {
-			self::generic_log_entry( 'ERROR', $msg );
+		public static function error( $msg, $indented = false ) {
+			self::generic_log_entry( 'ERROR', $msg, $indented );
 		}
 
-		public static function info( $msg ) {
-			self::generic_log_entry( 'INFO', $msg );
+		public static function info( $msg, $indented = false ) {
+			self::generic_log_entry( 'INFO', $msg, $indented );
 		}
 
-		public static function debug( $msg ) {
-			self::generic_log_entry( 'DEBUG', $msg );
+		public static function debug( $msg, $indented = false ) {
+			self::generic_log_entry( 'DEBUG', $msg, $indented );
 		}
 
-		public static function perf( $msg ) {
-			self::generic_log_entry( 'PERF', $msg );
+		public static function perf( $msg, $indented = false ) {
+			$settings = ABD_Database::get_settings();
+
+			if( $settings['enable_perf_logging'] == 'yes' ) {
+				self::generic_log_entry( 'PERF', $msg, $indented );
+			}
 		}
 
 
@@ -42,7 +46,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 			return end( $es );
 		}
 
-		public static function get_readable_log( $num_entries = 0, $line_endings = '&#13;&#10;&#13;&#10;' ) {
+		public static function get_readable_log( $num_entries = 0, $indentation = '    >>   ', $line_endings = '&#13;&#10;&#13;&#10;' ) {
 			$readable = '';
 			$es = self::get_all_log_entries();
 
@@ -72,14 +76,17 @@ if ( !class_exists( 'ABD_Log' ) ) {
 				$type = $es[$i]['type'];
 				$msg = $es[$i]['message'];
 				$time = $es[$i]['time'];
-				//$loc = print_r( $es[$i]['backtrace'], true );
+
+				if( !$es[$i]['indented'] ) {
+					$indentation = '';
+				}
 
 				//	Pad type with spaces for uniformity
 				for( $j=strlen( $type ); $j <= 8; $j++ ) {
 					$type .= ' ';
 				}
 				
-				$readable .= $type . ' :: ' . $time . ' ::   ' . $msg . /*' ::  ' . $loc .*/ $line_endings;
+				$readable .= $indentation . $type . ' :: ' . $time . ' ::   ' . $msg . /*' ::  ' . $loc .*/ $line_endings;
 			}
 
 			return $readable;
@@ -90,16 +97,14 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		}
 
 
-		protected static function generic_log_entry( $type, $msg ) {
-			$bt = debug_backtrace();
-
+		protected static function generic_log_entry( $type, $msg, $indented = false ) {
 			$e = self::get_all_log_entries();
 
 			$e[] = array(
 				'type' => $type,
 				'message' => $msg,
 				'time' => date( 'm/d/y @ H:i:s (P' ) . ' GMT)',
-				'backtrace' => $bt
+				'indented' => $indented
 			);
 
 			update_site_option( self::get_option_name(), $e );
@@ -184,12 +189,11 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		 * @param    string $func_name    The function (e.g. my_func()) or class::function (e.g. ABD_Database::get_shortcode()) this performance pertains to.
 		 * @param    int    $start_time   The start time of the function in microseconds (get this using microtime())
 		 * @param    int    $start_mem    The start memory usage in bytes (get this using memory_get_usage())
+		 * @param	bool 	$sub_entry	Signifies whether this is a sub entry for performance log (will get indented)
 		 * @param float $time_alert_threshold The maximum amount of time in milliseconds before this function is starred as abnormal.
 		 * @param int $mem_alert_threshold The maximum amount of memory used before this function is starred as abnormal.
-		 *
-		 * @return   [type]                 [description]
 		 */
-		public static function perf_summary( $func_name, $start_time, $start_mem, $time_alert_threshold = 100, $mem_alert_threshold = 1048576 ) {
+		public static function perf_summary( $func_name, $start_time, $start_mem, $sub_entry = false, $time_alert_threshold = 100, $mem_alert_threshold = 1048576 ) {
 			$bytes = self::mem_diff( $start_mem, false );
 			$ms = self::time_diff( $start_time );
 
@@ -214,9 +218,9 @@ if ( !class_exists( 'ABD_Log' ) ) {
 
 			if( !empty( $suffix ) ) {
 				$suffix = ' #####' . $suffix . '#####';
-			}
+			}			
 
-			self::perf( $func_name . ' -- Exec Time = ' . self::time_diff( $start_time ) . 'ms, Mem Usage = ' . self::mem_diff( $start_mem ) . $suffix );
+			self::perf( $prefix . $func_name . ' -- Exec Time = ' . self::time_diff( $start_time ) . 'ms, Mem Usage = ' . self::mem_diff( $start_mem ) . $suffix, $sub_entry );
 		}
 	}	//	end class
 }	//	end if ( !class_exists( ...

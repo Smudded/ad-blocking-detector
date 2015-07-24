@@ -283,7 +283,16 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
                 $fopt = $this->get_field_options_array();
 
 
-                $fname = $this->get_section()->get_options_group()->get_db_option_name();
+                $Section = $this->get_section();
+                if( empty( $Section ) ) {
+                    ABDWPSM_Settings_Manager::die_with_message( 'Field has no section!' );
+                    return;
+                }
+                $OG = $Section->get_options_group();
+                if( empty( $OG ) ) {
+                    ABDWPSM_Settings_Manager::die_with_message( 'Section has no options group!');
+                }
+                $fname = $OG->get_db_option_name();
 
                 if( is_array( $this->get_field_name() ) ) {
                     foreach( $this->get_field_name() as $lvl ) {
