@@ -72,6 +72,11 @@ if( !class_exists( 'ABDWPSM_Settings_Manager' ) ) {
         protected function __construct() {}
 
         public static function initialize() {
+            //      Collect start state for performance logging
+            $start_time = microtime( true );
+            $start_mem = memory_get_usage( true );
+
+            
             //wp_die('<pre>' . htmlspecialchars( print_r( self::$options_groups, true ) ) . '</pre>' );
             foreach( self::$options_groups as $OG ) {
                 register_setting(
@@ -80,9 +85,16 @@ if( !class_exists( 'ABDWPSM_Settings_Manager' ) ) {
                     array( get_class( $OG ), 'validation_handler' )  //  Sanitize/Validate callback
                 );
             }
+
+            ABD_Log::perf_summary( 'ABDWPSM_Settings_Manager::initialize()', $start_time, $start_mem );
         }
 
         public static function display_settings_page_content( $page_identifier ) {
+            //      Collect start state for performance logging
+            $start_time = microtime( true );
+            $start_mem = memory_get_usage( true );
+
+            
             //  Do we have the basic building block for the settings... an array of tabs in $tabs?
             if( !is_array( self::$tabs ) ) {    //  Oh noes! We must die a horrible death.
                 self::die_with_message( "Expected array of ABDWPSM_Tab objects." );
@@ -164,6 +176,9 @@ if( !class_exists( 'ABDWPSM_Settings_Manager' ) ) {
                 //  No tabs
                 echo '<h3>No tabs are set to display on this page.</h3>';
             }
+
+
+            ABD_Log::perf_summary( 'ABDWPSM_Settings_Manager::display_settings_page_content()', $start_time, $start_mem );
         }
 
         public static function add_query_arg_to_strip( $query_arg_name ) {

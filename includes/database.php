@@ -49,9 +49,9 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			* this.  They're commented out because they spam the hell out of the Session Log.
 			*/
 
-			//		This function gets called a lot... for information purposes, let's record
-			//		how long it takes.
-			$start_time = microtime(true);
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
 
 			//		Get cache results... if any
 			self::$our_shortcode_cache = get_transient( self::$our_shortcode_cache_option );
@@ -111,7 +111,8 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	from the prefix.
 			$substr_cutoff = strlen( $prefix_used );
 
-
+			$time_bfl = microtime( true );
+			$mem_bfl = memory_get_usage( true );
 			foreach( $options as $key=>$o ) {
 				//	All ABD shortcode options are prefixed by $prefix_used
 				//	So, if this came straight from the database, all we need to do 
@@ -146,6 +147,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					}
 				}
 			}
+			ABD_Log::perf_summary( 'ABD_Database::get_all_shortcodes() // foreach( $options as $key=>$o ){ ... }', $time_bfl, $mem_bfl );
 
 			//wp_die( print_r( $abd_scs, true ) );
 
@@ -157,14 +159,17 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			}
 
 			//		Performance log
-			$total_time = round( (microtime(true) - $start_time) * 1000, 3 );		//		milliseconds to 3 decimal places
-			//ABD_Log::info( 'Retrieved ' . count($abd_scs) . ' shortcode(s) from database in ' . $total_time . ' milliseconds.' );
+			ABD_Log::perf_summary( 'ABD_Database::get_all_shortcodes()', $start_time, $start_mem );
 
 			//		Return our results
 			return $abd_scs;
 		}
 
 		public static function delete_shortcode( $id ) {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$scname = self::get_shortcode_prefix() . $id;
 			$res = delete_option( $scname );
 
@@ -188,11 +193,18 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			self::nuke_shortcode_cache();
 			ABD_Log::info( 'Forcing shortcode cache update after shortcode deletion by deleting existing cache.' );
 
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::delete_shortcode()', $start_time, $start_mem );
+
 			
 			return $res;
 		}
 
 		public static function get_shortcode( $id, $muffle_output = false ) {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$res = get_option( self::get_shortcode_prefix() . $id );
 
 			if( !$muffle_output ) {				
@@ -203,11 +215,18 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					ABD_Log::info( 'Failed to retrieve shortcode with ID=' . $id . ' from database. Query failure or no corresponding option in database.' );
 				}
 			}
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::get_shortcode()', $start_time, $start_mem );
 			
 			return $res;
 		}
 
 		public static function get_next_id( $force_new_transient = false ) {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$id = get_transient( 'abd_next_shortcode_id' );
 
 			$id_in_use = self::get_shortcode( $id, true ) ? true : false;
@@ -223,13 +242,20 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				//	Generate a new one.
 				set_transient( 'abd_next_shortcode_id', uniqid(), 86400 );
 
-				return self::get_next_id();
+				$id =  self::get_next_id();
 			}
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::get_next_id()', $start_time, $start_mem );
 
 			return $id;
 		}
 
 		public static function get_settings( $json_array = false ) {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$abd_settings = get_option( 'abd_user_settings', array(
 					'user_defined_selectors' => '',
 					'enable_iframe'          => 'yes',
@@ -243,13 +269,20 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				$abd_settings['user_defined_selectors'] = json_encode( 
 					array_map( 'trim', explode( ';', $abd_settings['user_defined_selectors'] ) )
 				);
-			}			
+			}	
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::get_settings()', $start_time, $start_mem );		
 
 			return $abd_settings;
 		}
 
 
 		public static function nuke_all_options() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$options = wp_load_alloptions();	//	Get all WP options
 
 			foreach( $options as $key=>$o ) {
@@ -259,12 +292,22 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			}
 
 			//		Make sure we update the cache when we retrieve shortcodes next
-			self::nuke_shortcode_cache();			
+			self::nuke_shortcode_cache();	
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::nuke_all_options()', $start_time, $start_mem );		
 		}
 
 
 		public static function nuke_shortcode_cache() {
-			delete_transient( self::$our_shortcode_cache_option );			
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
+			delete_transient( self::$our_shortcode_cache_option );
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::nuke_shortcode_cache()', $start_time, $start_mem );			
 		}
 
 		/**
@@ -297,6 +340,10 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 		//	Stats gathering
 		public static function size_of_wp_options_table() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			global $wpdb;
 			$prefix = $wpdb->base_prefix;
 
@@ -307,6 +354,9 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			else {
 				return -1;
 			}
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::size_of_wp_options_table()', $start_time, $start_mem );
 		}
 
 
@@ -348,6 +398,10 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	
 			//	This function is to extract the shortcodes from the old database, turn them
 			//	into values, and store them as an option.
+
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
 
 			//	Get old shortcodes
 			global $wpdb;
@@ -430,9 +484,16 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				add_action( 'network_admin_notices',
 					array( 'ABD_Admin_Views', 'deprecated_network_wide_shortcodes_notice' ) );
 			}
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::v2_to_v3_database_transfer()', $start_time, $start_mem );
 		}
 
 		public static function v31_to_v32_database_update() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			//	Versions 3.0.0 and 3.0.1 did not utilize the list of shortcodes database
 			//	option which improves performance and reduces memory usage. This was introduced
 			//	in version 3.0.2.  So, if we're using versions 3.0.0 and 3.0.1, we need to look
@@ -451,9 +512,16 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			update_option( 'abd_list_of_shortcodes', $list );
 
 			ABD_Log::info( 'Update Progress - Finished search of wp_options table for existing shortcodes.' );
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::v31_to_v32_database_update()', $start_time, $start_mem );
 		}
 
 		public static function drop_v2_table() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			global $wpdb;
 			
 
@@ -464,6 +532,9 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			$wpdb->query( $sql );
 
 			ABD_Log::info( 'Dropped version 2 table, abd_shortcodes, from the database.' );
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::drop_v2_table()', $start_time, $start_mem );
 		}
 
 	}	//	end class ABD_Database

@@ -189,11 +189,18 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			 * awesome.
 			 */
 
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			//	Remove any old messages on each page load
 			ABDWPSM_Settings_Manager::add_query_arg_to_strip( 'msg-code' );
 			ABDWPSM_Settings_Manager::add_query_arg_to_strip( 'result' );
 
 			//	Tabs
+			$time_bt = microtime( true );
+			$mem_bt = memory_get_usage( true );
+			
 			$GS_Tab = new ABDWPSM_Tab( array(
 				'display_name'        => ABD_L::__( 'Getting Started' ),
 				'display_description' => self::getting_started_tab_header(),
@@ -224,8 +231,12 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'url_slug'            => 'debug',
 				'page'                => 'ad-blocking-detector'
 			) );
+			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs', $time_bt, $mem_bt );
 
 			//	Options Groups
+			$time_bt = microtime( true );
+			$mem_bt = memory_get_usage( true );
+			
 			//	New Shortcode Tab
 			$NST_OG = new ABDWPSM_Options_Group( array(
 				'db_option_name' => ABD_Database::get_shortcode_prefix() . ABD_Database::get_next_id(),
@@ -238,10 +249,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'db_option_name' => 'abd_user_settings'
 			) );
 			$AS_OG->add_to_tab( $Settings_Tab );
+			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // options groups', $time_bt, $mem_bt );
 
 
 
 			//	Sections
+			$time_bt = microtime( true );
+			$mem_bt = memory_get_usage( true );
+			
 			$NST_Basic_Section = new ABDWPSM_Section( array(
 				'id'                  => 'nst_og-basic_options',
 				'display_name'        => ABD_L::__( 'Basic Shortcode Settings' ),
@@ -268,10 +283,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'display_name'        => ABD_L::__( 'Customize Iframe Detection Method' ),
 				'display_description' => self::settings_customize_iframe_section_header()
 			) );
-			$AS_Iframe_Section->add_to_options_group( $AS_OG );
+			$AS_Iframe_Section->add_to_options_group( $AS_OG );			
+			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // sections', $time_bt, $mem_bt );
 
 
 			//	Fields
+			$time_bt = microtime( true );
+			$mem_bt = memory_get_usage( true );
+			
 			$NST_Basic_Fs = array();
 			$AS_UDS_Fs = array();
 			//	Basic Section
@@ -383,14 +402,25 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				)
 			) );
 			$AS_Iframe_URL->add_to_section( $AS_Iframe_Section );
+			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // fields', $time_bt, $mem_bt );
 
 
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // before ogize_existing_shortcodes()', $start_time, $start_mem );
 
 			//	Deal with Existing Shortcodes Tab which is all programmatic, not hard coded
-			self::ogize_existing_shortcodes( $Existing_Shortcodes_Tab );			
+			self::ogize_existing_shortcodes( $Existing_Shortcodes_Tab );
+
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings()', $start_time, $start_mem );
 		}
 
 		protected static function ogize_existing_shortcodes( &$The_Tab_To_Add_To ) {			
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$enabled_text                  = ABD_L::__( 'Enabled (default)' );
 			$disabled_text                 = ABD_L::__( 'Disabled' );
 			$choices_array                 = array();
@@ -468,6 +498,11 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				//	No shortcodes in array.
 				$The_Tab_To_Add_To->set_display_description( '<br /><h3>' . ABD_L::__( 'No shortcodes yet! Click the "Add New Shortcode" tab above to create your first one.' ) . '</h3>' );
 			}
+
+
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::ogize_existing_shortcodes()', $start_time, $start_mem );
 		}	//	end ogize_existing_shortcodes
 
 
@@ -1140,13 +1175,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 
 
-				<div class="abd-masonry-block">
+				<div class="abd-masonry-block" style="width: 100%;">
 					<h3><?php ABD_L::_e( 'Session Log' ); ?></h3>
 
 					<p>
 						<?php ABD_L::_e( 'This plugin logs noteworthy actions and errors during usage of this dashboard. If an action isn\'t working correctly, try clearing this log using the button below, reattempting the action, then checking the log for information, or pass it to the developer in a bug report or support request.' ); ?>
 					</p>
-					<div><textarea>SESSION LOG&#13;&#10;============&#13;&#10;============&#13;&#10;&#13;&#10;<?php echo ABD_Log::get_readable_log(); ?></textarea></div>
+					<div><textarea style='width: 100% !important'>SESSION LOG&#13;&#10;============&#13;&#10;============&#13;&#10;&#13;&#10;<?php echo ABD_Log::get_readable_log(); ?></textarea></div>
 
 					<!-- Space for Date and Time -->
 					<p id="abd-js-date-time"><strong><?php ABD_L::_e( 'Current Date and Time: ' ); ?></strong></p>
