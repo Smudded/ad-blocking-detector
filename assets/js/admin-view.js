@@ -97,7 +97,7 @@
 				masonryContainer.masonry('reload');	
 			}
 		});
-		$('.abd-accordion').addClass('abd-jqui');	//	jQuery UI theme scope
+		$('.abd-accordion').addClass('abd-jqui').wrap('<div class="abd-jqui" />');	//	jQuery UI theme scope
 
 		//	Sometimes the layout isn't right after accordioning, so force re-arrange the boxes
 		masonryContainer.masonry('reload');
@@ -145,7 +145,7 @@
 					});
 
 					//	Fix Random jQuery UI CSS Scoping Issues	//
-					$('div.ui-widget-overlay').wrap('<div class="ffs abd-jqui" />');
+					$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
 				}
 			});
 			gsDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope
@@ -184,7 +184,7 @@
 				],
 				open: function() {
 					//	Fix Random jQuery UI CSS Scoping Issues	//
-					$('div.ui-widget-overlay').wrap('<div class="ffs abd-jqui" />');
+					$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
 				}
 			});
 			dsDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope
@@ -213,7 +213,7 @@
 				],				
 				open: function() {
 					//	Fix Random jQuery UI CSS Scoping Issues	//
-					$('div.ui-widget-overlay').wrap('<div class="ffs abd-jqui" />');
+					$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
 				}
 			});
 			umDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope
@@ -242,7 +242,7 @@
 				],				
 				open: function() {
 					//	Fix Random jQuery UI CSS Scoping Issues	//
-					$('div.ui-widget-overlay').wrap('<div class="ffs abd-jqui" />');
+					$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
 				}
 			});			
 			dmpDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope
@@ -311,7 +311,7 @@
 					],				
 					open: function() {
 						//	Fix Random jQuery UI CSS Scoping Issues	//
-						$('div.ui-widget-overlay').wrap('<div class="ffs abd-jqui" />');
+						$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
 					}
 				});			
 				idleDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope

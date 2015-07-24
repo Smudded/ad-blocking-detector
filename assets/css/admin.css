@@ -258,9 +258,9 @@ div.abd-masonry-block {
  * jQuery UI Fixes
  ********************/
  /* Dialog overlay not over certain elements */
- .ui-front {
+ .abd-jqui .ui-front {
  	z-index: 10001 !important;
  }
- .ui-dialog {
+ .abd-jqui .ui-dialog {
  	z-index: 10002 !important;
  }
