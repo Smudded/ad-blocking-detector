@@ -217,7 +217,7 @@ if( !class_exists( 'ABDWPSM_Settings_Manager' ) ) {
             $loc_string .= '<br /><strong>Line #: </strong>' . $line;
 
             $loc_string .= '<br /><br /><h4>Complete Backtrace</h4>';
-            $loc_string .= '<pre>' . $trace_str . '</pre>';
+            $loc_string .= '<pre>' . htmlentities( $trace_str ) . '</pre>';
 
             //  Now output the error.
             wp_die( '<h3 style="color: #600;">ERROR</h3><p style="color: #600; font-size: 1.2em;">' . $message . '</p><br />' . $loc_string . 'WPSM Error' );

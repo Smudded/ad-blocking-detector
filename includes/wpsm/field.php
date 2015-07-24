@@ -117,21 +117,10 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
          * Gets the ABDWPSM_Field object with a field name matching the one specified in the
          * section specified.
          * @param  {string} $field_name The name of the field to get.
-         * @param  {string} $Section    A ABDWPSM_Section object to search for the field in.
          * @return {object}             The ABDWPSM_Field object with the specified name.
          * @return {null}               If no field object matches, null is returned.
          */
         public static function get_field_by_field_name( $field_name, $Section ) {
-            //  Don't add something that isn't a section.
-            if( !( $Section instanceof ABDWPSM_Section ) ) {
-                //  Okay, it's not an instance of ABDWPSM_Section, to make
-                //  errors more helpful, what is it?
-                $type = ABDWPSM_Settings_Manager::wtf_is_this( $Section );
-
-                ABDWPSM_Settings_Manager::die_with_message( 'Expected ABDWPSM_Section object.  Got ' . $type . '.' );
-                return;
-            }
-
             foreach( $Section->get_fields() as $Field ) {
                 if( $Field->get_field_name() == $field_name ) {
                     return $Field;
@@ -158,11 +147,11 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
          * Makes sure this field meets identifying property uniqueness requirements.
          */
         public function ip_uniqueness_check() {
-            $My_Section = $this->get_section();
+            $My_Section = $this->get_section( false );
             $my_fn = $this->get_field_name();
 
-            //  Fields' identifying properties (IP) are the field_name, and they only
-            //  need to remain unique amongst other fields in the same section.
+            //  Fields' identifying properties (IP) are the field_name, and they must be globally
+            //  unique
 
             //  So, first, make sure we have a section and field_name set. If we don't then presumably
             //  this construct is still being built and we have nothing to check for.
@@ -175,13 +164,13 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
 
 
             //  Okay, if we're here, we have everything set. We can check uniqueness.
-            foreach( $My_Section->get_fields() as $Field ) {
+            foreach( ABDWPSM_Settings_Manager::$fields as $Field ) {
                 if( $Field->get_field_name() == $my_fn &&
-                    $My_Section              == $Field->get_section() &&
+                    $Field->get_section()->get_options_group()->get_db_option_name == $my_fn &&
                     $Field                   != $this ) {
 
                     //  Not unique!
-                    ABDWPSM_Settings_Manager::die_with_message( 'Your field needs a unique identifying property (field_name) amongst other fields in its section. <em>' . $my_fn . '</em> has already been used!' );
+                    ABDWPSM_Settings_Manager::die_with_message( 'Your field needs a unique identifying property (field_name) in its options group. <em>' . $my_fn . '</em> has already been used!' );
                     return;
                 }
             }
@@ -606,8 +595,20 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
         public function get_field_name() {
             return $this->my_field_name;
         }
-        public function get_section() {
-            return $this->my_section;
+        public function get_section( $the_object = true ) {
+            if( !$the_object ) {
+                return $this->my_section;   //  The identifying property
+            }
+            else {
+                //  Search all sections for section with identifying property
+                foreach( ABDWPSM_Settings_Manager::$sections as $section ) {
+                    if( $section->get_id() == $this->my_section ) {
+                        return $section;
+                    }
+                }
+            }
+
+            return null;
         }
         public function get_type() {
             return $this->my_type;
@@ -700,25 +701,8 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
 
             $this->my_type = $type;
         }
-        public function set_section_reference( $Section ) {
-            //  Don't add to something that isn't an options group.
-            if( !( $Section instanceof ABDWPSM_Section ) ) {
-                //  Okay, it's not an instance of ABDWPSM_Options_Group, to make
-                //  errors more helpful, what is it?
-                $type = get_class( $Section );
-                if( !$type ) {  //  It's not a class, it's something else... what?
-                    $type = gettype( $Section );
-                }
-                else {  //  It is a class, let's tack on ' object' for readability.
-                    $type .= ' object';
-                }
-
-                ABDWPSM_Settings_Manager::die_with_message( 'Expected ABDWPSM_Section object.  Got ' . $type . '.' );
-                return;
-            }
-
-            //  Okay, if we're here, then we have a section, so set it.
-            $this->my_section = $Section;
+        public function set_section_reference( $id ) {
+            $this->my_section = $id;
         }
 
 

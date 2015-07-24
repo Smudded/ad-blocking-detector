@@ -54,7 +54,7 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
          * Append a section object to the options group.
          * @param {object} $Section ABDWPSM_Section object to append.
          */
-        public function add_section( $Section ) {
+        public function add_section( $Section, $skip_ip_check = false ) {
             //  Don't add something that isn't a section.
             if( !( $Section instanceof ABDWPSM_Section ) ) {
                 //  Okay, it's not an instance of ABDWPSM_Section, to make
@@ -68,7 +68,7 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
 
             //  If this section already has a parent, then we don't want to
             //  add it because that will screw up references to it.
-            if( $Section->get_options_group() ) {
+            if( $Section->get_options_group( false ) ) {
                 ABDWPSM_Settings_Manager::die_with_message( 'Cannot add a section to multiple options groups!' );
             }
 
@@ -80,10 +80,20 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
             }
 
             //  Update the section to point to options group
-            $Section->set_options_group_reference( $this );
+            $Section->set_options_group_reference( $this->get_db_option_name() );
 
             //  Check IP uniqueness requirements
-            $Section->ip_uniqueness_check();
+            if( !$skip_ip_check ) {
+                $Section->ip_uniqueness_check();
+            }
+
+            //  Children construct IP uniqueness check
+            $children = $Section->get_fields();
+            if( !empty( $children ) ) {
+                foreach( $children as $c ) {
+                    $c->ip_uniqueness_check();
+                }
+            }
 
             //  Okay, add the bastard.
             $this->my_sections[] = $Section;
@@ -546,13 +556,16 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
                 $this->set_validation_callback( $ogoa['validation_callback'] );
             }
 
+            //  Add section to its tab
+
+
             //  Add each section object
             if( is_array( $ogoa['section_object_array'] ) ) {
                 //  Loop through the array and add sections individually
                 //  so we get the add_section function's validation
                 //  instead of simply assigning the array.
                 foreach( $ogoa['section_object_array'] as $Section ) {
-                    $this->add_section( $Section );
+                    $this->add_section( $Section, true );
                 }
             }
         }
@@ -569,8 +582,22 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
             return $this->my_validation_callback;
         }
 
-        public function get_tab() {
-            return $this->my_tab;
+        public function get_tab( $the_object = true ) {
+            if( !$the_object ) {
+                return $this->my_tab;
+            }
+            else {
+                //  Search all tabs for one with tab with url_slug
+                foreach( ABDWPSM_Settings_Manager::$tabs as $tab ) {
+                    if( $tab->get_url_slug() == $this->my_tab ) {
+                        return $tab;
+                    }
+                }
+            }
+
+            
+
+            return null;
         }
 
         public function get_sections() {
@@ -610,17 +637,6 @@ if( !class_exists( 'ABDWPSM_Options_Group' ) ) {
         }
 
         public function set_tab_reference( $Tab ) {
-            //  Don't add to something that isn't an options group.
-            if( !( $Tab instanceof ABDWPSM_Tab ) ) {
-                //  Okay, it's not an instance of ABDWPSM_Options_Group, to make
-                //  errors more helpful, what is it?
-                $type = ABDWPSM_Settings_Manager::wtf_is_this( $Tab );
-
-                ABDWPSM_Settings_Manager::die_with_message( 'Expected ABDWPSM_Tab object.  Got ' . $type . '.' );
-                return;
-            }
-
-            //  Okay, if we're here, then we have a section, so set it.
             $this->my_tab = $Tab;
         }
     }   //  end class

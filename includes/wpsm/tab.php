@@ -56,7 +56,7 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
          * Appends an options group object to the tab.
          * @param {object} $options_group_object An instance of ABDWPSM_Options_Group class.
          */
-        public function add_options_group( $Options_group_object ) {
+        public function add_options_group( $Options_group_object, $skip_ip_check = false ) {
             //  Is it a valid options group?
             if( !( $Options_group_object instanceof ABDWPSM_Options_Group ) ) {
                 //  Okay, it's not an instance of ABDWPSM_Options_Group, to make
@@ -69,7 +69,7 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
 
             //  If this options group already has a parent, then we don't want to
             //  add it because that will screw up references to it.
-            if( $Options_group_object->get_tab() ) {
+            if( $Options_group_object->get_tab( false ) ) {
                 ABDWPSM_Settings_Manager::die_with_message( 'Cannot add an options group to multiple tabs!' );
             }
 
@@ -86,11 +86,21 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
 
 
             //  Update options group to point to this tab
-            $Options_group_object->set_tab_reference( $this );
+            $Options_group_object->set_tab_reference( $this->get_url_slug() );
 
 
             //  IP uniqueness check
-            $Options_group_object->ip_uniqueness_check();
+            if( !$skip_ip_check ) {
+                $Options_group_object->ip_uniqueness_check();
+            }
+
+            //  Children construct IP uniqueness check
+            $children = $Options_group_object->get_sections();
+            if( !empty( $children ) ) {
+                foreach( $children as $c ) {
+                    $c->ip_uniqueness_check();
+                }
+            }
 
 
             $this->my_options_groups[] = $Options_group_object;
@@ -104,9 +114,9 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
          * with the given URL slug.
          * @return {null}             If no tab with url slug is found, null is returned.
          */
-        public static function get_tab_by_url_slug( $url_slug, $page ) {
+        public static function get_tab_by_url_slug( $url_slug ) {
             foreach ( ABDWPSM_Settings_Manager::$tabs as $tab ) {
-                if( $tab->get_url_slug() == $url_slug && $tab->get_page() == $page ) {
+                if( $tab->get_url_slug() == $url_slug ) {
                     return $tab;
                 }
             }
@@ -146,8 +156,8 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
             $my_page = $this->get_page();
             $my_url_slug = $this->get_url_slug();
 
-            //  Tabs' identifying properties (IP) are the url_slug, and they only
-            //  need to remain unique amongst other tabs on the same page.
+            //  Tabs' identifying properties (IP) are the url_slug, and they must be globally
+            //  unique
 
             //  So, first, make sure we have a page and url_slug set. If we don't then presumably
             //  this construct is still being built and we have nothing to check for.
@@ -162,11 +172,10 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
             //  Okay, if we're here, we have everything set. We can check uniqueness.
             foreach( ABDWPSM_Settings_Manager::$tabs as $Tab ) {
                 if( $Tab->get_url_slug() == $my_url_slug &&
-                    $Tab->get_page()     == $my_page &&
                     $Tab                 != $this ) {
 
                     //  Not unique!
-                    ABDWPSM_Settings_Manager::die_with_message( 'Your tab needs a unique identifying property (url_slug) amongst other tabs on its page. <em>' . $my_url_slug . '</em> has already been used!' );
+                    ABDWPSM_Settings_Manager::die_with_message( 'Your tab needs a unique identifying property (url_slug). <em>' . $my_url_slug . '</em> has already been used!' );
                     return;
                 }
             }
@@ -233,19 +242,18 @@ if( !class_exists( 'ABDWPSM_Tab' ) ) {
             $this->set_display_description( $toa['display_description'] );
             $this->set_url_slug( $toa['url_slug'] );
 
+            //  Add to the page
+            if( !empty( $toa['page'] ) ) {
+                $this->add_to_page( $toa['page'] );
+            }
 
             //  Add the options groups
             $this->my_options_groups = array();
             if( is_array( $toa['options_group_object_array'] ) ) {
 
                 foreach( $toa['options_group_object_array'] as $OG ) {
-                    $this->add_options_group( $OG );
+                    $this->add_options_group( $OG, true );
                 }
-            }
-
-            //  Add to the page
-            if( !empty( $toa['page'] ) ) {
-                $this->add_to_page( $toa['page'] );
             }
         }   //  end __construct
 
