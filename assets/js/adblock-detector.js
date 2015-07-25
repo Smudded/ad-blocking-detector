@@ -147,10 +147,19 @@ function Abd_Detector (options) {
 		else {
 			var selectors = [];
 		}
-		jQuery.each(selectors, function(index, value) {
+		jQuery.each(selectors, function(index, val) {
 			//	Is this empty or not a string?
-			if(!value || typeof value != 'string') {
+			if(!val || typeof val != 'string') {
 				return true;	//	jQuery each() equivalent of continue;
+			}
+
+			//	Is this a JSON string?
+			var value = val;
+			try {
+				value = jQuery.parseJSON( value );
+			}
+			catch(e) {
+				value = val;
 			}
 
 			self.debugMsg("checking user defined selector: " + value);
@@ -166,9 +175,9 @@ function Abd_Detector (options) {
 			}
 
 			//	Iterate through each match
-			jQuery(value).each(function() {				
+			jQuery(value).each(function(ind, elem) {				
 				//	Is the wrapper height shrunk to zero?
-				if(jQuery(this).height() < 50) {
+				if(jQuery(elem).height() < 50) {
 					mthd_text = "user defined wrapper removal detected! (Detection Method: wrapper height resized to near 0 - $(selector).height < 50";
 
 					retVal = {
@@ -181,7 +190,7 @@ function Abd_Detector (options) {
 				}
 
 				//	Is the wrapper empty?
-				if(jQuery.trim(jQuery(this).html()) == '') {
+				if(jQuery.trim(jQuery(elem).html()) == '') {
 					mthd_text = "user defined wrapper removal detected! (Detection Method: wrapper is empty - $.trim($(selector).html()) == ''";
 
 					retVal = {
@@ -194,8 +203,8 @@ function Abd_Detector (options) {
 				}
 
 				//	If there is an iframe within the wrapper, is it screwed up?
-				jQuery(this).find('iframe').each(function() {
-					retVal = self.checkAdStatusIframeHelper(value, jQuery(this), 'skip', retVal);
+				jQuery(elem).find('iframe').each(function() {
+					retVal = self.checkAdStatusIframeHelper(value, jQuery(elem), 'skip', retVal);
 				});
 			});
 		});
