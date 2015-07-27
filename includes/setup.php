@@ -553,7 +553,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 			/**
 			 * An associative array where the key is a plugin version, and the value is
-			 * a function, passed to admin_notices WordPress action that outputs the content
+			 * a function callback, passed to admin_notices WordPress action that outputs the content
 			 * of an upgrade message for that version.  This will be checked later on,
 			 * and if we are upgrading, and there is a mapped function, it will be tied
 			 * to an admin_notices action.
@@ -624,8 +624,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	ALL VERSION JUMPS	//
 				//////////////////////////
 				//	Update the Block List Countermeasure Plugin if automatic
-				$blcp_status = ABD_Anti_Adblock::bcc_plugin_status();
-				if( !$blcp_status['manual_plugin_exists'] ) {
+				$blcp_manual_status = ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_exists' );
+				if( !$blcp_manual_status ) {
 					//	Auto upgrade it
 					ABD_Log::info( 'Attempting upgrade of automatic Block List Countermeasure plugin.' );
 					ABD_Anti_Adblock::create_bcc_plugin();

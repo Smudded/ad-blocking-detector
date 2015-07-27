@@ -1449,7 +1449,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 						
 						<br /><strong style="color: #444; "><?php ABD_L::_e( 'Automatic Plugin Status' ); ?>:</strong>
 						<?php
-						if( $blcp_status['auto_plugin_exists'] ) {
+						if( !$blcp_status['plugin_exists'] ) {
 							?>
 							<ul>
 								<li class="abd_failure_message">
