@@ -165,6 +165,20 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			return $abd_scs;
 		}
 
+		public static function count_shortcodes() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+			
+			$sclist = get_option( 'abd_list_of_shortcodes', array() );
+
+			$count = count( $sclist );
+
+			ABD_Log::perf_summary( 'ABD_Database::count_shortcodes()', $start_time, $start_mem );
+
+			return $count;
+		}
+
 		public static function delete_shortcode( $id ) {
 			//		Collect start state for performance logging
 			$start_time = microtime( true );
