@@ -194,11 +194,29 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		 * @param int $mem_alert_threshold The maximum amount of memory used before this function is starred as abnormal.
 		 */
 		public static function perf_summary( $func_name, $start_time, $start_mem, $sub_entry = false, $time_alert_threshold = 100, $mem_alert_threshold = 1048576 ) {
+			//	Check for settings thresholds and filtration
+			$settings = ABD_Database::get_settings();
+			if( isset( $settings['perf_logging_time_limit'] ) ) {
+				$time_alert_threshold = $settings['perf_logging_time_limit'];
+			}
+			if( isset( $settings['perf_logging_mem_limit'] ) ) {
+				$mem_alert_threshold = $settings['perf_logging_mem_limit'];
+			}
+			if( isset( $settings['perf_logging_only_above_limits'] ) && $settings['perf_logging_only_above_limits'] == 'yes' ) {
+				$only_above_threshold = true;
+			}
+			else {
+				$only_above_threshold = false;
+			}
+
+
 			$bytes = self::mem_diff( $start_mem, false );
 			$ms = self::time_diff( $start_time );
+			$above_threshold = false;
 
 			$suffix = '';
 			if( $ms > $time_alert_threshold ) {
+				$above_threshold = true;
 				$time_times_over = round( $ms / $time_alert_threshold );				
 				$suffix .= ' T';
 				for( ; $time_times_over > 0; $time_times_over-- ) {
@@ -207,6 +225,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 				$suffix .= ' ';
 			}
 			if( $bytes > $mem_alert_threshold ) {
+				$above_threshold = true;
 				$mem_times_over = round( $bytes / $mem_alert_threshold );				
 				$suffix .= ' M';
 				for( ; $mem_times_over > 0; $mem_times_over-- ) {
@@ -220,7 +239,9 @@ if ( !class_exists( 'ABD_Log' ) ) {
 				$suffix = ' #####' . $suffix . '#####';
 			}
 
-			self::perf( $func_name . ' -- Exec Time = ' . self::time_diff( $start_time ) . 'ms, Mem Usage = ' . self::mem_diff( $start_mem ) . $suffix, $sub_entry );
+			if( !$only_above_threshold || $above_threshold ) {
+				self::perf( $func_name . ' -- Exec Time = ' . self::time_diff( $start_time ) . 'ms, Mem Usage = ' . self::mem_diff( $start_mem ) . $suffix, $sub_entry );
+			}
 		}
 	}	//	end class
 }	//	end if ( !class_exists( ...

@@ -441,7 +441,39 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					'default' => 'yes'
 				)
 			) );
+			$AS_Log_perf_filtering = new ABDWPSM_Field( array(
+				'field_name'          => 'perf_logging_only_above_limits',
+				'type'                => 'radio',
+				'display_name'        => ABD_L::__( 'Filter Performance Summary Log Entries' ),
+				'display_description' => ABD_L::__( 'Whether to limit performance log entries to those exceeding the time and memory limits.' ),				
+				'field_options_array' => array(
+					'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
+					'default' => 'no'
+				)
+			) );
+			$AS_Log_perf_time_limit = new ABDWPSM_Field( array(
+				'field_name'          => 'perf_logging_time_limit',
+				'type'                => 'number',
+				'display_name'        => ABD_L::__( 'Peformance Summary Log Entry Time Limit' ),
+				'display_description' => ABD_L::__( 'The time threshold, in milliseconds, at which log entries are highlighted and cut off if performance entry filtration is enabled.' ),
+				'field_options_array' => array(
+					'default' => 100
+				)
+			) );
+			$AS_Log_perf_mem_limit = new ABDWPSM_Field( array(
+				'field_name'          => 'perf_logging_mem_limit',
+				'type'                => 'number',
+				'display_name'        => ABD_L::__( 'Peformance Summary Log Entry Memory Limit' ),
+				'display_description' => ABD_L::__( 'The used memory threshold, in bytes, at which log entries are highlighted and cut off if performance entry filtration is enabled.' ),
+				'field_options_array' => array(
+					'default' => 1048576
+				)
+			) );
 			$AS_Log_enable_perf->add_to_section( $AS_Log_Section );
+			$AS_Log_perf_filtering->add_to_section( $AS_Log_Section );
+			$AS_Log_perf_time_limit->add_to_section( $AS_Log_Section );
+			$AS_Log_perf_mem_limit->add_to_section( $AS_Log_Section );
+
 
 			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // fields', $time_bt, $mem_bt, true );
 
@@ -1269,7 +1301,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						$blcdir = ABD_Anti_Adblock::get_bcc_plugin_dir_name();
 						if( !$blcdir ) { $blcdir = 'No BLC Plugin Directory'; }
 
-						$mem_usage = memory_get_peak_usage( true );
+						$mem_usage = memory_get_usage( true );
 						if( $mem_usage < 1024 ) { $mem_usage = $mem_usage . ' bytes'; }
 						else if( $mem_usage < 1048576 ) { $mem_usage = round( $mem_usage/1024, 2 ) . ' KB'; }
 						else { $mem_usage = round( $mem_usage/1048576, 2 ) . ' MB'; }
