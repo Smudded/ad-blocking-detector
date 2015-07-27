@@ -607,7 +607,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 			$bfs_time = microtime( true );
 			$bfs_mem = memory_get_usage( true );
-			$blcp_status = ABD_Anti_Adblock::bcc_plugin_status();
+			$blcp_status = array(
+				'auto_plugin_activated'   => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_activated' ),
+				'manual_plugin_activated' => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_activated' ),
+				'auto_plugin_exists'      => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_exists' ),
+				'manual_plugin_exists'    => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_exists' ),
+				'plugin_activated'        => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_activated' ),
+				'plugin_exists'           => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_exists' )
+			);
 			ABD_Log::perf_summary( 'ABD_Admin_Views::getting_started_tab_content // before $blcp_status = ABD_Anti_Adblock::bcc_plugin_status();', $bfs_time, $bfs_mem, true );
 
 			$abd_settings = ABD_Database::get_settings();
@@ -639,7 +646,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 					<ul style="list-style-type: square">
 						<?php
-							if( $blcp_status['auto_plugin_activated'] || $blcp_status['manual_plugin_activated'] ) {
+							if( $blcp_status['plugin_activated'] ) {
 								$class = 'class="abd_success_message"';
 							}
 							else {
@@ -1290,26 +1297,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 					<?php 
 						//	Gather Data
-						$blc = ABD_Anti_Adblock::bcc_plugin_status(); 
-						if( $blc['auto_plugin_activated'] || $blc['manual_plugin_activated'] ) {
-							$blcactive = 'true';
-						}
-						else {
-							$blcactive = 'false';
-						}
-
-						if( $blc['auto_plugin_exists'] ) {
-							$blcexists = 'true';
-							$blctype = 'auto';
-						}
-						else if( $blc['manual_plugin_exists'] ) {
-							$blcexists = 'true';
-							$blctype = 'manual';
-						}
-						else {
-							$blcexists = 'false';
-							$blctype = 'N/A';
-						}
+						$blcp_status = array(
+							'auto_plugin_activated'   => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_activated' ),
+							'manual_plugin_activated' => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_activated' ),
+							'auto_plugin_exists'      => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_exists' ),
+							'manual_plugin_exists'    => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_exists' ),
+							'plugin_activated'        => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_activated' ),
+							'plugin_exists'           => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_exists' )
+						);
 
 						$blcdir = ABD_Anti_Adblock::get_bcc_plugin_dir_name();
 						if( !$blcdir ) { $blcdir = 'No BLC Plugin Directory'; }
@@ -1330,9 +1325,10 @@ PHP Max Execution Time: <?php echo ini_get( 'max_execution_time' ); ?>&#13;&#10;
 WordPress Version: <?php echo get_bloginfo('version'); ?>&#13;&#10;
 Total # of wp_options Entries: <?php echo ABD_Database::size_of_wp_options_table(); ?>&#13;&#10;
 Plugin Version: <?php echo ABD_VERSION; ?>&#13;&#10;
-BLC Plugin Exists?: <?php echo $blcexists; ?>&#13;&#10;
-BLC Plugin Active?: <?php echo $blcactive; ?>&#13;&#10;
-BLC Plugin Type?: <?php echo $blctype; ?>&#13;&#10;
+Total # of shortcodes: <?php echo ABD_Database::count_shortcodes(); ?>&#13;&#10;
+BLC Plugin Exists?: <?php echo $blcp_status['plugin_exists']; ?>&#13;&#10;
+BLC Plugin Active?: <?php echo $blcp_statuc['plugin_activated']; ?>&#13;&#10;
+BLC Plugin Type?: <?php echo get_option( 'abd_blc_plugin_type' ); ?>&#13;&#10;
 BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 					</textarea>
 				</div>
@@ -1394,7 +1390,14 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 		}
 		
 		protected static function block_list_countermeasure_plugin_section() {
-			$fps = ABD_Anti_Adblock::bcc_plugin_status();
+			$blcp_status = array(
+				'auto_plugin_activated'   => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_activated' ),
+				'manual_plugin_activated' => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_activated' ),
+				'auto_plugin_exists'      => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_exists' ),
+				'manual_plugin_exists'    => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_exists' ),
+				'plugin_activated'        => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_activated' ),
+				'plugin_exists'           => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_exists' )
+			);
 			ob_start();
 			?>
 
@@ -1431,7 +1434,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 				<ul>
 					<?php
 					//	Does fallback plugin exist
-					if( $fps['auto_plugin_exists'] > 0 || $fps['manual_plugin_exists'] ) {
+					if( $blcp_status['plugin_exists'] ) {
 						$class = 'abd_success_message';
 					}
 					else if ( ABD_Anti_Adblock::check_php_version() < 0 ) {
@@ -1446,7 +1449,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 						
 						<br /><strong style="color: #444; "><?php ABD_L::_e( 'Automatic Plugin Status' ); ?>:</strong>
 						<?php
-						if( $fps['auto_plugin_exists'] < 1 ) {
+						if( $blcp_status['auto_plugin_exists'] ) {
 							?>
 							<ul>
 								<li class="abd_failure_message">
@@ -1533,13 +1536,10 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 							<?php
 						}
 
-						if( $fps['manual_plugin_exists'] != 0 || $fps['auto_plugin_exists'] < 1 ) {
+						if( $blcp_status['manual_plugin_exists'] || !$blcp_status['auto_plugin_exists'] ) {
 							//	Does fallback plugin exist
-							if( $fps['manual_plugin_exists'] > 0 ) {
+							if( $blcp_status['manual_plugin_exists'] ) {
 								$class = 'abd_success_message';
-							}
-							else if ( $fps['manual_plugin_exists'] < 0 ) {
-								$class = 'abd_unknown_message';
 							}
 							else {
 								$class = 'abd_failure_message';
@@ -1551,7 +1551,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 								<li class='<?php echo $class; ?>'><?php echo ABD_L::__( 'Manual plugin exists?' ); ?></li>
 
 								<?php
-								if( $fps['manual_plugin_exists'] ) {
+								if( $blcp_status['manual_plugin_exists'] ) {
 									?>
 									<li class='abd_success_message'><?php echo ABD_L::__( 'Plugin Directory' ) . ': ' . ABD_Anti_Adblock::get_bcc_manual_plugin_dir_name(); ?></li>
 									<?php
@@ -1566,7 +1566,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 
 					<?php
 					//	Is fallback plugin activated
-					if( $fps['auto_plugin_activated'] > 0 || $fps['manual_plugin_activated'] > 0 ) {
+					if( $blcp_status['plugin_activated'] ) {
 						$class = 'abd_success_message';
 					}
 					else if ( ABD_Anti_Adblock::check_php_version() < 0 ) {
@@ -1579,8 +1579,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 					<li class="<?php echo $class; ?>">
 						<?php ABD_L::_e( 'The Block List Countermeasure Plugin is activated?' ); 
 
-						if( ( $fps['auto_plugin_exists']   > 0 && $fps['auto_plugin_activated']   < 1 ) || 
-							( $fps['manual_plugin_exists'] > 0 && $fps['manual_plugin_activated'] < 1 ) ) {
+						if( $blcp_status['plugin_exists'] && !$blcp_status['plugin_activated'] ) {
 
 							//	Plugin exists and is NOT activated
 							?>
@@ -1613,7 +1612,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 
 				<div id='abd-fallback-plugin-controls'>
 					<?php
-					if( $fps['auto_plugin_exists'] < 1 ) {
+					if( !$blcp_status['auto_plugin_exists'] ) {
 						$style = 'button-primary';
 					}
 					else {
@@ -1637,7 +1636,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 						</a>
 					</p>
 					<?php
-					if( $fps['auto_plugin_exists'] < 1 ) {
+					if( !$blcp_status['auto_plugin_exists'] ) {
 						?>
 						<p>
 							<strong><?php ABD_L::_e( 'Manual Plugin Controls' ); ?></strong><br />
