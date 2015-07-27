@@ -118,6 +118,8 @@ if ( !class_exists( 'ABD_Log' ) ) {
 			if( count( $es ) > $max_entries ) {
 				$es = array_slice( $es, -1*$max_entries );
 			}
+
+			update_option( self::$our_option_name, $es );
 		}
 
 
