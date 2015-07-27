@@ -133,6 +133,10 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 		}
 
 		public static function bcc_plugin_status() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );			
+
 			$status = array( 'auto_plugin_exists' => 0, 'auto_plugin_activated' => 0, 'manual_plugin_exists' => -1, 'manual_plugin_activated' => 0 );
 
 			$dn = get_site_option( 'abd_blc_dir' );
@@ -182,6 +186,9 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 				$status['manual_plugin_exists'] = 0;
 				$status['auto_plugin_exists'] = 0;
 			}
+
+
+			ABD_Log::perf_summary( 'ABD_Anti_Adblock::bcc_plugin_status()', $start_time, $start_mem );
 
 			return $status;
 		}

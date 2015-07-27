@@ -588,11 +588,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			<?php
 			echo self::getting_started_tab_content();
 
-
 			return ob_get_clean();
 		}
 
 		protected static function getting_started_tab_content() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+			
+
 			if( defined( 'ABDBLC_ROOT_URL' ) ) {
 				//	Then our block list countermeasure plugin is loaded because it defines this constant.
 				$prefix = ABDBLC_ROOT_URL;
@@ -601,10 +605,15 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				$prefix = ABD_ROOT_URL;
 			}
 
-			$fallback_status = ABD_Anti_Adblock::bcc_plugin_status();
+			$bfs_time = microtime( true );
+			$bfs_mem = memory_get_usage( true );
+			$blcp_status = ABD_Anti_Adblock::bcc_plugin_status();
+			ABD_Log::perf_summary( 'ABD_Admin_Views::getting_started_tab_content // before $blcp_status = ABD_Anti_Adblock::bcc_plugin_status();', $bfs_time, $bfs_mem, true );
+
 			$abd_settings = ABD_Database::get_settings();
 
 			ob_start();
+
 			?>
 			<div id="abd_getting_started_message" class="abd-masonry-wrapper">
 				<div class="abd-subtle-highlight abd-masonry-block">
@@ -630,7 +639,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 					<ul style="list-style-type: square">
 						<?php
-							if( $fallback_status['auto_plugin_activated'] || $fallback_status['manual_plugin_activated'] ) {
+							if( $blcp_status['auto_plugin_activated'] || $blcp_status['manual_plugin_activated'] ) {
 								$class = 'class="abd_success_message"';
 							}
 							else {
@@ -645,7 +654,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							</ul>
 						</li>
 						<?php
-							if( count( ABD_Database::get_all_shortcodes() ) > 0 ) {
+							if( ABD_Database::count_shortcodes() > 0 ) {
 								$class = 'class="abd_success_message"';
 							}
 							else {
@@ -801,7 +810,10 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			</div>
 
 			<?php
-			return ob_get_clean();
+			$ob = ob_get_clean();
+			ABD_Log::perf_summary( 'ABD_Admin_Views::getting_started_tab_content()', $start_time, $start_mem );
+
+			return $ob;
 		}
 
 		protected static function manage_shortcodes_tab_header() {

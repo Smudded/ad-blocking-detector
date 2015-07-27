@@ -691,15 +691,39 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 		 * function in the main plugin file: ABD_Setup::initialize()
 		 */
 		public static function initialize() {
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
 			//	Upgrade function runs every time plugin loads. It determines
 			//	what, if anything needs to be done.
 			self::upgrade();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::upgrade()', $start_time, $start_mem, true );
 
+			$sub_time = microtime( true );
+			$sub_mem = memory_get_usage( true );
 			self::menus();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::menus()', $sub_time, $sub_mem, true );
+
+			$sub_time = microtime( true );
+			$sub_mem = memory_get_usage( true );
 			self::hooks();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::hooks()', $sub_time, $sub_mem, true );
+
+			$sub_time = microtime( true );
+			$sub_mem = memory_get_usage( true );
 			self::enqueue();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::enqueue()', $sub_time, $sub_mem, true );
+
+			$sub_time = microtime( true );
+			$sub_mem = memory_get_usage( true );
 			self::shortcodes();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::shortcodes()', $sub_time, $sub_mem, true );
+
+			$sub_time = microtime( true );
+			$sub_mem = memory_get_usage( true );
 			self::plugin_list_links();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::plugin_list_links()', $sub_time, $sub_mem, true );
+
+			ABD_Log::perf_summary( 'ABD_Setup::initialize()', $start_time, $start_mem );
 		}
 	}	//	end class
 }	//	end if( !class_exists( ...
