@@ -52,6 +52,7 @@ define( 'ABD_VERSION', '3.1.2' );
 
 $start_time = microtime( true );
 $start_mem = memory_get_usage( true );
+$start_peak_mem = memory_get_peak_usage( true );
 
 define ( 'ABD_ROOT_PATH', plugin_dir_path( __FILE__ ) );
 define ( 'ABD_ROOT_URL', plugin_dir_url( __FILE__ ) );
@@ -102,3 +103,4 @@ function abd_is_session_started()
 abd_my_session_start();
 
 ABD_Log::perf_summary( 'Entire Plugin Init', $start_time, $start_mem );
+ABD_Log::perf( 'Entire Plugin Init -- Peak Memory = ' . ( memory_get_peak_usage( true ) - $start_peak_mem )/1048576 . 'MB' );
