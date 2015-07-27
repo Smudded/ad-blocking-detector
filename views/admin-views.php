@@ -1268,6 +1268,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					</p>
 					<div><textarea style='width: 100% !important'>SESSION LOG&#13;&#10;============&#13;&#10;============&#13;&#10;&#13;&#10;<?php echo ABD_Log::get_readable_log(); ?></textarea></div>
 
+					<p><strong><?php ABD_L::_e( 'Number of Log Entries:  ' ); ?></strong><?php echo count( ABD_Log::get_all_log_entries() ); ?></p>
 					<!-- Space for Date and Time -->
 					<p id="abd-js-date-time"><strong><?php ABD_L::_e( 'Current Date and Time: ' ); ?></strong></p>
 
