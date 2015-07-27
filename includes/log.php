@@ -195,7 +195,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		 * @param float $time_alert_threshold The maximum amount of time in milliseconds before this function is starred as abnormal.
 		 * @param int $mem_alert_threshold The maximum amount of memory used before this function is starred as abnormal.
 		 */
-		public static function perf_summary( $func_name, $start_time, $start_mem, $sub_entry = false, $time_alert_threshold = 100, $mem_alert_threshold = 1048576 ) {
+		public static function perf_summary( $func_name, $start_time, $start_mem, $sub_entry = false, $time_alert_threshold = 100, $mem_alert_threshold = 500000 ) {
 			//	Check for settings thresholds and filtration
 			$settings = ABD_Database::get_settings();
 			if( isset( $settings['perf_logging_time_limit'] ) ) {

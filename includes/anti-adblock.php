@@ -52,6 +52,9 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 		}
 
 		public static function create_bcc_plugin() {
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			//	Path to fallback dir is one directory up from this plugin's directory, then
 			//	down to the bcc_plugin_dir_name
 			$dir_only = self::get_bcc_plugin_dir_name();
@@ -97,10 +100,16 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 			update_site_option( 'abd_blc_plugin_type', 'auto' );
 			update_site_option( 'abd_blc_dir', $dir_only );
 			ABD_Log::info( 'Successfully created Block List Countermeasure plugin in directory ' . $dir_only );
+
+			ABD_Log::perf_summary( 'ABD_Anti_Adblock::create_bcc_plugin()', $start_time, $start_mem );
+
 			return true;
 		}
 
 		public static function delete_bcc_plugin() {
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
 			$do = self::get_bcc_plugin_dir_name();
 			if( !$do ) {
 				ABD_Log::error( 'Attempt to delete automatic Block List Countermeasure plugin, but no directory stored.  Plugin already deleted?' );
@@ -128,6 +137,8 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 				delete_site_option( 'abd_blc_dir' );
 				ABD_Log::info( 'Deleted Block List Countermeasure plugin successfully from ' . $do );
 			}
+
+			ABD_Log::perf_summary( 'ABD_Anti_Adblock::delete_bcc_plugin()', $start_time, $start_mem );
 
 			return $res;
 		}
@@ -163,6 +174,7 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 					$retval = is_dir( $plugin_path) && $plugin_type == 'manual';
 					break;
 				default:
+					ABD_Log::error( 'Unknown BLC Plugin status request type: ' . $what_you_want_to_know );
 					$retval = null;
 					break;
 			}
