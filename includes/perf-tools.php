@@ -37,7 +37,6 @@ if( !class_exists( 'ABD_Perf_Tools' ) ) {
 			} 
 			catch( Exception $e ) {
 				ABD_Log::error( 'Error in ABD_Perf_Tools::need_to_load_wpsm_settings(): ' . $e->getMessage() );
-				return false;
 			}
 
 			return false;
