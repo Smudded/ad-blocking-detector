@@ -188,6 +188,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			 * be.  With a little bit of familiarity, I think you'll agree that this thing is
 			 * awesome.
 			 */
+			
+			//	If we don't need to, don't register all this crap. Some users have had performance
+			//	issues (e.g. out of memory), and this will break their whole damn site, rather than
+			//	just pages where this loads.
+			if( !ABD_Perf_Tools::need_to_load_wpsm_settings() ) {
+				return;
+			}
 
 			//		Collect start state for performance logging
 			$start_time = microtime( true );
@@ -1280,7 +1287,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<p id="abd-js-date-time"><strong><?php ABD_L::_e( 'Current Date and Time: ' ); ?></strong></p>
 
 					<!-- Clear log button -->
-					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=clear_log' ), 'user instructed deletion of all log entries' ); ?>' class='button'>
+					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_clear_log' ), 'user instructed deletion of all log entries' ); ?>' class='button'>
 						<?php ABD_L::_e('Clear Log'); ?>
 					</a>
 				</div>
@@ -1621,17 +1628,17 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 					?>
 					<p>
 						<strong><?php ABD_L::_e( 'Automatic Plugin Controls' ); ?></strong><br />
-						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=create_bcc_plugin' ), 'user instructed anti-adblock fallback plugin creation' ); ?>" class='abd-fallback-plugin-copy-button button <?php echo $style; ?>'>
+						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_create_bcc_plugin' ), 'user instructed anti-adblock fallback plugin creation' ); ?>" class='abd-fallback-plugin-copy-button button <?php echo $style; ?>'>
 							<?php ABD_L::_e( 'Automatically Install Plugin' ); ?>
 						</a> 
 
 
-						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=reset_bcc_plugin_name' ), 'user instructed anti-adblock fallback plugin rename' ); ?>" id='abd-fallback-plugin-rename-button' class='button'>
+						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_reset_bcc_plugin_name' ), 'user instructed anti-adblock fallback plugin rename' ); ?>" id='abd-fallback-plugin-rename-button' class='button'>
 							<?php ABD_L::_e( 'Reset Plugin Directory Name' ); ?>
 						</a> 
 
 
-						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=delete_bcc_plugin' ), 'user instructed anti-adblock fallback plugin deletion' ); ?>" class='abd-fallback-plugin-delete-button button'>
+						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_delete_bcc_plugin' ), 'user instructed anti-adblock fallback plugin deletion' ); ?>" class='abd-fallback-plugin-delete-button button'>
 							<?php ABD_L::_e( 'Delete Automatically Installed Plugin' ); ?>
 						</a>
 					</p>
@@ -1642,7 +1649,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 							<strong><?php ABD_L::_e( 'Manual Plugin Controls' ); ?></strong><br />
 							<a class="button abd-download-manual-blc-plugin-button" href="<?php echo ABD_Anti_Adblock::get_bcc_manual_plugin_url(); ?>"><?php ABD_L::_e( 'Download Manual Plugin' ); ?></a>
 
-							<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=delete_manual_bcc_plugin' ), 'user instructed manual anti-adblock fallback plugin deletion' ); ?>" class='abd-fallback-plugin-delete-button button'>
+							<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_delete_manual_bcc_plugin' ), 'user instructed manual anti-adblock fallback plugin deletion' ); ?>" class='abd-fallback-plugin-delete-button button'>
 								<?php ABD_L::_e( 'Try to Delete Manually Installed Plugin' ); ?>
 							</a>						
 						</p>
@@ -1684,7 +1691,7 @@ BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
 						<?php ABD_L::_e( 'Get This Shortcode' ); ?>
 					</a> &nbsp;
 
-					<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=delete_shortcode&id=' . $sc_id ), 'user instructed shortcode delete id equals ' . $sc_id ); ?>" class="abd-shortcode-delete-button button">
+					<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_delete_shortcode&id=' . $sc_id ), 'user instructed shortcode delete id equals ' . $sc_id ); ?>" class="abd-shortcode-delete-button button">
 						<?php ABD_L::_e( 'Delete This Shortcode' ); ?>
 					</a>
 				</div>
