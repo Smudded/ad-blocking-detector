@@ -6,6 +6,14 @@
 
 if( !class_exists( 'ABD_Perf_Tools' ) ) {
 	class ABD_Perf_Tools {
+		/**
+		 * Settings API options only need registration on Ad Blocking Detector pages, and the
+		 * options.php submission page.  Everywhere else, it's just superfluous overhead that
+		 * can completely break WordPress sites if something is wrong with them.  This function
+		 * checks whether the options need registering or not.
+		 *
+		 * @return   bool   Whether we need to register options or not.
+		 */
 		public static function need_to_load_wpsm_settings() {
 			//	Wrap in try/catch so we don't break all of WordPress if something goes wrong.
 			try {
