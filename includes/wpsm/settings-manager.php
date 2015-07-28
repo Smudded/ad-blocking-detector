@@ -181,6 +181,14 @@ if( !class_exists( 'ABDWPSM_Settings_Manager' ) ) {
             }
 
 
+            //  Save memory by unsetting everything and triggering garbage collection (if possible) now that we've committed what we have.
+            //  Force the unset with =null since there have been memory exceeding problems and we want to get rid of everything.
+            self::$fields         = null;
+            self::$sections       = null;
+            self::$options_groups = null;
+            self::$tabs           = null;
+            ABD_Perf_Tools::force_garbage_collection();
+
             ABD_Log::perf_summary( 'ABDWPSM_Settings_Manager::display_settings_page_content()', $start_time, $start_mem );
         }
 
