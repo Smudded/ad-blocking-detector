@@ -153,16 +153,15 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 
 			$plugin_path = ABD_ROOT_PATH . '../' . $dir_name;
 
-
 			switch( $what_you_want_to_know ) {
 				case 'plugin_activated':
 					$retval = ( self::bcc_plugin_status( 'auto_plugin_activated' ) || self::bcc_plugin_status( 'manual_plugin_activated' ) );
 					break;
 				case 'auto_plugin_activated':
-					$retval = ( defined( ABDBLC_VERSION ) ? true : false ) && $plugin_type == 'auto';
+					$retval = ( defined( 'ABDBLC_VERSION' ) ? true : false ) && $plugin_type == 'auto';
 					break;
 				case 'manual_plugin_activated':
-					$retval = ( defined( ABDBLC_VERSION ) ? true : false ) && $plugin_type == 'manual';
+					$retval = ( defined( 'ABDBLC_VERSION' ) ? true : false ) && $plugin_type == 'manual';
 					break;
 				case 'plugin_exists':
 					$retval = ( self::bcc_plugin_status( 'auto_plugin_exists' ) || self::bcc_plugin_status( 'manual_plugin_exists' ) );
