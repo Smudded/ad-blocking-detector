@@ -449,9 +449,13 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//	of shortcodes.
 			set_time_limit( 60 );
 			$nwflag = false;	//	Will be set to true if any network wide shortcodes are detected.
+			$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE site_id = '{$wpdb->siteid}' AND deleted='0' AND archived='0'", ARRAY_A );
 			foreach( $old_scs as $osc ) {
+				$loop_start_time = microtime( true );
+				$loop_start_mem = memory_get_usage( true );
+
 				ABD_Log::info( 'Found version 2 shortcode. Initiating transfer.' );
-				ABD_Log::debug( 'Old Shortcode Contents: ' . json_encode( $osc ) );
+				//ABD_Log::debug( 'Old Shortcode Contents: ' . json_encode( $osc ) );
 				$nsc = array(
 					'display_name' => $osc['name'],
 					'noadblocker'  => $osc['noadblock'],
@@ -469,7 +473,6 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					$nsc['readonly'] = true;
 
 					//	Now, get all blog IDs
-					$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs} WHERE site_id = '{$wpdb->siteid}' AND deleted='0' AND archived='0'", ARRAY_A );					
 					if( !empty( $blogs ) ) {
 						ABD_Log::debug( 'Found ' . count( $blogs ) . ' multisite sites to add shortcode to.' );
 						
@@ -479,10 +482,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 							$res = ABD_Multisite::update_blog_option( $id, self::get_shortcode_prefix() . $osc['id'], $nsc );
 
 							if( $res ) {
-								ABD_Log::info( 'Successfully copied network wide shortcode "' . $osc['name'] . '" to multisite site "' . ABD_Multisite::get_blog_option( $id, 'blogname' ) );
-
-								update_option( 'abd_list_of_shortcodes', $scs );
-								ABD_Log::info( 'Adding ' . $osc['name'] . ' to list of shortcodes.' );
+								ABD_Log::info( 'Successfully copied network wide shortcode "' . $osc['name'] . '" to multisite site "' . ABD_Multisite::get_blog_option( $id, 'blogname' ) );								
 							}
 							else {
 								ABD_Log::error( 'Unknown failure transferring shortcode "' . $osc['name'] . '" to multisite site "' . ABD_Multisite::get_blog_option( $id, 'blogname' ) . '"' );
@@ -500,21 +500,25 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 					if( $res ) {
 						ABD_Log::info( 'Successfully transferred shortcode "' . $osc['name'] . '" from version 2 database table to version 3 WordPress option.' );
-
-						update_option( 'abd_list_of_shortcodes', $scs );
-						ABD_Log::info( 'Adding ' . $osc['name'] . ' to list of shortcodes.' );
 					}
 					else {
 						ABD_Log::error( 'Unknown failure transferring shortcode "' . $osc['name'] . '" from version 2 database table to version 3 WordPress option.' );
 						ABD_Log::debug( 'Failed shortcode option value: ' . print_r( $nsc, true ) );
 					}
-				}				
+				}
+
+				ABD_Log::perf_summary( 'ABD_Database::v2_to_v3_database_transfer() // transfer loop iteration', $loop_start_time, $loop_start_mem, true );
 			}
 
 			//	Warn users about use of any deprecated features (network wide shortcodes)
 			if( $nwflag ) {
 				add_action( 'network_admin_notices',
 					array( 'ABD_Admin_Views', 'deprecated_network_wide_shortcodes_notice' ) );
+			}
+
+			//	Delete list of shortcodes so it's reconstructed 
+			foreach( $blogs as $blog ) {
+				 ABD_Multisite::delete_blog_option( $blog['blog_id'], 'abd_list_of_shortcodes' );
 			}
 
 			//		Performance log
