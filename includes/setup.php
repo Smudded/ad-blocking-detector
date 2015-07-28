@@ -11,6 +11,7 @@ require_once( ABD_ROOT_PATH . 'views/admin-views.php' );
 require_once( ABD_ROOT_PATH . 'views/public-views.php' );
 require_once( ABD_ROOT_PATH . "includes/widget.php" );
 require_once( ABD_ROOT_PATH . "includes/click-handler.php" );
+require_once( ABD_ROOT_PATH . "includes/perf-tools.php" );
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
@@ -340,17 +341,17 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 
 			//	Button Click and Form Handlers
-			add_action( 'admin_post_create_bcc_plugin', 
+			add_action( 'admin_post_abd_create_bcc_plugin', 
 				array( 'ABD_Click_Handler', 'create_bcc_plugin' ) );
-			add_action( 'admin_post_reset_bcc_plugin_name', 
+			add_action( 'admin_post_abd_reset_bcc_plugin_name', 
 				array( 'ABD_Click_Handler', 'reset_bcc_plugin_name' ) );
-			add_action( 'admin_post_delete_bcc_plugin', 
+			add_action( 'admin_post_abd_delete_bcc_plugin', 
 				array( 'ABD_Click_Handler', 'delete_bcc_plugin' ) );
-			add_action( 'admin_post_delete_manual_bcc_plugin',
+			add_action( 'admin_post_abd_delete_manual_bcc_plugin',
 				array( 'ABD_Click_Handler', 'delete_manual_bcc_plugin' ) );
-			add_action( 'admin_post_clear_log',
+			add_action( 'admin_post_abd_clear_log',
 				array( 'ABD_Click_Handler', 'clear_log' ) );
-			add_action( 'admin_post_delete_shortcode',
+			add_action( 'admin_post_abd_delete_shortcode',
 				array( 'ABD_Click_Handler', 'delete_shortcode' ) );
 
 			//	Admin notices
