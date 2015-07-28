@@ -191,7 +191,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			
 			//	If we don't need to, don't register all this crap. Some users have had performance
 			//	issues (e.g. out of memory), and this will break their whole damn site, rather than
-			//	just pages where this loads.
+			//	just pages where this is needed.
 			if( !ABD_Perf_Tools::need_to_load_wpsm_settings() ) {
 				return;
 			}
@@ -208,15 +208,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			$time_bt = microtime( true );
 			$mem_bt = memory_get_usage( true );
 			
-			$GS_Tab = new ABDWPSM_Tab( array(
+			
+			new ABDWPSM_Tab( array(
 				'display_name'        => ABD_L::__( 'Getting Started' ),
 				'display_description' => self::getting_started_tab_header(),
 				'url_slug'            => 'getting-started',
 				'page'                => 'ad-blocking-detector'
 			) );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs - $GS_Tab', $time_bt, $mem_bt, true );
-			$time_after_tab = microtime( true );
-			$mem_after_tab = memory_get_usage( true );
+
 
 			$Existing_Shortcodes_Tab = new ABDWPSM_Tab( array(
 				'display_name'        => ABD_L::__( 'Manage Shortcodes' ),
@@ -224,9 +223,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'url_slug'            => 'manage-shortcodes',
 				'page'                => 'ad-blocking-detector'
 			) );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs - $ES_Tab', $time_after_tab, $mem_after_tab, true );
-			$time_after_tab = microtime( true );
-			$mem_after_tab = memory_get_usage( true );
+
 
 			$New_Shortcode_Tab = new ABDWPSM_Tab( array(
 				'display_name'        => ABD_L::__( 'Add New Shortcode' ),
@@ -234,9 +231,64 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'url_slug'            => 'new-shortcodes',
 				'page'                => 'ad-blocking-detector'
 			) );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs - $NS_Tab', $time_after_tab, $mem_after_tab, true );
-			$time_after_tab = microtime( true );
-			$mem_after_tab = memory_get_usage( true );
+
+				$NST_OG = new ABDWPSM_Options_Group( array(
+					'db_option_name' => ABD_Database::get_shortcode_prefix() . ABD_Database::get_next_id(),
+					'validation_callback'  => array( 'ABD_Admin_Views', 'cache_handler_validator' )						
+				) );
+				$NST_OG->add_to_tab( $New_Shortcode_Tab );
+
+					$NST_Basic_Section = new ABDWPSM_Section( array(
+						'id'                  => 'nst_og-basic_options',
+						'display_name'        => ABD_L::__( 'Basic Shortcode Settings' ),
+						'display_description' => self::add_new_basic_section_header()
+					) );
+					$NST_Basic_Section->add_to_options_group( $NST_OG );
+
+						$NST_Basic_Fs = array();
+						//	Basic Section
+						$NST_Basic_Fs[] = new ABDWPSM_Field( array(  
+							'field_name'           => 'display_name',
+							'type'                 => 'text',
+							'display_name'         => ABD_L::__( 'Name / Description' ),
+							'display_description'  => ABD_L::__( 'Give this shortcode an identifying name for readability.' ),
+							'example_entry'        => ABD_L::__( 'Google AdSense Sidebar Ad' ),
+							'field_options_array'  => array( 'required' => true )
+						) );
+						$NST_Basic_Fs[] = new ABDWPSM_Field( array(
+							'field_name'           => 'noadblocker',
+							'type'                 => 'textarea',
+							'display_name'         => ABD_L::__( 'No Ad Blocker Detected Content' ),
+							'display_description'  => sprintf( ABD_L::_x( 'Optional. The content to display to users with no detected ad blocker. Supports plain text or HTML. If you aren\'t familiar with HTML, you can use %sthis tool%s to generate the needed HTML for you.', 'No Ad Blocker Detected field description.' ), '<a href="' . self::$our_links['htmlcreator'] . '" target="_blank">', '</a>' )
+						) );
+						$NST_Basic_Fs[] = new ABDWPSM_Field( array(
+							'field_name'           => 'adblocker',
+							'type'                 => 'textarea',
+							'display_name'         => ABD_L::__( 'Ad Blocker Detected Content' ),
+							'display_description'  => sprintf( ABD_L::_x( 'Optional. The content to display to users with a detected ad blocker. Supports plain text or HTML. If you aren\'t familiar with HTML, you can use %sthis tool%s to generate the needed HTML for you.', 'Ad Blocker Detected field description.' ), '<a href="' . self::$our_links['htmlcreator'] . '" target="_blank">', '</a>' )
+						) );
+						$NST_Basic_Fs[] = new ABDWPSM_Field( array(
+							'field_name'           => 'user_defined_selectors',
+							'type'                 => 'text',
+							'display_name'         => ABD_L::__( 'User-Defined Wrapper CSS Selectors' ),
+							'display_description'  => sprintf( ABD_L::__( 'Optional. Improve ad blocker detection results by specifying the wrapping element around your advertisement that is not removed by ad blockers. This is required to detect privacy browser extensions like Ghostery, but not required for most ad blocking extensions like AdBlock Plus. Separate multiple selectors using semicolons.  %sRead this article%s for more information, detailed instructions, and examples.' ), '<a href="' . self::$our_links['userdefinedwrappers'] . '" target="_blank">', '</a>' ),
+							'example_entry'        => 'ins.adsbygoogle; #myadwrapper'
+						) );
+						$NST_Basic_Fs[] = new ABDWPSM_Field( array(
+							'field_name'           => 'blog_id',
+							'type'                 => 'hidden',
+							'field_options_array'  => array( 'default' => ABD_Multisite::get_current_blog_id() )
+						) );
+
+						foreach( $NST_Basic_Fs as $F ) {
+							$F->add_to_section( $NST_Basic_Section );
+						}
+			//	Free memory
+			unset( $NST_Basic_Fs );
+			unset( $NST_Basic_Section );
+			unset( $NST_OG );
+			unset( $New_Shortcode_Tab );
+
 
 			$Settings_Tab = new ABDWPSM_Tab( array(
 				'display_name'        => ABD_L::__( 'Advanced Settings' ),
@@ -244,242 +296,171 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'url_slug'            => 'settings',
 				'page'                => 'ad-blocking-detector'
 			) );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs - $Settings_Tab', $time_after_tab, $mem_after_tab, true );
-			$time_after_tab = microtime( true );
-			$mem_after_tab = memory_get_usage( true );
+				
+				$AS_OG = new ABDWPSM_Options_Group( array(
+					'db_option_name' => 'abd_user_settings'
+				) );
+				$AS_OG->add_to_tab( $Settings_Tab );
 
-			$Debug_Tab = new ABDWPSM_Tab( array(
+					$AS_UDS_Section = new ABDWPSM_Section( array(
+						'id'                  => 'as_uds-user_defined_selectors',
+						'display_name'        => ABD_L::__( 'Improved Detection: User-Defined Wrapper CSS Selectors' ),
+						'display_description' => self::settings_user_defined_selectors_section_header()
+					) );
+					$AS_UDS_Section->add_to_options_group( $AS_OG );
+
+						$AS_UDS_Field = new ABDWPSM_Field( array(
+							'field_name'          => 'user_defined_selectors',
+							'type'                => 'text',
+							'display_name'        => ABD_L::__( 'Global CSS Selectors' ),
+							'display_description' => ABD_L::__( 'A list of CSS selectors for the wrapping elements. Separate multiple selectors with semicolons.' ),
+							'example_entry'       => 'ins.adsbygoogle; #myawesomeadserverwrapper',
+							'field_options_array' => array(
+								'default'    => 'ins.adsbygoogle',
+								'style'      => 'min-width: 350px'
+							)
+						) );
+						$AS_UDS_Field->add_to_section( $AS_UDS_Section );
+
+					$AS_Disable_Section = new ABDWPSM_Section( array(
+						'id'                  => 'as_uds-disable_detection_methods',
+						'display_name'        => ABD_L::__( 'Performance Improvement: Disable Detection Methods' ),
+						'display_description' => self::settings_disable_detection_method_section_header()
+					) );
+					$AS_Disable_Section->add_to_options_group( $AS_OG );
+
+						$AS_Disable_Iframe_Field = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_iframe',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Iframe Detection Method' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+						$AS_Disable_Iframe_Field->add_to_section( $AS_Disable_Section );
+
+						$AS_Disable_Div_Field = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_div',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Div Element Detection Method' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+						$AS_Disable_Div_Field->add_to_section( $AS_Disable_Section );
+
+						$AS_Disable_JS_Field = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_js_file',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'JavaScript File Detection Method' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+						$AS_Disable_JS_Field->add_to_section( $AS_Disable_Section );
+
+					$AS_Iframe_Section = new ABDWPSM_Section( array(
+						'id'                  => 'as_uds-customize_iframe',
+						'display_name'        => ABD_L::__( 'Customize Iframe Detection Method' ),
+						'display_description' => self::settings_customize_iframe_section_header()
+					) );
+					$AS_Iframe_Section->add_to_options_group( $AS_OG );
+
+						$AS_Iframe_URL = new ABDWPSM_Field( array(
+							'field_name'          => 'iframe_url',
+							'type'                => 'text',
+							'display_name'        => ABD_L::__( 'URL of Iframe' ),
+							'display_description' => ABD_L::__( 'The bait iframe\'s URL. This should contain ad or advertisement keywords. I recommend a URL that doesn\'t exist to keep loading times down. Leave empty to allow automatic an automatic URL choice.' ),
+							'example_entry'       => 'http://YHrSUDwvRGxPpWyM-ad.us/adserver/adlogger_tracker.php',
+							'field_options_array' => array(
+								'default' => '',
+								'style'   => 'width: 50%; max-width: 500px; min-width: 170px;'
+							)
+						) );
+						$AS_Iframe_URL->add_to_section( $AS_Iframe_Section );
+
+					$AS_Log_Section = new ABDWPSM_Section( array(
+						'id'                  => 'as_uds-log_management',
+						'display_name'        => ABD_L::__( 'Log Options' ),
+						'display_description' => self::settings_customize_log_section_header()
+					) );
+					$AS_Log_Section->add_to_options_group( $AS_OG );
+
+						$AS_Log_enable_perf = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_perf_logging',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Performance Statistics Logging' ),
+							'display_description' => ABD_L::__( 'Whether to record execution times and memory usage in the Session Log. This helps tracking down performance related plugin bugs, but generates a lot of log entries and uses slightly more overhead and database traffic.' ),				
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+						$AS_Log_perf_filtering = new ABDWPSM_Field( array(
+							'field_name'          => 'perf_logging_only_above_limits',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Filter Performance Summary Log Entries' ),
+							'display_description' => ABD_L::__( 'Whether to limit performance log entries to those exceeding the time and memory limits.' ),				
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
+								'default' => 'no'
+							)
+						) );
+						$AS_Log_perf_time_limit = new ABDWPSM_Field( array(
+							'field_name'          => 'perf_logging_time_limit',
+							'type'                => 'number',
+							'display_name'        => ABD_L::__( 'Peformance Summary Log Entry Time Limit' ),
+							'display_description' => ABD_L::__( 'The time threshold, in milliseconds, at which log entries are highlighted and cut off if performance entry filtration is enabled.' ),
+							'field_options_array' => array(
+								'default' => 100
+							)
+						) );
+						$AS_Log_perf_mem_limit = new ABDWPSM_Field( array(
+							'field_name'          => 'perf_logging_mem_limit',
+							'type'                => 'number',
+							'display_name'        => ABD_L::__( 'Peformance Summary Log Entry Memory Limit' ),
+							'display_description' => ABD_L::__( 'The used memory threshold, in bytes, at which log entries are highlighted and cut off if performance entry filtration is enabled.' ),
+							'field_options_array' => array(
+								'default' => 1048576
+							)
+						) );
+						$AS_Log_enable_perf->add_to_section( $AS_Log_Section );
+						$AS_Log_perf_filtering->add_to_section( $AS_Log_Section );
+						$AS_Log_perf_time_limit->add_to_section( $AS_Log_Section );
+						$AS_Log_perf_mem_limit->add_to_section( $AS_Log_Section );
+
+			//	Free memory
+			unset( $AS_Log_enable_perf );
+			unset( $AS_Log_perf_filtering );
+			unset( $AS_Log_perf_time_limit );
+			unset( $AS_Log_perf_mem_limit );
+			unset( $AS_Log_Section );
+			unset( $AS_Iframe_URL );
+			unset( $AS_Iframe_Section );
+			unset( $AS_Disable_Iframe_Field );
+			unset( $AS_Disable_Div_Field );
+			unset( $AS_Disable_JS_Field );
+			unset( $AS_Disable_Section );
+			unset( $AS_UDS_Field );
+			unset( $AS_UDS_Section );
+			unset( $AS_OG );
+			unset( $Settings_Tab );
+
+
+			new ABDWPSM_Tab( array(
 				'display_name'        => ABD_L::__( 'Report a Problem / Debug' ),
 				'display_description' => self::debug_tab_header(),
 				'url_slug'            => 'debug',
 				'page'                => 'ad-blocking-detector'
 			) );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs - $Debug_Tab', $time_after_tab, $mem_after_tab, true );
-			$time_after_tab = microtime( true );
-			$mem_after_tab = memory_get_usage( true );
-
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // tabs', $time_bt, $mem_bt, true );
-
-			//	Options Groups
-			$time_bt = microtime( true );
-			$mem_bt = memory_get_usage( true );
-			
-			//	New Shortcode Tab
-			$NST_OG = new ABDWPSM_Options_Group( array(
-				'db_option_name' => ABD_Database::get_shortcode_prefix() . ABD_Database::get_next_id(),
-				'validation_callback'  => array( 'ABD_Admin_Views', 'cache_handler_validator' )						
-			) );
-			$NST_OG->add_to_tab( $New_Shortcode_Tab );
-
-			//	Settings Tab
-			$AS_OG = new ABDWPSM_Options_Group( array(
-				'db_option_name' => 'abd_user_settings'
-			) );
-			$AS_OG->add_to_tab( $Settings_Tab );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // options groups', $time_bt, $mem_bt, true );
 
 
+			//	Force cleanup before we move to populating existing shortcodes
+			ABD_Perf_Tools::force_garbage_collection();
 
-			//	Sections
-			$time_bt = microtime( true );
-			$mem_bt = memory_get_usage( true );
-			
-			$NST_Basic_Section = new ABDWPSM_Section( array(
-				'id'                  => 'nst_og-basic_options',
-				'display_name'        => ABD_L::__( 'Basic Shortcode Settings' ),
-				'display_description' => self::add_new_basic_section_header()
-			) );
-			$NST_Basic_Section->add_to_options_group( $NST_OG );
-
-			$AS_UDS_Section = new ABDWPSM_Section( array(
-				'id'                  => 'as_uds-user_defined_selectors',
-				'display_name'        => ABD_L::__( 'Improved Detection: User-Defined Wrapper CSS Selectors' ),
-				'display_description' => self::settings_user_defined_selectors_section_header()
-			) );
-			$AS_UDS_Section->add_to_options_group( $AS_OG );
-
-			$AS_Disable_Section = new ABDWPSM_Section( array(
-				'id'                  => 'as_uds-disable_detection_methods',
-				'display_name'        => ABD_L::__( 'Performance Improvement: Disable Detection Methods' ),
-				'display_description' => self::settings_disable_detection_method_section_header()
-			) );
-			$AS_Disable_Section->add_to_options_group( $AS_OG );
-
-			$AS_Iframe_Section = new ABDWPSM_Section( array(
-				'id'                  => 'as_uds-customize_iframe',
-				'display_name'        => ABD_L::__( 'Customize Iframe Detection Method' ),
-				'display_description' => self::settings_customize_iframe_section_header()
-			) );
-			$AS_Iframe_Section->add_to_options_group( $AS_OG );			
-			
-			$AS_Log_Section = new ABDWPSM_Section( array(
-				'id'                  => 'as_uds-log_management',
-				'display_name'        => ABD_L::__( 'Log Options' ),
-				'display_description' => self::settings_customize_log_section_header()
-			) );
-			$AS_Log_Section->add_to_options_group( $AS_OG );
-			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // sections', $time_bt, $mem_bt, true );
-
-
-			//	Fields
-			$time_bt = microtime( true );
-			$mem_bt = memory_get_usage( true );
-			
-			$NST_Basic_Fs = array();
-			$AS_UDS_Fs = array();
-			//	Basic Section
-			$NST_Basic_Fs['display_name'] = new ABDWPSM_Field( array(  
-				'field_name'           => 'display_name',
-				'type'                 => 'text',
-				'display_name'         => ABD_L::__( 'Name / Description' ),
-				'display_description'  => ABD_L::__( 'Give this shortcode an identifying name for readability.' ),
-				'example_entry'        => ABD_L::__( 'Google AdSense Sidebar Ad' ),
-				'field_options_array'  => array( 'required' => true )
-			) );
-			$NST_Basic_Fs['noadblock'] = new ABDWPSM_Field( array(
-				'field_name'           => 'noadblocker',
-				'type'                 => 'textarea',
-				'display_name'         => ABD_L::__( 'No Ad Blocker Detected Content' ),
-				'display_description'  => sprintf( ABD_L::_x( 'Optional. The content to display to users with no detected ad blocker. Supports plain text or HTML. If you aren\'t familiar with HTML, you can use %sthis tool%s to generate the needed HTML for you.', 'No Ad Blocker Detected field description.' ), '<a href="' . self::$our_links['htmlcreator'] . '" target="_blank">', '</a>' )
-			) );
-			$NST_Basic_Fs['adblock'] = new ABDWPSM_Field( array(
-				'field_name'           => 'adblocker',
-				'type'                 => 'textarea',
-				'display_name'         => ABD_L::__( 'Ad Blocker Detected Content' ),
-				'display_description'  => sprintf( ABD_L::_x( 'Optional. The content to display to users with a detected ad blocker. Supports plain text or HTML. If you aren\'t familiar with HTML, you can use %sthis tool%s to generate the needed HTML for you.', 'Ad Blocker Detected field description.' ), '<a href="' . self::$our_links['htmlcreator'] . '" target="_blank">', '</a>' )
-			) );
-			$NST_Basic_Fs['user_defined_selectors'] = new ABDWPSM_Field( array(
-				'field_name'           => 'user_defined_selectors',
-				'type'                 => 'text',
-				'display_name'         => ABD_L::__( 'User-Defined Wrapper CSS Selectors' ),
-				'display_description'  => sprintf( ABD_L::__( 'Optional. Improve ad blocker detection results by specifying the wrapping element around your advertisement that is not removed by ad blockers. This is required to detect privacy browser extensions like Ghostery, but not required for most ad blocking extensions like AdBlock Plus. Separate multiple selectors using semicolons.  %sRead this article%s for more information, detailed instructions, and examples.' ), '<a href="' . self::$our_links['userdefinedwrappers'] . '" target="_blank">', '</a>' ),
-				'example_entry'        => 'ins.adsbygoogle; #myadwrapper'
-			) );
-			$NST_Basic_Fs['blog_id'] = new ABDWPSM_Field( array(
-				'field_name'           => 'blog_id',
-				'type'                 => 'hidden',
-				'field_options_array'  => array( 'default' => ABD_Multisite::get_current_blog_id() )
-			) );
-
-			//	Advanced Section
-			$enabled_text = ABD_L::__( 'Enabled (default)' );
-			$disabled_text = ABD_L::__( 'Disabled' );
-			$choices_array = array();
-			$choices_array[$enabled_text] = 'enabled';
-			$choices_array[$disabled_text] = 'disabled';
-					
-
-			foreach( $NST_Basic_Fs as $F ) {
-				$F->add_to_section( $NST_Basic_Section );
-			}
-
-
-
-			$AS_UDS_Field = new ABDWPSM_Field( array(
-				'field_name'          => 'user_defined_selectors',
-				'type'                => 'text',
-				'display_name'        => ABD_L::__( 'Global CSS Selectors' ),
-				'display_description' => ABD_L::__( 'A list of CSS selectors for the wrapping elements. Separate multiple selectors with semicolons.' ),
-				'example_entry'       => 'ins.adsbygoogle; #myawesomeadserverwrapper',
-				'field_options_array' => array(
-					'default'    => 'ins.adsbygoogle',
-					'style'      => 'min-width: 350px'
-				)
-			) );
-			$AS_UDS_Field->add_to_section( $AS_UDS_Section );
-
-			$AS_Disable_Iframe_Field = new ABDWPSM_Field( array(
-				'field_name'          => 'enable_iframe',
-				'type'                => 'radio',
-				'display_name'        => ABD_L::__( 'Iframe Detection Method' ),
-				'field_options_array' => array(
-					'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
-					'default' => 'yes'
-				)
-			) );
-			$AS_Disable_Iframe_Field->add_to_section( $AS_Disable_Section );
-
-			$AS_Disable_Div_Field = new ABDWPSM_Field( array(
-				'field_name'          => 'enable_div',
-				'type'                => 'radio',
-				'display_name'        => ABD_L::__( 'Div Element Detection Method' ),
-				'field_options_array' => array(
-					'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
-					'default' => 'yes'
-				)
-			) );
-			$AS_Disable_Div_Field->add_to_section( $AS_Disable_Section );
-
-			$AS_Disable_JS_Field = new ABDWPSM_Field( array(
-				'field_name'          => 'enable_js_file',
-				'type'                => 'radio',
-				'display_name'        => ABD_L::__( 'JavaScript File Detection Method' ),
-				'field_options_array' => array(
-					'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
-					'default' => 'yes'
-				)
-			) );
-			$AS_Disable_JS_Field->add_to_section( $AS_Disable_Section );
-
-
-
-
-			$AS_Iframe_URL = new ABDWPSM_Field( array(
-				'field_name'          => 'iframe_url',
-				'type'                => 'text',
-				'display_name'        => ABD_L::__( 'URL of Iframe' ),
-				'display_description' => ABD_L::__( 'The bait iframe\'s URL. This should contain ad or advertisement keywords. I recommend a URL that doesn\'t exist to keep loading times down. Leave empty to allow automatic an automatic URL choice.' ),
-				'example_entry'       => 'http://YHrSUDwvRGxPpWyM-ad.us/adserver/adlogger_tracker.php',
-				'field_options_array' => array(
-					'default' => '',
-					'style'   => 'width: 50%; max-width: 500px; min-width: 170px;'
-				)
-			) );
-			$AS_Iframe_URL->add_to_section( $AS_Iframe_Section );
-
-
-			$AS_Log_enable_perf = new ABDWPSM_Field( array(
-				'field_name'          => 'enable_perf_logging',
-				'type'                => 'radio',
-				'display_name'        => ABD_L::__( 'Performance Statistics Logging' ),
-				'display_description' => ABD_L::__( 'Whether to record execution times and memory usage in the Session Log. This helps tracking down performance related plugin bugs, but generates a lot of log entries and uses slightly more overhead and database traffic.' ),				
-				'field_options_array' => array(
-					'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
-					'default' => 'yes'
-				)
-			) );
-			$AS_Log_perf_filtering = new ABDWPSM_Field( array(
-				'field_name'          => 'perf_logging_only_above_limits',
-				'type'                => 'radio',
-				'display_name'        => ABD_L::__( 'Filter Performance Summary Log Entries' ),
-				'display_description' => ABD_L::__( 'Whether to limit performance log entries to those exceeding the time and memory limits.' ),				
-				'field_options_array' => array(
-					'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
-					'default' => 'no'
-				)
-			) );
-			$AS_Log_perf_time_limit = new ABDWPSM_Field( array(
-				'field_name'          => 'perf_logging_time_limit',
-				'type'                => 'number',
-				'display_name'        => ABD_L::__( 'Peformance Summary Log Entry Time Limit' ),
-				'display_description' => ABD_L::__( 'The time threshold, in milliseconds, at which log entries are highlighted and cut off if performance entry filtration is enabled.' ),
-				'field_options_array' => array(
-					'default' => 100
-				)
-			) );
-			$AS_Log_perf_mem_limit = new ABDWPSM_Field( array(
-				'field_name'          => 'perf_logging_mem_limit',
-				'type'                => 'number',
-				'display_name'        => ABD_L::__( 'Peformance Summary Log Entry Memory Limit' ),
-				'display_description' => ABD_L::__( 'The used memory threshold, in bytes, at which log entries are highlighted and cut off if performance entry filtration is enabled.' ),
-				'field_options_array' => array(
-					'default' => 1048576
-				)
-			) );
-			$AS_Log_enable_perf->add_to_section( $AS_Log_Section );
-			$AS_Log_perf_filtering->add_to_section( $AS_Log_Section );
-			$AS_Log_perf_time_limit->add_to_section( $AS_Log_Section );
-			$AS_Log_perf_mem_limit->add_to_section( $AS_Log_Section );
 
 
 			ABD_Log::perf_summary( 'ABD_Database::wpsm_settings() // fields', $time_bt, $mem_bt, true );

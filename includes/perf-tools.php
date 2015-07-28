@@ -41,5 +41,13 @@ if( !class_exists( 'ABD_Perf_Tools' ) ) {
 
 			return false;
 		}
+
+		public static function force_garbage_collection() {
+			if( function_exists( 'gc_collect_cycles' ) && function_exists( 'gc_enable' ) ) {    //  PHP >= 5.3 only
+                //  Force garbage collection now
+                gc_enable();
+                gc_collect_cycles();
+            }
+		}
 	}	//	end class
 }	//	end if( !class_exists( ...
