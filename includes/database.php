@@ -445,6 +445,9 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 
 			//	Loop through old shortcodes and make it a new shortcode
+			//	Before we do, let's reset the script timeout to account for people with a ton
+			//	of shortcodes.
+			set_time_limit( 60 );
 			$nwflag = false;	//	Will be set to true if any network wide shortcodes are detected.
 			foreach( $old_scs as $osc ) {
 				ABD_Log::info( 'Found version 2 shortcode. Initiating transfer.' );
