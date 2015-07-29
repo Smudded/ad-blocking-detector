@@ -120,6 +120,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				wp_enqueue_script( 'abd-admin-view',
 					$prefix . 'assets/js/admin-view.js', array('jquery') );
 				wp_localize_script( 'abd-admin-view', 'objectL10n', ABD_Admin_Views::get_js_localization_array() );
+				wp_localize_script( 'abd-admin-view', 'abdPaths', array( 'abdRootUrl' => ABD_ROOT_URL ) );
 			}
 			public static function enqueue_helper_public_js( $prefix = ABD_ROOT_URL ) {
 				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers

@@ -1277,8 +1277,8 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_clear_log' ), 'user instructed deletion of all log entries' ); ?>' class='button'>
 						<?php ABD_L::_e('Clear Log'); ?>
 					</a>
-					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_send_usage_info' ), 'user instructed sending usage info to dev' ); ?>' class='button'>
-						<?php ABD_L::_e( 'Submit Log to Developer' ); ?>
+					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_send_usage_info' ), 'user instructed sending usage info to dev' ); ?>' class='button abd-submit-log-to-dev-button'>
+						<?php ABD_L::_e( 'Send a Copy of Log to Developer' ); ?>
 					</a>
 				</div>
 
@@ -1839,6 +1839,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'close'                             => ABD_L::__( 'Close' ),
 				'nevermind'                         => ABD_L::__( 'No! Take me back.' ),
 				'affirmative'                       => ABD_L::__( 'Yes! I\'m sure.' ),
+				'wait'                              => ABD_L::__( 'Please wait, this may take some time.' ),
 				
 				'deleteDialogTitle'                 => ABD_L::__( 'Are you sure?' ),
 				'deleteDialogWarning'               => ABD_L::__( 'A deleted shortcode can not be recovered!' ),
@@ -1850,7 +1851,10 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'downloadManualPluginTitle'         => ABD_L::__( 'Beyond these hills there be dragons!' ),
 
 				'idlingForceRefreshWarning'         => ABD_L::__( 'To function properly, this page reserves database names and space on loading. However, if the page idles for an extended period, that reservation is released and a lot of errors and problems will result unless you refresh this page. It appears this page has sat for too long and needs a refresh. Upon closing this dialog, the page should automatically reload. If it does not, reload this page before submitting a shortcode.' ),
-				'idlingForceRefreshTitle'           => ABD_L::__( 'This page has been idling too long!' )
+				'idlingForceRefreshTitle'           => ABD_L::__( 'This page has been idling too long!' ),
+
+				'submitLogToDevWarning'             => ABD_L::__( 'Ad Blocking Detector is about to send the contents of the Session Log and Plugin, WordPress, and Server Configuration Data boxes to the developer. If you wish to check the contents before sending, close this dialog box, and review the content in the appropriate boxes. No contact information is submitted with the log entries, so you will not be responded to. If you require or desire feedback, you will need to contact the developer personally as well.' ),
+				'submitLogToDevTitle'               => ABD_L::__( 'Are you sure?' )
 			);
 
 			return $jsarr;

@@ -250,6 +250,46 @@
 
 
 
+		//////////////////////////////////////
+		//	Submit Log To Developer Button 	//
+		//////////////////////////////////////
+		$('a.abd-submit-log-to-dev-button').click( function(e) {
+			var link = this;
+			e.preventDefault();
+
+			var msg = '<p>' + objectL10n.submitLogToDevWarning + '</p>';
+
+			var sltdwDialog = $("<div />").html(msg).dialog({
+				modal: true,
+				title: objectL10n.submitLogToDevTitle,
+				width: 500,
+				position:{my: 'right bottom', at: 'middle'},
+				buttons: [
+					{
+						text: objectL10n.affirmative,
+						icons: {primary: 'ui-icon-check'},
+						click: function() {
+							window.location = link.href;
+							$(this).html('<div style="text-align: center">' + objectL10n.wait + '<br />' + '<img src="' + abdPaths.abdRootUrl + 'assets/images/ajax-loader.gif" /></div>');
+						}
+					},
+					{
+						text: objectL10n.nevermind,
+						icons: {primary: 'ui-icon-closethick'},
+						click: function() {
+							$(this).dialog("destroy");
+						}
+					}
+				],
+				open: function() {
+					$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
+				}
+			});
+			sltdwDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope
+		});
+
+
+
 		//////////////////////////////////////////////////////////
 		//	Output Detection Results To TextArea on Debug Tab	//
 		//////////////////////////////////////////////////////////

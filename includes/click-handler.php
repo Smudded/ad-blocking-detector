@@ -85,14 +85,17 @@ if( !class_exists( 'ABD_Click_Handler' ) ) {
 			check_admin_referer( 'user instructed sending usage info to dev' );
 
 			$email_address = 'abd_usage_reports@johnmorris.me';
-			$headers = 'From: ABD AUTO EMAIL <' . $email_address . '>\r\n';
+			$headers = array(
+				'From: ABD AUTO EMAIL <' . $email_address . '><br />',
+				'Content-Type: text/html; charset=UTF-8'
+			);
 
-			$contents =  'ENVIRONMENT DATA\r\n======================\r\n';
-			$contents .= ABD_Perf_Tools::get_readable_server_config_data( '\r\n' );
-			$contents .= '\r\n\r\n\r\n\r\nSESSION LOG\r\n======================\r\n';
-			$contents .= ABD_Log::get_readable_log( 0, '    >>   ', '\r\n\r\n' );
+			$contents = 'Website: ' . get_home_url() . '<br /><br />';
+			$contents .= ABD_Perf_Tools::get_readable_server_config_data( '<br />' );
+			$contents .= '<br /><br /><br /><br />SESSION LOG<br />======================<br />';
+			$contents .= ABD_Log::get_readable_log( 0, '    >>   ', '<br /><br />' );
 
-			$res = wp_mail( $email_address, 'ABD Usage Info', $contents, $headers );
+			$res = wp_mail( $email_address, 'ABD Usage Info: ' . get_home_url(), $contents, $headers );
 
 			if( !$res ) {
 				ABD_Log::error( 'Unknown error sending usage info email to developer.' );
