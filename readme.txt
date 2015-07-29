@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
 Tested up to: 4.2.3
-Stable tag: 3.1.2
+Stable tag: 3.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,17 @@ screenshots.
 
 
 == Changelog ==
+= 3.2.0 =
+* Performance Improvement: Counting shortcodes no longer retrieves all shortcodes and data from database (lower load times, less memory usage).
+* Performance Improvement: Reworked Block List Countermeasure plugin status checking to an on demand check system.
+* Performance Improvement: On demand only Settings API & WPSM Framework option registration. This should allow plugin management and disabling in the face of memory exceeded errors.
+* Performance Improvement: Unset WPSM Framework construct references A.S.A.P., and prior to populating existing shortcodes. Should marginally reduce memory usage.
+* Bug Fix: Version 2 -> Version 3 upgrade not updating shortcode list.
+* Bug Fix: Log pruning not affecting database.
+* Prefixed admin_post actions to avoid plugin collisions.
+* Added more performance logging settings.
+* Increased performance logging detail.
+* Added button to automatically send log to developer.
 = 3.1.2 =
 * Fixed broken "Global CSS Selectors" problem that stopped Ad Blocking Detector script from running at all.
 = 3.1.1 =
