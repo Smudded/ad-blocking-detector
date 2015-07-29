@@ -127,6 +127,12 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'delete_shortcode_failure_unknown' => array(
 					'msg'   => ABD_L::__( 'Shortcode deletion failed!' ),
 					'class' => 'error'
+				),
+
+				//	Send usage info message
+				'send_usage_info_success' => array(
+					'msg'   => ABD_L::__( 'Usage info submitted. Thanks for helping improve Ad Blocking Detector!' ),
+					'class' => 'updated'
 				)
 			);
 
@@ -1271,6 +1277,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_clear_log' ), 'user instructed deletion of all log entries' ); ?>' class='button'>
 						<?php ABD_L::_e('Clear Log'); ?>
 					</a>
+					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_send_usage_info' ), 'user instructed sending usage info to dev' ); ?>' class='button'>
+						<?php ABD_L::_e( 'Submit Log to Developer' ); ?>
+					</a>
 				</div>
 
 
@@ -1281,44 +1290,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 
 				<div class="abd-masonry-block">
-					<h3><?php ABD_L::_e( 'Plugin, WordPress, and Server Configuration Data' ); ?></h3>
+					<h3><?php ABD_L::_e( 'Plugin, WordPress, and Server Configuration Data' ); ?></h3>			
 
-					<?php 
-						//	Gather Data
-						$blcp_status = array(
-							'auto_plugin_activated'   => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_activated' ),
-							'manual_plugin_activated' => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_activated' ),
-							'auto_plugin_exists'      => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_exists' ),
-							'manual_plugin_exists'    => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_exists' ),
-							'plugin_activated'        => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_activated' ),
-							'plugin_exists'           => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_exists' )
-						);
-
-						$blcdir = ABD_Anti_Adblock::get_bcc_plugin_dir_name();
-						if( !$blcdir ) { $blcdir = 'No BLC Plugin Directory'; }
-
-						$mem_usage = memory_get_usage( true );
-						if( $mem_usage < 1024 ) { $mem_usage = $mem_usage . ' bytes'; }
-						else if( $mem_usage < 1048576 ) { $mem_usage = round( $mem_usage/1024, 2 ) . ' KB'; }
-						else { $mem_usage = round( $mem_usage/1048576, 2 ) . ' MB'; }
-					?>
-
-					<textarea id="abd-server-config-textarea">
-ENVIRONMENT DATA&#13;&#10;==================&#13;&#10;==================&#13;&#10;
-System: <?php echo php_uname(); ?>&#13;&#10;
-PHP Version: <?php echo phpversion(); ?>&#13;&#10;
-PHP/WordPress Memory Limit: <?php echo ini_get( 'memory_limit' ); ?>&#13;&#10;
-Memory Used: <?php echo $mem_usage; ?>&#13;&#10;
-PHP Max Execution Time: <?php echo ini_get( 'max_execution_time' ); ?>&#13;&#10;&#13;&#10;
-WordPress Version: <?php echo get_bloginfo('version'); ?>&#13;&#10;
-Total # of wp_options Entries: <?php echo ABD_Database::size_of_wp_options_table(); ?>&#13;&#10;
-Plugin Version: <?php echo ABD_VERSION; ?>&#13;&#10;
-Total # of shortcodes: <?php echo ABD_Database::count_shortcodes(); ?>&#13;&#10;
-BLC Plugin Exists?: <?php echo $blcp_status['plugin_exists']; ?>&#13;&#10;
-BLC Plugin Active?: <?php echo $blcp_statuc['plugin_activated']; ?>&#13;&#10;
-BLC Plugin Type?: <?php echo get_option( 'abd_blc_plugin_type' ); ?>&#13;&#10;
-BLC Plugin Dir: <?php echo $blcdir; ?>&#13;&#10;
-					</textarea>
+					<textarea id="abd-server-config-textarea"><?php echo ABD_Perf_Tools::get_readable_server_config_data(); ?></textarea>
 				</div>
 
 				

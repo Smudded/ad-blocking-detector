@@ -353,6 +353,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				array( 'ABD_Click_Handler', 'clear_log' ) );
 			add_action( 'admin_post_abd_delete_shortcode',
 				array( 'ABD_Click_Handler', 'delete_shortcode' ) );
+			add_action( 'admin_post_abd_send_usage_info',
+				array( 'ABD_Click_Handler', 'send_usage_info' ) );
 
 			//	Admin notices
 			add_action( 'admin_notices', 
@@ -639,7 +641,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 						array( 'ABD_Admin_Views', 'update_manual_blcp_notice' ) );
 
 					//	Deactivate manual plugin
-					if( defined( ABDBLC_SUBDIR_AND_FILE ) ) {	//	Block List Countermeasure plugin is activated
+					if( defined( 'ABDBLC_SUBDIR_AND_FILE' ) ) {	//	Block List Countermeasure plugin is activated
 						deactivate_plugins( ABDBLC_SUBDIR_AND_FILE );
 					}
 				}

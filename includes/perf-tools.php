@@ -49,5 +49,46 @@ if( !class_exists( 'ABD_Perf_Tools' ) ) {
                 gc_collect_cycles();
             }
 		}
+
+		public static function get_readable_server_config_data( $line_endings = '&#13;&#10;' ) {
+			//	Gather Data
+			$blcp_status = array(
+				'auto_plugin_activated'   => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_activated' ),
+				'manual_plugin_activated' => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_activated' ),
+				'auto_plugin_exists'      => ABD_Anti_Adblock::bcc_plugin_status( 'auto_plugin_exists' ),
+				'manual_plugin_exists'    => ABD_Anti_Adblock::bcc_plugin_status( 'manual_plugin_exists' ),
+				'plugin_activated'        => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_activated' ),
+				'plugin_exists'           => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_exists' )
+			);
+
+			$blcdir = ABD_Anti_Adblock::get_bcc_plugin_dir_name();
+			if( !$blcdir ) { $blcdir = 'No BLC Plugin Directory'; }
+
+			$mem_usage = memory_get_usage( true );
+			if( $mem_usage < 1024 ) { $mem_usage = $mem_usage . ' bytes'; }
+			else if( $mem_usage < 1048576 ) { $mem_usage = round( $mem_usage/1024, 2 ) . ' KB'; }
+			else { $mem_usage = round( $mem_usage/1048576, 2 ) . ' MB'; }
+
+			ob_start();
+			
+			?>
+ENVIRONMENT DATA<?php echo $line_endings; ?>==================<?php echo $line_endings; ?>==================<?php echo $line_endings; ?>
+System: <?php echo php_uname(); ?><?php echo $line_endings; ?>
+PHP Version: <?php echo phpversion(); ?><?php echo $line_endings; ?>
+PHP/WordPress Memory Limit: <?php echo ini_get( 'memory_limit' ); ?><?php echo $line_endings; ?>
+Memory Used: <?php echo $mem_usage; ?><?php echo $line_endings; ?>
+PHP Max Execution Time: <?php echo ini_get( 'max_execution_time' ); ?><?php echo $line_endings . $line_endings; ?>
+WordPress Version: <?php echo get_bloginfo('version'); ?><?php echo $line_endings; ?>
+Total # of wp_options Entries: <?php echo ABD_Database::size_of_wp_options_table(); ?><?php echo $line_endings; ?>
+Plugin Version: <?php echo ABD_VERSION; ?><?php echo $line_endings; ?>
+Total # of shortcodes: <?php echo ABD_Database::count_shortcodes(); ?><?php echo $line_endings; ?>
+BLC Plugin Exists?: <?php echo $blcp_status['plugin_exists']; ?><?php echo $line_endings; ?>
+BLC Plugin Active?: <?php echo $blcp_statuc['plugin_activated']; ?><?php echo $line_endings; ?>
+BLC Plugin Type?: <?php echo get_option( 'abd_blc_plugin_type' ); ?><?php echo $line_endings; ?>
+BLC Plugin Dir: <?php echo $blcdir; ?><?php echo $line_endings; ?>
+			<?php
+			
+			return ob_get_clean();
+		}
 	}	//	end class
 }	//	end if( !class_exists( ...
