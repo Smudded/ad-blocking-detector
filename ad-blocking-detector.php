@@ -64,43 +64,5 @@ require_once ( ABD_ROOT_PATH . 'includes/setup.php' );
 
 ABD_Setup::initialize();
 
-
-
-//      Start SESSION to facilitate data transfers
-//      Don't Forget Error Prevention: http://goo.gl/Acm9oY
-//      Don't Forget PHP 5.4.0+ changes: http://www.php.net/manual/en/function.session-status.php
-function abd_my_session_start()
-{
-    if(abd_is_session_started() || !isset($_SESSION)) {
-        if (isset($_COOKIE['PHPSESSID'])) {
-                $sessid = $_COOKIE['PHPSESSID'];
-        }
-        else if (isset($_GET['PHPSESSID'])) {
-                $sessid = $_GET['PHPSESSID'];
-        }
-        else {
-                session_start();
-                return false;
-        }
-        if (!preg_match('/^[a-z0-9]{32}$/', $sessid)) {
-                return false;
-        }
-        session_start();
-        return true;
-    }
-}
-function abd_is_session_started()
-{
-    if ( php_sapi_name() !== 'cli' ) {
-        if ( version_compare(phpversion(), '5.4.0', '>=') ) {
-            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
-        } else {
-            return session_id() === '' ? FALSE : TRUE;
-        }
-    }
-    return FALSE;
-}
-abd_my_session_start();
-
 ABD_Log::perf_summary( 'Entire Plugin Init', $start_time, $start_mem );
 ABD_Log::perf( 'Entire Plugin Init -- Peak Memory = ' . ( memory_get_peak_usage( true ) - $start_peak_mem )/1048576 . 'MB' );

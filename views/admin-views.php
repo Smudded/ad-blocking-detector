@@ -4,11 +4,6 @@
  * plugin.
  */
 
-require_once ( ABD_ROOT_PATH . 'includes/multisite.php' );
-require_once ( ABD_ROOT_PATH . 'includes/database.php' );
-require_once ( ABD_ROOT_PATH . 'includes/localization.php' );
-
-
 if ( !class_exists( 'ABD_Admin_Views' ) ) {
 	class ABD_Admin_Views {
 		/**
@@ -609,9 +604,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				'plugin_activated'        => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_activated' ),
 				'plugin_exists'           => ABD_Anti_Adblock::bcc_plugin_status( 'plugin_exists' )
 			);
-			ABD_Log::perf_summary( 'ABD_Admin_Views::getting_started_tab_content // before $blcp_status = ABD_Anti_Adblock::bcc_plugin_status();', $bfs_time, $bfs_mem, true );
-
-			$abd_settings = ABD_Database::get_settings();
+			ABD_Log::perf_summary( 'ABD_Admin_Views::getting_started_tab_content // before $blcp_status = ABD_Anti_Adblock::bcc_plugin_status();', $bfs_time, $bfs_mem, true );			
 
 			ob_start();
 

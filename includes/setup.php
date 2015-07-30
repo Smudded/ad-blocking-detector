@@ -4,14 +4,23 @@
  * register, and other related WordPress items.
  */
 
-require_once( ABD_ROOT_PATH . 'includes/log.php' );
-require_once( ABD_ROOT_PATH . 'includes/wpsm/settings-manager.php' );
-require_once( ABD_ROOT_PATH . 'includes/anti-adblock.php' );
-require_once( ABD_ROOT_PATH . 'views/admin-views.php' );
-require_once( ABD_ROOT_PATH . 'views/public-views.php' );
-require_once( ABD_ROOT_PATH . "includes/widget.php" );
-require_once( ABD_ROOT_PATH . "includes/click-handler.php" );
-require_once( ABD_ROOT_PATH . "includes/perf-tools.php" );
+$start_time = microtime( true );
+$start_mem = memory_get_usage( true );
+
+require( ABD_ROOT_PATH . 'includes/database.php' );
+require( ABD_ROOT_PATH . 'includes/log.php' );
+require( ABD_ROOT_PATH . 'includes/wpsm/settings-manager.php' );
+require( ABD_ROOT_PATH . 'includes/anti-adblock.php' );
+require( ABD_ROOT_PATH . 'views/admin-views.php' );
+require( ABD_ROOT_PATH . 'views/public-views.php' );
+require( ABD_ROOT_PATH . "includes/widget.php" );
+require( ABD_ROOT_PATH . "includes/click-handler.php" );
+require( ABD_ROOT_PATH . "includes/perf-tools.php" );
+require( ABD_ROOT_PATH . "includes/multisite.php" );
+require( ABD_ROOT_PATH . "includes/localization.php" );
+
+ABD_Log::perf_summary( 'setup.php // require plugin files', $start_time, $start_mem );
+
 
 if ( !class_exists( 'ABD_Setup' ) ) {
 	class ABD_Setup {
@@ -179,7 +188,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				?>
 				<script type="text/javascript">
 					<?php
-					if( $abd_settings['enable_iframe'] == 'yes' || $abd_settings['enable_iframe'] == '' ) {
+					if( $abd_settings['enable_iframe'] != 'no' ) {
 						?>
 						(function() {
 							//	Insert iframe only if we can prevent it from frame busting simply.
@@ -217,7 +226,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				</script>
 
 				<?php
-				if( $abd_settings['enable_div'] == 'yes' || $abd_settings['enable_div'] == '' ) {
+				if( $abd_settings['enable_div'] != 'no' ) {
 					?>
 					<div
 						id="abd-ad-div"
@@ -418,7 +427,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 		}
 			public static function menus_helper() {
 				//	We need the ABD_Admin_Views class
-				require_once (ABD_ROOT_PATH . 'views/admin-views.php');
+				require (ABD_ROOT_PATH . 'views/admin-views.php');
 
 				add_menu_page(
 					'ABD Dashboard',	//	Title tag value
@@ -555,18 +564,6 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			 * ********************************END NOTE************************************
 			 */
 
-			/**
-			 * An associative array where the key is a plugin version, and the value is
-			 * a function callback, passed to admin_notices WordPress action that outputs the content
-			 * of an upgrade message for that version.  This will be checked later on,
-			 * and if we are upgrading, and there is a mapped function, it will be tied
-			 * to an admin_notices action.
-			 */
-			$notification_map = array(
-				'3.0.0'  => array( 'ABD_Admin_Views', 'v2_to_v3_migration_notice' )
-			);	//	Maps a version number to a function to call with an upgrade notice.			
-			
-
 			//	Does the stored plugin version equal the current version?
 			//	If so, then we shouldn't need to do anything.
 			//	If not, then we have to run through any upgrade processes.
@@ -575,13 +572,14 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				ABD_Log::info( 'Checking whether plugin upgrade is needed. No version information stored in database. Assuming upgrade from version 2.2.8 (last stable release of v2 branch) required.' );
 				$upgrading_version = '2.2.8';
 			}
-
-			$upgrading_major_version = $upgrading_version[0];
 			$new_version = ABD_VERSION;
-			$new_major_version = $new_version[0];
 
 			if (  $upgrading_version != $new_version ) {
 				ABD_Log::info( 'Running plugin update. Old version: ' . $upgrading_version . ', new version: ' . $new_version );
+
+				$upgrading_major_version = $upgrading_version[0];				
+				$new_major_version = $new_version[0];
+				
 				///////////////////////////////
 				//	Do our updating here!!!	///
 				///////////////////////////////
@@ -673,6 +671,17 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			 * after the plugin is updated for whoever happens to see it.  It will show on every
 			 * site the first time somebody goes to that site's dashboard after the update.
 			 */
+			
+			/**
+			 * An associative array where the key is a plugin version, and the value is
+			 * a function callback, passed to admin_notices WordPress action that outputs the content
+			 * of an upgrade message for that version.  This will be checked later on,
+			 * and if we are upgrading, and there is a mapped function, it will be tied
+			 * to an admin_notices action.
+			 */
+			$notification_map = array(
+				'3.0.0'  => array( 'ABD_Admin_Views', 'v2_to_v3_migration_notice' )
+			);	//	Maps a version number to a function to call with an upgrade notice.
 			$last_notice_version = get_option( 'abd_last_upgrade_notice_seen', '0.0.0' );
 
 			if( array_key_exists( ABD_VERSION, $notification_map ) && 

@@ -21,9 +21,9 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		}
 
 		public static function perf( $msg, $indented = false ) {
-			$settings = ABD_Database::get_settings();
+			$enable_perf_logging = ABD_Database::get_specific_setting( 'enable_perf_logging' );
 
-			if( $settings['enable_perf_logging'] == 'yes' ) {
+			if( $enable_perf_logging != 'no' ) {
 				self::generic_log_entry( 'PERF', $msg, $indented );
 			}
 		}
@@ -105,21 +105,24 @@ if ( !class_exists( 'ABD_Log' ) ) {
 				'message' => $msg,
 				'time' => date( 'm/d/y @ H:i:s (P' ) . ' GMT)',
 				'indented' => $indented
-			);
+			);			
+
+			$e = self::prune_log( $e );
 
 			update_site_option( self::get_option_name(), $e );
-
-			self::prune_log();
 		}
 
-		protected static function prune_log( $max_entries = 500 ) {
-			$es = self::get_all_log_entries();
-
-			if( count( $es ) > $max_entries ) {
-				$es = array_slice( $es, -1*$max_entries );
+		protected static function prune_log( $value = null, $max_entries = 500 ) {
+			if( $value == null ) {
+				$value = self::get_all_log_entries();
 			}
 
-			update_option( self::$our_option_name, $es );
+
+			if( count( $value ) > $max_entries ) {
+				$value = array_slice( $value, -1*$max_entries );
+			}
+
+			return $value;
 		}
 
 
@@ -198,17 +201,21 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		public static function perf_summary( $func_name, $start_time, $start_mem, $sub_entry = false, $time_alert_threshold = 100, $mem_alert_threshold = 500000 ) {
 			//	Check for settings thresholds and filtration
 			$settings = ABD_Database::get_settings();
-			if( isset( $settings['perf_logging_time_limit'] ) ) {
-				$time_alert_threshold = $settings['perf_logging_time_limit'];
+			$time_limit = ABD_Database::get_specific_setting( 'perf_logging_time_limit' );
+			$mem_limit = ABD_Database::get_specific_setting( 'perf_logging_mem_limit' );
+			$only_above_threshold = ABD_Database::get_specific_setting( 'perf_logging_only_above_limits' );
+
+			if( !is_null( $time_limit ) ) {
+				$time_alert_threshold = $time_limit;
 			}
-			if( isset( $settings['perf_logging_mem_limit'] ) ) {
-				$mem_alert_threshold = $settings['perf_logging_mem_limit'];
+			if( !is_null( $mem_limit ) ) {
+				$mem_alert_threshold = $mem_limit;
 			}
-			if( isset( $settings['perf_logging_only_above_limits'] ) && $settings['perf_logging_only_above_limits'] == 'yes' ) {
-				$only_above_threshold = true;
+			if( is_null( $only_above_threshold ) || $only_above_threshold != 'no' ) {
+				$only_above_threshold = false;
 			}
 			else {
-				$only_above_threshold = false;
+				$only_above_threshold = true;
 			}
 
 

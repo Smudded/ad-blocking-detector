@@ -3,8 +3,6 @@
  * This file contains the ABD widget declaration and handler functions.
  */
 
-require_once ( ABD_ROOT_PATH . 'views/public-views.php' );
-
 if( !class_exists( 'ABD_Widget' ) ) {
     class ABD_Widget extends WP_Widget {
         function __construct() {

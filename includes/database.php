@@ -284,14 +284,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		}
 
 		public static function get_settings( $json_array = false ) {
-			$abd_settings = get_option( 'abd_user_settings', array(
-					'user_defined_selectors' => '',
-					'enable_iframe'          => 'yes',
-					'enable_div'             => 'yes',
-					'enable_js_file'         => 'yes',
-					'enable_perf_logging'    => 'yes'
-				)
-			);
+			$abd_settings = get_option( 'abd_user_settings', array() );
 
 			if( $json_array ) {
 				//	Turn user defined selectors into JSON array
@@ -299,8 +292,17 @@ if ( !class_exists( 'ABD_Database' ) ) {
 					array_map( 'trim', explode( ';', $abd_settings['user_defined_selectors'] ) )
 				);
 			}
-
 			return $abd_settings;
+		}
+
+		public static function get_specific_setting( $setting_name, $json_array = false ) {
+			$abd_settings = self::get_settings( $json_array );
+
+			if( array_key_exists( $setting_name, $abd_settings ) ) {
+				return $abd_settings[$setting_name];
+			}
+
+			return null;
 		}
 
 

@@ -92,7 +92,7 @@ function Abd_Detector (options) {
 
 		//	Ad blockers can hide things in numerous ways. Check every way I
 		//	can think of.
-		if(ABDSettings.enableIframe == 'yes' || ABDSettings.enableIframe == '') {
+		if(ABDSettings.enableIframe != 'no') {
 			//	Check for the appended frame
 			//
 			//	Okay, we have a problem... We might not have loaded the iframe if the browser
@@ -109,7 +109,7 @@ function Abd_Detector (options) {
 		}
 
 
-		if( ABDSettings.enableDiv == 'yes' || ABDSettings.enableDiv == '' ) {
+		if( ABDSettings.enableDiv != 'no' ) {
 			retVal = self.checkAdStatusDivHelper(div, divNoJq, retVal);
 		}
 		else {
@@ -117,7 +117,7 @@ function Abd_Detector (options) {
 		}
 
 
-		if( ABDSettings.enableJsFile == 'yes' || ABDSettings.enableJsFile == '' ) {
+		if(ABDSettings.enableJsFile != 'no') {
 			//	Check for bait javascript file (assets/js/advertisement.js) flags
 			if (window.abd_script_load_flag !== true) {
 				//	Then the bait javascript file, advertisement.js, was not loaded or run

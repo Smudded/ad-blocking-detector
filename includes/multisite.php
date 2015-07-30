@@ -4,10 +4,6 @@
  * class... because multisite is a pain-in-the-ass
  */
 
-abd_my_session_start();	//	Make sure we have a $_SESSION.  It's absolutely necessary for parts of this.
-
-
-
 
 //	Need is_plugin_active_for_network()
 include_once( ABSPATH . '/wp-admin/includes/plugin.php' );
