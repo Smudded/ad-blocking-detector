@@ -83,7 +83,7 @@ Total # of wp_options Entries: <?php echo ABD_Database::size_of_wp_options_table
 Plugin Version: <?php echo ABD_VERSION; ?><?php echo $line_endings; ?>
 Total # of shortcodes: <?php echo ABD_Database::count_shortcodes(); ?><?php echo $line_endings; ?>
 BLC Plugin Exists?: <?php echo $blcp_status['plugin_exists']; ?><?php echo $line_endings; ?>
-BLC Plugin Active?: <?php echo $blcp_statuc['plugin_activated']; ?><?php echo $line_endings; ?>
+BLC Plugin Active?: <?php echo $blcp_status['plugin_activated']; ?><?php echo $line_endings; ?>
 BLC Plugin Type?: <?php echo get_option( 'abd_blc_plugin_type' ); ?><?php echo $line_endings; ?>
 BLC Plugin Dir: <?php echo $blcdir; ?><?php echo $line_endings; ?>
 			<?php
