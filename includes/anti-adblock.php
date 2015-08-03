@@ -181,68 +181,6 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 			//	ABD_Log::perf_summary( 'ABD_Anti_Adblock::bcc_plugin_status()', $start_time, $start_mem );
 
 			return $retval;
-
-
-
-
-
-
-
-
-			// $status = array( 'auto_plugin_exists' => 0, 'auto_plugin_activated' => 0, 'manual_plugin_exists' => -1, 'manual_plugin_activated' => 0 );
-
-			// $dir_name = get_site_option( 'abd_blc_dir' );
-			// $plugin_type = get_site_option( 'abd_blc_plugin_type' );
-
-			// if( $dir_name ) {//	Plugin should exist				
-			// 	//	Let's make sure
-			// 	$plugin_path = ABD_ROOT_PATH . '../' . $dir_name;
-				
-			// 	if( !is_dir( $plugin_path ) ) {
-			// 		ABD_Log::error( 'Block List Countermeasure plugin does not exist at the location it is expected to: ' . $plugin_path );
-
-			// 		//	The directory option is obviously out of sync...
-			// 		delete_site_option( 'abd_blc_dir' );
-
-			// 		//	The plugin does not exist... therefore it isn't activated either... so, return our vanilla $status
-			// 		return $status;
-			// 	}
-
-			// 	//	If we're here, the plugin exists.  Now we just need to know whether it's automatic or manual
-			// 	if( $plugin_type == 'auto' ) {
-			// 		//	It's automatic
-			// 		$status['auto_plugin_exists'] = 1;
-			// 		$status['manual_plugin_exists'] = 0;
-			// 	}
-			// 	else {
-			// 		//	It's manual
-			// 		$status['manual_plugin_exists'] = 1;
-			// 		$status['auto_plugin_exists'] = 0;
-			// 	}
-
-			// 	//	Let's check if the plugin is activated.  The simplest way to do that is check whether
-			// 	//	one of it's crucial constants is defined.
-			// 	if( defined( 'ABDBLC_ROOT_PATH' ) ) {
-			// 		//	Yes, it is activated
-			// 		if( $plugin_type == 'auto' ) {
-			// 			$status['auto_plugin_activated'] = 1;
-			// 			$status['manual_plugin_activated'] = 0;
-			// 		}
-			// 		else {
-			// 			$status['manual_plugin_activated'] = 1;
-			// 			$status['auto_plugin_activated'] = 0;
-			// 		}
-			// 	}
-			// }
-			// else {	//	Plugin does not exist
-			// 	$status['manual_plugin_exists'] = 0;
-			// 	$status['auto_plugin_exists'] = 0;
-			// }
-
-
-			// ABD_Log::perf_summary( 'ABD_Anti_Adblock::bcc_plugin_status()', $start_time, $start_mem );
-
-			// return $status;
 		}
 
 
