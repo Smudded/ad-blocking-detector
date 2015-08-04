@@ -9,21 +9,33 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		protected static $our_option_name = 'abd_event_log';
 
 		public static function error( $msg, $indented = false ) {
-			self::generic_log_entry( 'ERROR', $msg, $indented );
+			$enable_errors = ABD_Database::get_specific_setting( 'enable_error_logging' );
+
+			if( $enable_errors != 'no' ) {
+				self::generic_log_entry( 'ERROR', $msg, $indented );
+			}
 		}
 
 		public static function info( $msg, $indented = false ) {
-			self::generic_log_entry( 'INFO', $msg, $indented );
+			$enable_info = ABD_Database::get_specific_setting( 'enable_info_logging' );
+
+			if( $enable_info !== 'no' ) {
+				self::generic_log_entry( 'INFO', $msg, $indented );
+			}
 		}
 
 		public static function debug( $msg, $indented = false ) {
-			self::generic_log_entry( 'DEBUG', $msg, $indented );
+			$enable_debug = ABD_Database::get_specific_setting( 'enable_debug_logging' );
+
+			if( $enable_debug !== 'no' ) {
+				self::generic_log_entry( 'DEBUG', $msg, $indented );
+			}
 		}
 
 		public static function perf( $msg, $indented = false ) {
 			$enable_perf_logging = ABD_Database::get_specific_setting( 'enable_perf_logging' );
 
-			if( $enable_perf_logging != 'no' ) {
+			if( $enable_perf_logging !== 'no' ) {
 				self::generic_log_entry( 'PERF', $msg, $indented );
 			}
 		}
@@ -47,6 +59,12 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		}
 
 		public static function get_readable_log( $num_entries = 0, $indentation = '    >>   ', $line_endings = '&#13;&#10;&#13;&#10;' ) {
+			$enabled = ABD_Database::get_specific_setting( 'enable_logging' );
+
+			if( $enabled === 'no' ) {
+				return ABD_L::__( '* Logging has been disabled in Advanced Settings.' );
+			}
+
 			$readable = '';
 			$es = self::get_all_log_entries();
 
@@ -89,6 +107,10 @@ if ( !class_exists( 'ABD_Log' ) ) {
 				$readable .= $indentation . $type . ' :: ' . $time . ' ::   ' . $msg . /*' ::  ' . $loc .*/ $line_endings;
 			}
 
+			if( empty( $readable ) ) {
+				$readable = ABD_L::__( '* No log entries at this time.' );
+			}
+
 			return $readable;
 		}
 
@@ -98,18 +120,22 @@ if ( !class_exists( 'ABD_Log' ) ) {
 
 
 		protected static function generic_log_entry( $type, $msg, $indented = false ) {
-			$e = self::get_all_log_entries();
+			$enable = ABD_Database::get_specific_setting( 'enable_logging' );
 
-			$e[] = array(
-				'type' => $type,
-				'message' => $msg,
-				'time' => date( 'm/d/y @ H:i:s (P' ) . ' GMT)',
-				'indented' => $indented
-			);			
+			if( $enable !== 'no' ) {
+				$e = self::get_all_log_entries();
 
-			$e = self::prune_log( $e );
+				$e[] = array(
+					'type' => $type,
+					'message' => $msg,
+					'time' => date( 'm/d/y @ H:i:s (P' ) . ' GMT)',
+					'indented' => $indented
+				);			
 
-			update_site_option( self::get_option_name(), $e );
+				$e = self::prune_log( $e );
+
+				update_site_option( self::get_option_name(), $e );
+			}
 		}
 
 		protected static function prune_log( $value = null, $max_entries = 500 ) {

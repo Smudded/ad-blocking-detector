@@ -390,11 +390,55 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					) );
 					$AS_Log_Section->add_to_options_group( $AS_OG );
 
+						$AS_Log_enable_all = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_logging',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Allow Logging' ),
+							'display_description' => ABD_L::__( 'Whether to log any events in the "Session Log." If this is disabled, no logging will occur.' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disbaled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+
+						$AS_Log_enable_info = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_info_logging',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Information Logging' ),
+							'display_description' => ABD_L::__( 'Whether to log noteworthy plugin actions in the "Session Log." Most Ad Blocking Detector Dashboard activities generates one or more of these log entries. Disabling this will improve plugin performance, but will drastically reduce the effectiveness of logging.' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disbaled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+
+						$AS_Log_enable_debug = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_debug_logging',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Debugging Data Logging' ),
+							'display_description' => ABD_L::__( 'Whether to log debugging data in the "Session Log." These entries are rarely generated outside of plugin updates and activation. They often accompany error log entries with contextual information. It is recommended to match this with error logging.  If error logging is on, debug logging should also be on.' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disbaled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+
+						$AS_Log_enable_error = new ABDWPSM_Field( array(
+							'field_name'          => 'enable_error_logging',
+							'type'                => 'radio',
+							'display_name'        => ABD_L::__( 'Error Report Logging' ),
+							'display_description' => ABD_L::__( 'Whether to log encountered errors in the "Session Log." These are very rarely generated outside of plugin updates and activation.' ),
+							'field_options_array' => array(
+								'choices' => array( 'Enabled'=>'yes', 'Disbaled'=>'no' ),
+								'default' => 'yes'
+							)
+						) );
+
 						$AS_Log_enable_perf = new ABDWPSM_Field( array(
 							'field_name'          => 'enable_perf_logging',
 							'type'                => 'radio',
 							'display_name'        => ABD_L::__( 'Performance Statistics Logging' ),
-							'display_description' => ABD_L::__( 'Whether to record execution times and memory usage in the Session Log. This helps tracking down performance related plugin bugs, but generates a lot of log entries and uses slightly more overhead and database traffic.' ),				
+							'display_description' => ABD_L::__( 'Whether to record execution times and memory usage in the Session Log. This helps tracking down performance related plugin bugs, but generates a lot of log entries and generates significant database traffic.' ),				
 							'field_options_array' => array(
 								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
 								'default' => 'yes'
@@ -407,7 +451,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							'display_description' => ABD_L::__( 'Whether to limit performance log entries to those exceeding the time and memory limits.' ),				
 							'field_options_array' => array(
 								'choices' => array( 'Enabled'=>'yes', 'Disabled'=>'no' ),
-								'default' => 'no'
+								'default' => 'yes'
 							)
 						) );
 						$AS_Log_perf_time_limit = new ABDWPSM_Field( array(
@@ -428,12 +472,20 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 								'default' => 1048576
 							)
 						) );
+						$AS_Log_enable_all->add_to_section( $AS_Log_Section );
+						$AS_Log_enable_info->add_to_section( $AS_Log_Section );
+						$AS_Log_enable_debug->add_to_section( $AS_Log_Section );
+						$AS_Log_enable_error->add_to_section( $AS_Log_Section );
 						$AS_Log_enable_perf->add_to_section( $AS_Log_Section );
 						$AS_Log_perf_filtering->add_to_section( $AS_Log_Section );
 						$AS_Log_perf_time_limit->add_to_section( $AS_Log_Section );
 						$AS_Log_perf_mem_limit->add_to_section( $AS_Log_Section );
 
 			//	Free memory
+			unset( $AS_Log_enable_all );
+			unset( $AS_Log_enable_info );
+			unset( $AS_Log_enable_debug );
+			unset( $AS_Log_enable_error );
 			unset( $AS_Log_enable_perf );
 			unset( $AS_Log_perf_filtering );
 			unset( $AS_Log_perf_time_limit );
