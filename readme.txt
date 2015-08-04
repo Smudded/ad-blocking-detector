@@ -3,8 +3,8 @@ Contributors: jtmorris
 Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
-Tested up to: 4.2.3
-Stable tag: 3.2.0
+Tested up to: 4.2.4
+Stable tag: 3.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,15 @@ screenshots.
 
 
 == Changelog ==
+= 3.2.1 =
+* Performance Improvement: Remove dependence on PHP sessions.
+* Performance Improvement: Decrease memory usage in several functions by eliminating needless arrays and defining on demand only.
+* Performance Improvement: Correct log pruning behavior, and reduce database access required for pruning.
+* Performance Improvement: Replace PHP require_once() with require().
+* Increased performance logging detail.
+* Added more log customization settings.
+* Minor bug fixes.
+* Source code tidying.
 = 3.2.0 =
 * Performance Improvement: Counting shortcodes no longer retrieves all shortcodes and data from database (lower load times, less memory usage).
 * Performance Improvement: Reworked Block List Countermeasure plugin status checking to an on demand check system.
