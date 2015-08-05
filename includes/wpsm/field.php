@@ -166,7 +166,7 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
             //  Okay, if we're here, we have everything set. We can check uniqueness.
             foreach( ABDWPSM_Settings_Manager::$fields as $Field ) {
                 if( $Field->get_field_name() == $my_fn &&
-                    $Field->get_section()->get_options_group()->get_db_option_name == $my_fn &&
+                    $Field->get_section()->get_options_group()->get_db_option_name() == $my_fn &&
                     $Field                   != $this ) {
 
                     //  Not unique!
@@ -310,13 +310,13 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
                 //  Let's parse the field options a little to make life simpler
                 //  Start with read only.
                 ( array_key_exists( 'readonly', $fopt ) && $fopt['readonly'] ) ?
-					$readonly = 'readonly="readonly"' : '';
+					$readonly = 'readonly="readonly"' : $readonly = '';
                 //  Now disabled
                 ( array_key_exists( 'disabled', $fopt ) && $fopt['disabled'] ) ?
-                    $disabled = 'disabled="disabled"' : '';
+                    $disabled = 'disabled="disabled"' : $disabled = '';
                 //  Required
                 ( array_key_exists( 'required', $fopt ) && $fopt['required'] ) ?
-                    $required = 'required="required"' : '';
+                    $required = 'required="required"' : $required = '';
                 //  Now default value
                 array_key_exists('default', $fopt) ?
 					$default = $fopt['default'] : $default = '';
@@ -343,7 +343,7 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
                 //  Now, let's get the value we're gonna put in the input.
                 //  Unfortunately, there are several possibilities.
                 //  Possibility #1: Data persistence from a previous failed submission attempt.
-                if( !is_null( $this->data_persistence_value ) ) {
+                if( isset( $this->data_persistence_value ) && !is_null( $this->data_persistence_value ) ) {
                     $value = $this->data_persistence_value;
 
                     $this->data_persistence_value = null;   //  Clean up our mess
@@ -411,20 +411,20 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
                     $fname .= '[' . $this->get_field_name() . ']';   
                 }
 
-                $fid = str_replace('[', '--', $fid);
-                $fid = str_replace(']', '--', $fid);
+                $fid = str_replace('[', '--', $fname);
+                $fid = str_replace(']', '', $fid);
 
                 //  Let's parse the field options a little to make life simpler
                 //  Start with read only.
                 ( array_key_exists( 'readonly', $fopt ) && $fopt['readonly'] ) ?
-                    $readonly = 'readonly="readonly"' : '';
+                    $readonly = 'readonly="readonly"' : $readonly = '';
                 //  Now disabled
                 ( array_key_exists( 'disabled', $fopt ) && $fopt['disabled'] ) ?
-                    $disabled = 'disabled="disabled"' : '';
+                    $disabled = 'disabled="disabled"' : $disabled = '';
                 //  Required
                 //  Now disabled
                 ( array_key_exists( 'required', $fopt ) && $fopt['required'] ) ?
-                    $required = 'required="required"' : '';
+                    $required = 'required="required"' : $required = '';
                 //  Now default value
                 array_key_exists('default', $fopt) ?
                     $default = $fopt['default'] : $default = null;
@@ -444,7 +444,7 @@ if( !class_exists( 'ABDWPSM_Field' ) ) {
                 //  Now, let's get the value we're gonna put in the input.
                 //  Unfortunately, there are several possibilities.
                 //  Possibility #1: Data persistence from a previous failed submission attempt.
-                if( !is_null( $this->data_persistence_value ) ) {
+                if( isset( $this->data_persistence_value ) && !is_null( $this->data_persistence_value ) ) {
                     $cur_val = $this->data_persistence_value;
 
                     $this->data_persistence_value = null;   //  Clean up our mess

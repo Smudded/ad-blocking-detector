@@ -76,6 +76,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				//		Yes, we can use the cache...				
 				$options = self::$our_shortcode_cache;
 				$cache_status = true;
+				$update_list_flag = false;
 			}
 			else {	
 				//		Damn... we can't use the cache...
