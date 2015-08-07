@@ -15,7 +15,7 @@ if ( !class_exists( 'ABD_Ajax_Actions' ) ) {
 			$ignore_registered = ABD_Database::get_specific_setting( 'stats_ignore_registered' );
 			$ignore_ips = ABD_Database::get_specific_setting( 'stats_ignore_ips' );
 
-			if( $enabled != 'yes' ) {
+			if( $enabled == 'no' ) {
 				echo 'Statistics recording disabled.';
 				wp_die();
 			}
