@@ -124,6 +124,7 @@ screenshots.
 
 == Changelog ==
 = 3.2.1 =
+* NEW FEATURE: Statistics - Now includes ability to collect ad blocker statuses of your site visitors and view the aggregated data.
 * Performance Improvement: Remove dependence on PHP sessions.
 * Performance Improvement: Decrease memory usage in several functions by eliminating needless arrays and defining on demand only.
 * Performance Improvement: Correct log pruning behavior, and reduce database access required for pruning.
@@ -275,6 +276,8 @@ screenshots.
 
 
 == Upgrade Notice ==
+= 3.2.1 =
+* This update includes a new feature: statistics! Now see the ad blocker usage trends for your website.
 = 3.1.2 =
 Dramatic performance improvements! If versions 3.0.0 through 3.0.2 were displaying errors, or was not functioning correctly, install this update!
 = 3.1.1 =
