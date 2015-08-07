@@ -311,7 +311,10 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				'enable_iframe'          => 'yes',
 				'enable_div'             => 'yes',
 				'enable_js_file'         => 'yes',
-				'user_defined_selectors' => ''
+				'user_defined_selectors' => '',
+				'enable_statistics'      => 'yes',
+				'stats_ignore_registered'=> 'no',
+				'stats_ignore_ips'       => ''
 			) );
 
 			if( $json_array && array_key_exists( 'user_defined_selectors', $abd_settings ) ) {
@@ -466,7 +469,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			//	Insert row
 			$res = $wpdb->insert( $table, 
-				array( 'adblocker'=>$adblocker_code, 'ip'=> $user_ip, 'date_time'=>$date, 'label'=>$label )
+				array( 'adblocker'=>$adblocker_code, 'ip'=> $user_ip, 'date_time'=>$date, 'label'=>$label, 'blog_id' => $blog_id )
 			 );
 
 			if( !$res ) {	//	no updated rows or fail
@@ -485,7 +488,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			$table = $wpdb->prefix . self::$our_stats_table;
 
-			$sql = "TRUNCATE TABLE $table";
+			$sql = "DELETE FROM $table WHERE blog_id=" . ABD_Multisite::get_current_blog_id();
 
 			$res = $wpdb->query( $sql );
 
@@ -494,7 +497,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 				self::log_last_query_debug_info();
 			}
 			else {
-				ABD_Log::info( 'Truncated statistics table (deleted all rows) in database.' );				
+				ABD_Log::info( 'Deleted ' . $rows . ' rows from statistics table in database.' );				
 			}
 		}
 
@@ -513,12 +516,24 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			//	Construct WHERE clause
 			if( is_array( $where ) ) {
+				if( !array_key_exists( 'blog_id', $where ) ) {
+					$where['blog_id'] = ABD_Multisite::get_current_blog_id();
+				}
+
 				$where = self::where_from_array( $where );
 			}
 			else if( !is_string( $where ) ) {
 				ABD_Log::error( 'Invalid $where parameter fed to ABD_Database::select_all_stats(). Defaulting to empty clause.' );
 				ABD_Log::debug( '$where parameter data dump = ' . print_r( $where, true ), true );
-				$where = '';
+				$where = ' WHERE blog_id=' . ABD_Multisite::get_current_blog_id();
+			}
+			else {
+				if( empty( $where ) ) {
+					$where = ' WHERE blog_id=' . ABD_Multisite::get_current_blog_id();
+				}
+				else {
+					$where .= ' AND blog_id=' . ABD_Multisite::get_current_blog_id();
+				}
 			}
 
 			//	Construct LIMIT clause
@@ -573,12 +588,24 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			//	Construct WHERE clause without start and end dates
 			if( is_array( $where ) ) {
+				if( !array_key_exists( 'blog_id', $where ) ) {
+					$where['blog_id'] = ABD_Multisite::get_current_blog_id();
+				}
+				
 				$where = self::where_from_array( $where );
 			}
 			else if( !is_string( $where ) ) {
 				ABD_Log::error( 'Invalid $where parameter fed to ABD_Database::select_stats_by_date(). Defaulting to empty clause.' );
 				ABD_Log::debug( '$where parameter data dump = ' . print_r( $where, true ), true );
-				$where = '';
+				$where = ' WHERE blog_id=' . ABD_Multisite::get_current_blog_id();
+			}
+			else {
+				if( empty( $where ) ) {
+					$where = ' WHERE blog_id=' . ABD_Multisite::get_current_blog_id();
+				}
+				else {
+					$where .= ' AND blog_id=' . ABD_Multisite::get_current_blog_id();
+				}
 			}
 
 
@@ -610,7 +637,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 			$custom_query = str_replace( '{{table}}', $table, $custom_query );
 
-			$sql = $custom_query . " AND adblocker = $status_code";
+			$sql = $custom_query . " AND adblocker = $status_code AND blog_id=" . ABD_Multisite::get_current_blog_id();
 			$wpdb->get_results( $sql );
 
 			return intval( $wpdb->num_rows );
@@ -624,7 +651,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 				//	Where multiple rows for distinct ip and multiple values in adblocker for some of those rows
 				//	Row returned is first occurrence... meaning starting ad blocker state...
-				$sql = "SELECT DISTINCT adblocker, date_time FROM $table GROUP BY ip HAVING COUNT(DISTINCT adblocker) > 1";
+				$sql = "SELECT DISTINCT adblocker, date_time FROM $table WHERE blog_id=" . ABD_Multisite::get_current_blog_id() . " GROUP BY ip HAVING COUNT(DISTINCT adblocker) > 1";
 				$res = $wpdb->get_results( $sql, ARRAY_A );
 
 				if( !is_array( $res ) ) {
