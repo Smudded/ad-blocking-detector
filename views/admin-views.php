@@ -978,8 +978,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 		protected static function statistics_tab_description() {
 			ob_start();
-			?>			
+			?>		
 			<p><?php ABD_L::_e( 'The charts below aggregate ad blocker status statistics collected during visits to your website. The collected statistics are subject to any filtering and recording rules defined on the Advanced Settings tab, and accuracy is not guaranteed.  Charts with no relevant data will be blank until data is collected.' ); ?></p>
+			<p style="color: #990000;"><strong><em><?php ABD_L::_e( 'The statistics feature of this plugin is currently in beta testing. The aggregated data below may be inaccurate and is subject to change. If flaws are discovered, all collected statistics during this beta may be reset without warning or prompting. Feedback on this feature is welcome.' ); ?></em></strong></p>
 			<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_delete_stats' ), 'user instructed deletion of all statistics table rows' ); ?>" id="abd-statistics-reset-button" class="button abd-delete-button"><?php ABD_L::_e( 'Reset Statistics' ); ?></a>
 
 
@@ -990,10 +991,10 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			<p class='abd-stats-chart-caption'><?php ABD_L::_e( 'This chart shows the ad blocker status for unique viewers.  This filters out the previous chart\'s skew, caused by page reloads, multiple page visits, and return views of your site.  Viewers are counted a maximum of once in each category.  Uniqueness is determined by IP address.  This metric is useful for assessing the ad blocker usage proclivity of your audience. It can be skewed by users who toggle their ad blocker on or off during their visit to your site, and by users whose IP address changes between page loads or site visits.' ); ?></p>
 
 			<div id="abd-stats-chart-change-disable" class="abd-stats-chart"></div>
-			<p class='abd-stats-chart-caption'><?php ABD_L::_e( 'This chart shows how many users first visited your site with an ad blocker enabled, and who later disabled it.  This metric can be a rough estimation of the effectiveness of disable ad blocker pleas.  It can be skewed by returning visitors, who toggled ad blockers off on other websites, between visits to yours.' ); ?></p>
+			<p class='abd-stats-chart-caption'><?php ABD_L::_e( 'This chart shows how many users first visited your site with an ad blocker enabled, and who later disabled it.  This metric can be a rough estimation of the effectiveness of disable ad blocker pleas.  It can be skewed by returning visitors, who toggled ad blockers off on other websites, between visits to yours. It does not take into account multiple ad blocker state toggles per visitor. If the visitor ever had an ad blocker on, and turned it off on a later page load, they are counted.' ); ?></p>
 
 			<div id="abd-stats-chart-change-enable" class="abd-stats-chart"></div>
-			<p class='abd-stats-chart-caption'><?php ABD_L::_e( 'This chart shows how many users first visited your site with an ad blocker disabled, and who later enabled it.  This metric can be a rough estimation of how many users felt the need to turn on an ad blocker on your site for some reason.  It can be skewed by returning visitors, who toggled on ad blockers on other websites, between visits to yours.' ); ?></p>
+			<p class='abd-stats-chart-caption'><?php ABD_L::_e( 'This chart shows how many users first visited your site with an ad blocker disabled, and who later enabled it.  This metric can be a rough estimation of how many users felt the need to turn on an ad blocker on your site for some reason.  It can be skewed by returning visitors, who toggled on ad blockers on other websites, between visits to yours. It does not take into account multiple ad blocker state toggles per visitor. If the visitor ever had an ad blocker off, and turned it on, on a later page load, they are counted.' ); ?></p>
 			<?php
 			return ob_get_clean();
 		}
