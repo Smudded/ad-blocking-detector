@@ -19,7 +19,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		public static function info( $msg, $indented = false ) {
 			$enable_info = ABD_Database::get_specific_setting( 'enable_info_logging' );
 
-			if( $enable_info !== 'no' ) {
+			if( $enable_info != 'no' ) {
 				self::generic_log_entry( 'INFO', $msg, $indented );
 			}
 		}
@@ -27,7 +27,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		public static function debug( $msg, $indented = false ) {
 			$enable_debug = ABD_Database::get_specific_setting( 'enable_debug_logging' );
 
-			if( $enable_debug !== 'no' ) {
+			if( $enable_debug != 'no' ) {
 				self::generic_log_entry( 'DEBUG', $msg, $indented );
 			}
 		}
@@ -35,7 +35,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		public static function perf( $msg, $indented = false ) {
 			$enable_perf_logging = ABD_Database::get_specific_setting( 'enable_perf_logging' );
 
-			if( $enable_perf_logging !== 'no' ) {
+			if( $enable_perf_logging != 'no' ) {
 				self::generic_log_entry( 'PERF', $msg, $indented );
 			}
 		}
@@ -122,7 +122,7 @@ if ( !class_exists( 'ABD_Log' ) ) {
 		protected static function generic_log_entry( $type, $msg, $indented = false ) {
 			$enable = ABD_Database::get_specific_setting( 'enable_logging' );
 
-			if( $enable !== 'no' ) {
+			if( $enable != 'no' ) {
 				$e = self::get_all_log_entries();
 
 				$e[] = array(
@@ -237,11 +237,11 @@ if ( !class_exists( 'ABD_Log' ) ) {
 			if( !is_null( $mem_limit ) ) {
 				$mem_alert_threshold = $mem_limit;
 			}
-			if( is_null( $only_above_threshold ) || $only_above_threshold != 'no' ) {
-				$only_above_threshold = false;
+			if( $only_above_threshold != 'no' ) {
+				$only_above_threshold = true;
 			}
 			else {
-				$only_above_threshold = true;
+				$only_above_threshold = false;
 			}
 
 
