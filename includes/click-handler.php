@@ -110,6 +110,20 @@ if( !class_exists( 'ABD_Click_Handler' ) ) {
 		}
 
 
+		public static function delete_all_statistics() {
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
+			check_admin_referer( 'user instructed deletion of all statistics table rows' );
+
+			$res = ABD_Database::delete_all_stats();
+
+			ABD_Log::perf_summary( 'ABD_Click_Handler::send_usage_info()', $start_time, $start_mem );
+
+			self::redirect( 'delete_all_stats_success' );
+		}
+
+
 		
 
 

@@ -106,7 +106,8 @@ div.abdwpsm_display_description {
 #abdwpsm_tab-manage-shortcodes form {
 	border-bottom: 3px solid #CCC;
 }	
-	#abdwpsm_tab-manage-shortcodes form .abd-shortcode-get-button {
+	.abdwpsm_tab_wrapper .abd-shortcode-get-button,
+	.abdwpsm_tab_wrapper .abd-shortcode-get-button:hover {
 		background-color: #78d639;
 		font-size: 1.2em;
 
@@ -114,10 +115,11 @@ div.abdwpsm_display_description {
 
 		color: #222;
 	}
-		#abdwpsm_tab-manage-shortcodes form .abd-shortcode-get-button:before {
+		.abdwpsm_tab_wrapper .abd-shortcode-get-button:before {
 			content:'\2713 \0020';
 		}
-	#abdwpsm_tab-manage-shortcodes form .abd-shortcode-delete-button {
+	.abdwpsm_tab_wrapper .abd-delete-button,
+	.abdwpsm_tab_wrapper .abd-delete-button:hover {
 		background-color: #FF7F7F;
 		font-size: 1.2em;
 
@@ -125,7 +127,7 @@ div.abdwpsm_display_description {
 
 		color: #222;
 	}
-		#abdwpsm_tab-manage-shortcodes form .abd-shortcode-delete-button:before {
+		.abdwpsm_tab_wrapper .abd-delete-button:before {
 			content:'\2717 \0020';
 		}
 
@@ -252,6 +254,19 @@ div.abd-masonry-block {
 			min-width: 460px;
 		}
  	}
+
+
+div.abd-stats-chart {
+	width: 650px;
+	height: 500px;
+}
+p.abd-stats-chart-caption {
+	width: 650px;
+	font-size: 1.1em;
+
+	padding-bottom: 20px;
+	border-bottom: 3px solid #999;
+}
 
 
  /********************

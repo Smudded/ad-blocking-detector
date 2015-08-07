@@ -119,5 +119,28 @@ BLC Plugin Dir: <?php echo $blcdir; ?><?php echo $line_endings . $line_endings; 
 			
 			return ob_get_clean();
 		}
+
+
+
+		/**
+		 * Determines whether the given IP address is within the given range.
+		 *
+		 * @param    string   $ip      IPV4 address to check in standard dot notation (e.g. 192.168.0.1)
+		 * @param    string   $range   IPV4 address with CIDR netmask. If no CIDR netmask given, /32 is assumed (exact match).  (e.g. 182.168.0.0/16)
+		 *
+		 * @return   boolean            true if $ip is in $range.  false if not.
+		 */
+		public static function ip_in_range( $ip, $range ) {
+			if ( strpos( $range, '/' ) == false ) {
+				$range .= '/32';
+			}
+			// $range is in IP/CIDR format eg 127.0.0.1/24
+			list( $range, $netmask ) = explode( '/', $range, 2 );
+			$range_decimal = ip2long( $range );
+			$ip_decimal = ip2long( $ip );
+			$wildcard_decimal = pow( 2, ( 32 - $netmask ) ) - 1;
+			$netmask_decimal = ~ $wildcard_decimal;
+			return ( ( $ip_decimal & $netmask_decimal ) == ( $range_decimal & $netmask_decimal ) );
+		}
 	}	//	end class
 }	//	end if( !class_exists( ...

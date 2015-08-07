@@ -381,7 +381,175 @@
 
 
 
+		//////////////////////////////////
+		//	Statistics Charts & Buttons	//
+		//////////////////////////////////
+		//	Load Google Charts
+		//	We only need to do this on the statistics page... if the chart containers are
+		//	present.  Let's check if the chart containers are present by picking one and
+		//	seeing what we get.
+		if( $('#abd-stats-chart-page-load').length ) {
+			//	Yay!  We're on stats page and containers are present.		
+			google.load('visualization', '1.0', {
+				'packages':['corechart'],
+				callback: function() {
+					//	This is here to keep page from being blank
+					//	http://stackoverflow.com/a/24980290
+				}
+			});
+			google.setOnLoadCallback(drawCharts);
+		}
 
+		//	Reset Statistics Button Handling
+		$('#abd-statistics-reset-button').click(function(e) {
+			e.preventDefault();
+			var targetUrl = $(this).attr("href");
+
+			var warning = '<p>' + objectL10n.resetStatisticsWarning + '</p>';
+
+			var dsDialog = $("<div/>").html(warning).dialog( {
+				modal: true,
+				title: objectL10n.resetStatisticsTitle,
+				width: 400,
+				position: {my: 'right bottom', at: 'middle'},
+				buttons: [
+					{
+						text: objectL10n.affirmative,
+						icons: {primary: 'ui-icon-check'},
+						click: function() {
+							window.location.href = targetUrl;
+						}
+					},
+					{
+						text: objectL10n.nevermind,
+						icons: {primary: 'ui-icon-closethick'},
+						click: function() {
+							$(this).dialog("destroy");
+						}
+					}
+				],
+				open: function() {
+					//	Fix Random jQuery UI CSS Scoping Issues	//
+					$('div.ui-widget-overlay, div.ui-dialog').wrap('<div class="ffs abd-jqui" />');
+				}
+			});
+			dsDialog.parent('.ui-dialog').addClass('abd-jqui');	//	jQuery UI theme scope
+		});
+		
+		function drawCharts() {
+			drawPageLoadChart('#336699', '#a93912');
+			drawUserChart('#336699', '#a93912');
+			drawDisableChart('#33CC33', '#990099');
+			drawEnableChart('#33CC33', '#990099');
+		}
+
+		function drawPageLoadChart(goodColor, badColor, neutralColor) {
+			var data = new google.visualization.DataTable();
+			data.addColumn( 'string', 'Category' );
+			data.addColumn( 'number', 'The Number' );
+			data.addRows([
+				['Ad Blockers Enabled (' + ABDStats.pageLoadAdblocker + ')', ABDStats.pageLoadAdblocker],
+				['Ad Blockers Disabled (' + ABDStats.pageLoadNoAdblocker + ')', ABDStats.pageLoadNoAdblocker],
+				['Other (' + ABDStats.pageLoadOther + ')', ABDStats.pageLoadOther]
+			]);
+
+			var options = {
+				'title': 'Ad Blockers By Page Loads',
+				'colors': [badColor, goodColor, neutralColor],
+				'backgroundColor': '#f1f1f1',
+				'fontSize': 18,
+				'fontName': 'sans-serif',
+				'legend': {position: 'bottom', textStyle: {fontSize: 15}}
+			};
+
+			var chart = new google.visualization.PieChart(document.getElementById('abd-stats-chart-page-load'));
+			chart.draw(data, options);
+		}
+
+		function drawUserChart(goodColor, badColor, neutralColor) {
+			var data = new google.visualization.DataTable();
+			data.addColumn( 'string', 'Category' );
+			data.addColumn( 'number', 'The Number' );
+			data.addRows([
+				['Ad Blockers Enabled (' + ABDStats.uniqueUsersAdBlocker + ')', ABDStats.uniqueUsersAdBlocker],
+				['Ad Blockers Disabled (' + ABDStats.uniqueUsersNoAdBlocker + ')', ABDStats.uniqueUsersNoAdBlocker],
+				['Other (' + ABDStats.uniqueUsersOther + ')', ABDStats.uniqueUsersOther]
+			]);
+
+			var options = {
+				'title': 'Ad Blockers By Unique User',
+				'colors': [badColor, goodColor, neutralColor],
+				'backgroundColor': '#f1f1f1',
+				'fontSize': 18,
+				'fontName': 'sans-serif',
+				'legend': {position: 'bottom', textStyle: {fontSize: 15}}
+			};
+
+			var chart = new google.visualization.PieChart(document.getElementById('abd-stats-chart-unique-user'));
+			chart.draw(data, options);
+		}
+
+		function drawDisableChart(goodColor, badColor) {
+			if( ABDStats.numUsersToDisable > 0 ) {
+				var to = ABDStats.numUsersToDisable;
+				var lo = ABDStats.uniqueUsersAdBlocker - ABDStats.numUsersToDisable;
+			}
+			else {
+				var to = 0;
+				var lo = 0;
+			}
+
+			var data = new google.visualization.DataTable();
+			data.addColumn( 'string', 'Category' );
+			data.addColumn( 'number', 'The Number' );
+			data.addRows([
+				['Turned Off Ad Blockers (' + to + ')', to],
+				['Left On Ad Blockers (' + lo + ')', lo]
+			]);
+
+			var options = {
+				'title': 'Users Who Toggled Off Ad Blocker',
+				'colors': [goodColor, badColor],
+				'backgroundColor': '#f1f1f1',
+				'fontSize': 18,
+				'fontName': 'sans-serif',
+				'legend': {position: 'bottom', textStyle: {fontSize: 15}}
+			};
+
+			var chart = new google.visualization.PieChart(document.getElementById('abd-stats-chart-change-disable'));
+			chart.draw(data, options);
+		}
+
+		function drawEnableChart(goodColor, badColor) {
+			if( ABDStats.numUsersToEnable > 0 ) {
+				var to = ABDStats.numUsersToEnable;
+				var lo = ABDStats.uniqueUsersNoAdBlocker - ABDStats.numUsersToEnable;
+			}
+			else {
+				var to = 0;
+				var lo = 0;
+			}
+
+			var data = new google.visualization.DataTable();
+			data.addColumn( 'string', 'Category' );
+			data.addColumn( 'number', 'The Number' );
+			data.addRows([
+				['Turned On Ad Blockers (' + to + ')', to],
+				['Left Off Ad Blockers (' + lo + ')', lo]
+			]);
+
+			var options = {
+				'title': 'Users Who Toggled On Ad Blocker',
+				'colors': [goodColor, badColor],
+				'backgroundColor': '#f1f1f1',
+				'fontSize': 18,
+				'fontName': 'sans-serif',
+				'legend': {position: 'bottom', textStyle: {fontSize: 15}}
+			};
+
+			var chart = new google.visualization.PieChart(document.getElementById('abd-stats-chart-change-enable'));
+			chart.draw(data, options);
+		}
 
 
 

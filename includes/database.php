@@ -7,6 +7,21 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		protected static $our_shortcode_prefix = 'abd_shortcode_';
 		protected static $our_shortcode_cache_option = 'abd_sc_cache';	
 		protected static $our_shortcode_cache = null;
+		protected static $our_stats_table = 'abd_adblocker_stats';
+
+		protected static $our_list_of_options = array(
+			'abd_event_log',
+			'abd_blc_dir',
+			'abd_blc_plugin_type',
+			'abd_user_settings',
+			'abd_list_of_shortcodes',
+			'abd_feedback_nag_time',
+			'abd_current_version'
+		);
+		protected static $our_list_of_transients = array(
+			'abd_sc_cache',
+			'abd_next_shortcode_id'
+		);
 
 		/**
 		 * Returns an array of WordPress database option values for each shortcode.
@@ -285,9 +300,21 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		}
 
 		public static function get_settings( $json_array = false ) {
-			$abd_settings = get_option( 'abd_user_settings', array() );
+			$abd_settings = get_option( 'abd_user_settings', array(
+				//	Load in some default values that will throw dreadful errors in the middle
+				//	of JavaScript code if somebody (*cough* John *cough*) forgets to run an
+				//	array_key_exists(), or it is really ugly and inelegant to do so, when 
+				//	debug errors are enabled.
+				//	
+				//	See includes/setup.php > ABD_Setup::enqueue_helper_footer() for a really
+				//	rough area for these errors at the time of this writing.
+				'enable_iframe'          => 'yes',
+				'enable_div'             => 'yes',
+				'enable_js_file'         => 'yes',
+				'user_defined_selectors' => ''
+			) );
 
-			if( $json_array ) {
+			if( $json_array && array_key_exists( 'user_defined_selectors', $abd_settings ) ) {
 				//	Turn user defined selectors into JSON array
 				$abd_settings['user_defined_selectors'] = json_encode( 
 					array_map( 'trim', explode( ';', $abd_settings['user_defined_selectors'] ) )
@@ -308,23 +335,26 @@ if ( !class_exists( 'ABD_Database' ) ) {
 
 
 		public static function nuke_all_options() {
-			//		Collect start state for performance logging
-			$start_time = microtime( true );
-			$start_mem = memory_get_usage( true );
+			//		Do not collect start state for performance logging
+			//		Performance logging gets put in database, and we're trying to delete that!
+			
 
-			$options = wp_load_alloptions();	//	Get all WP options
+			$sc_options = self::get_all_shortcodes();
 
-			foreach( $options as $key=>$o ) {
-				if( stristr( $key, 'abd_' ) ) {
-					delete_site_option( $key );					
-				}				
+			foreach( $sc_options as $id=>$val ) {
+				$oname = self::$our_shortcode_prefix . $id;
+
+				delete_option( $oname );
+			}
+			foreach( self::$our_list_of_options as $o ) {
+				delete_option( $o );			
+			}
+			foreach( self::$our_list_of_transients as $t ) {
+				delete_transient( $t );
 			}
 
-			//		Make sure we update the cache when we retrieve shortcodes next
-			self::nuke_shortcode_cache();	
-
-			//		Performance log
-			ABD_Log::perf_summary( 'ABD_Database::nuke_all_options()', $start_time, $start_mem );		
+			//		Do not log performance!
+			//		Performance logging gets put in database, and we're trying to delete that!	
 		}
 
 
@@ -338,6 +368,324 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			//		Performance log
 			ABD_Log::perf_summary( 'ABD_Database::nuke_shortcode_cache()', $start_time, $start_mem );			
 		}
+
+		public static function drop_tables() {
+			//		Collect start state for performance logging
+			$start_time = microtime( true );
+			$start_mem = memory_get_usage( true );
+
+			global $wpdb;
+			
+
+			$prefix = $wpdb->base_prefix;
+			$table1 = $prefix . 'abd_shortcodes';
+
+			$sql = "DROP TABLE IF EXISTS $table1;";
+			$wpdb->query( $sql );
+
+			ABD_Log::info( 'Dropped version 2 table, abd_shortcodes, from the database.' );
+
+			$table2 = $prefix . 'abd_adblocker_stats';
+
+			$sql = "DROP TABLE IF EXISTS $table2;";
+			$wpdb->query( $sql );
+
+			ABD_Log::info( 'Dropped version 3 table, abd_adblocker_stats, from the database.' );
+
+			//		Performance log
+			ABD_Log::perf_summary( 'ABD_Database::drop_tables()', $start_time, $start_mem );
+		}
+
+
+
+
+
+		////////////////////////////
+		//	Ad Blocker Statistics //
+		////////////////////////////
+		/**
+		 * Unlike shortcodes, statistics are collected into their own database table.
+		 * This is because the Settings API, which makes certain tasks easier and faster,
+		 * is not suited for an every page load kind of interaction. To use the Settings API,
+		 * we'd need to have a new option for every page load, or build an array, which needs
+		 * to be retrieved, updated, and put back in the database. This is way too much 
+		 * database traffic!
+		 *
+		 * However, we're only doing a handful of specific jobs for these stats, so a CRUD
+		 * setup for the custom table isn't too hard.
+		 */
+		public static function update_stats_table_structure() {
+			global $wpdb;
+			$charset = $wpdb->get_charset_collate();
+			$table = $wpdb->prefix . self::$our_stats_table;
+
+			$sql = "CREATE TABLE $table (
+				id mediumint(9) NOT NULL AUTO_INCREMENT,
+				blog_id mediumint(9) NOT NULL DEFAULT 1,
+				adblocker tinyint(1) NOT NULL,
+				date_time datetime NOT NULL,
+				label text DEFAULT '',
+				ip varchar(39),
+				PRIMARY KEY  (id),
+				KEY adblocker (adblocker),
+				KEY blog_id (blog_id),
+				KEY ip (ip)
+			) $charset;";
+
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
+		}
+
+		/**
+		 * Insert a row in the statistics database table.
+		 *
+		 * @param    int   $adblocker_code   The codified integer adblocker status (-1 = unknown, 0 = no adblocker, 1 = adblocker)
+		 * @param    int   $blog_id          The ID of the multisite blog this statistic is collected for. Defaults to 1.  Non-multisite is always 1.
+		 * @param    int   $user_ip          The IP address of the user.
+		 * @param    string   $date             The date and time this statistic is for. Ommitted = now. Should be a UNIX timestamp.
+		 * @param    string   $label            Some descriptive text for the entry.
+		 */
+		public static function insert_stat( $adblocker_code, $blog_id = 1, $user_ip  = '', $date = 'now', $label = '' ) {
+			global $wpdb;
+
+			$table = $wpdb->prefix . self::$our_stats_table;
+
+			//	Get date in right format
+			if( is_string( $date ) ) {
+				if( $date == 'now' ) {
+					$date = date( 'Y-m-d H:i:s' );
+				}
+				else {
+					$date = date( 'Y-m-d H:i:s', $date );
+				}
+			}
+			else {
+				ABD_Log::error( 'Invalid date/time value provided when inserting adblocker statistic. Using current date/time.' );
+				$date = date( 'Y-m-d H:i:s' );
+			}
+
+			//	Insert row
+			$res = $wpdb->insert( $table, 
+				array( 'adblocker'=>$adblocker_code, 'ip'=> $user_ip, 'date_time'=>$date, 'label'=>$label )
+			 );
+
+			if( !$res ) {	//	no updated rows or fail
+				ABD_Log::error( 'Unknown failure inserting adblocker statistic.' );
+				self::log_last_query_debug_info();
+			}
+
+			return $res;
+		}
+
+		/**
+		 * Deletes rows from statistics database.
+		 */
+		public static function delete_all_stats() {
+			global $wpdb;
+
+			$table = $wpdb->prefix . self::$our_stats_table;
+
+			$sql = "TRUNCATE TABLE $table";
+
+			$res = $wpdb->query( $sql );
+
+			if( $res === false ) {
+				ABD_Log::error( 'Unknown failure deleting adblocker statistics.' );
+				self::log_last_query_debug_info();
+			}
+			else {
+				ABD_Log::info( 'Truncated statistics table (deleted all rows) in database.' );				
+			}
+		}
+
+		/**
+		 * Returns all rows from statistics database that match provided WHERE and LIMIT clauses
+		 *
+		 * @param    string/array    $where   WHERE clause string, or named array of WHERE clauses (in column -> value pairs).  Defaults to empty WHERE clause thus not limiting SELECT query.
+		 * @param    integer   $limit   A limit on rows returned. 0 or negative number will not limit rows. Defaults to -1.
+		 *
+		 * @return   array             Associative array containing query results.  Array will be empty if query fails or no rows match query.
+		 */
+		public static function select_all_stats( $where = '', $limit = -1 ) {
+			global $wpdb;
+
+			$table = $wpdb->prefix . self::$our_stats_table;
+
+			//	Construct WHERE clause
+			if( is_array( $where ) ) {
+				$where = self::where_from_array( $where );
+			}
+			else if( !is_string( $where ) ) {
+				ABD_Log::error( 'Invalid $where parameter fed to ABD_Database::select_all_stats(). Defaulting to empty clause.' );
+				ABD_Log::debug( '$where parameter data dump = ' . print_r( $where, true ), true );
+				$where = '';
+			}
+
+			//	Construct LIMIT clause
+			if( is_numeric( $limit) && $limit > 0 ) {
+				$limit = ' LIMIT ' . $limit;
+			}
+			else {
+				$limit = '';
+			}
+
+			//	Run query
+			$res = $wpdb->get_results( 'SELECT * FROM ' . $table . $where . $limit, ARRAY_A );
+
+			if( !is_array( $res ) || count( $res ) < 1 ) {
+				ABD_Log::info( 'SELECT query on statistics database returned empty set.' );
+				ABD_Log::debug( 'Empty set query = ' . $wpdb->last_query );
+
+				return array();
+			}
+
+			return $res;
+		}
+
+		/**
+		 * Returns all rows from statisitics database that fall in the date/time range specified. This is basically
+		 * a wrapper around ABD_Database::select_all_stats() which will add appropriate date range to WHERE clause
+		 * automatically.
+		 *
+		 * @param    string    $start_date   English textual datetime description of start date filter parsable by PHP's DateTime constructor.
+		 * @param    string    $end_date     English textual datetime description fo end date filter parsable by PHP's DateTime constructor.
+		 * @param    string/array    $where        WHERE clause string, or named array of WHERE clauses (in column -> value pairs).  Defaults to empty WHERE clause thus not limiting SELECT query.
+		 * @param    integer   $limit        A limit on rows returned. 0 or negative number will not limit rows. Defaults to -1.
+		 *
+		 * @return   array             Associative array containing query results.  Array will be empty if query fails or no rows match query.
+		 */
+		public static function select_stats_by_date( $start_date, $end_date = 'now', $where = null, $limit = -1 ) {	
+			//	Get start and end dates in MySQL acceptable forms
+			try {
+				$start_date = new DateTime( $start_date );
+				$end_date = new DateTime( $end_date );
+
+				$s = $start_date->format( 'Y-m-d H:i:s' );
+				$e = $end_date->format( 'Y-m-d H:i:s' );
+			}
+			catch( Exception $e ) {
+				ABD_Log::error( 'Invalid $start_date or $end_date parameter provided in ABD_Database::select_stats_by_date().' );
+				ABD_Log::debug( 'DateTime exception = ' . $e->getMessage(), true );
+
+				return array();
+			}
+
+
+			//	Construct WHERE clause without start and end dates
+			if( is_array( $where ) ) {
+				$where = self::where_from_array( $where );
+			}
+			else if( !is_string( $where ) ) {
+				ABD_Log::error( 'Invalid $where parameter fed to ABD_Database::select_stats_by_date(). Defaulting to empty clause.' );
+				ABD_Log::debug( '$where parameter data dump = ' . print_r( $where, true ), true );
+				$where = '';
+			}
+
+
+			//	Add start and end dates
+			if( empty( $where ) ) {
+				$where = ' WHERE ';
+			}
+			else {
+				$where .= ' AND ';
+			}
+
+			$where .= 'date > "' . $s . '" AND date < "' . $e . '"';
+
+			return self::select_all_stats( $where, $limit );
+		}
+
+		/**
+		 * Returns a count of rows in statistics database where the adblocker column contains the given $status_code.
+		 *
+		 * @param    integer   $status_code   adblocker column status code (adblocker=1, no adblocker=0, other=-1)
+		 * @param    string    $custom_query  A custom SQL query to run. The last clause must be a WHERE clause! If no WHERE clause, use "WHERE 1=1".  Use template tag {{table}} in place of table name.
+		 *
+		 * @return   integer                  A count of matching rows.
+		 */
+		public static function stats_status_count( $status_code = 1, $custom_query = "SELECT adblocker FROM {{table}} WHERE 1=1" ) {
+			global $wpdb;
+
+			$table = $wpdb->prefix . self::$our_stats_table;
+
+			$custom_query = str_replace( '{{table}}', $table, $custom_query );
+
+			$sql = $custom_query . " AND adblocker = $status_code";
+			$wpdb->get_results( $sql );
+
+			return intval( $wpdb->num_rows );
+		}
+			public static function stats_status_count_blocker_change( $change_type = 'disable' ) {
+				global $wpdb;
+
+				$table = $wpdb->prefix . self::$our_stats_table;
+
+				$count = 0;
+
+				//	Where multiple rows for distinct ip and multiple values in adblocker for some of those rows
+				//	Row returned is first occurrence... meaning starting ad blocker state...
+				$sql = "SELECT DISTINCT adblocker, date_time FROM $table GROUP BY ip HAVING COUNT(DISTINCT adblocker) > 1";
+				$res = $wpdb->get_results( $sql, ARRAY_A );
+
+				if( !is_array( $res ) ) {
+					ABD_Log::error( 'Unknown query failure in ABD_Database::stats_status_count_blocker_change(). Returning 0.' );
+					self::log_last_query_debug_info();
+					return 0;
+				}
+
+				foreach( $res as $r ) {
+					//	Rows contain beginning adblocker state. If we want disabled type, we want
+					//	enabled ad blocker in row.  Otherwise, we want disabled type
+					if( $change_type == 'disable' && $r['adblocker'] == 1 ) {
+						$count++;
+					}
+					else if( $change_type == 'enable' && $r['adblocker'] == 0 ) {
+						$count++;
+					}
+				}
+
+				return $count;
+			}
+
+
+		protected static function log_last_query_debug_info( $indented = true ) {
+			global $wpdb;
+
+			ABD_Log::debug( 'Failed MYSQL Query = ' . $wpdb->last_query, $indented );
+			ABD_Log::debug( 'Failed MYSQL Error = ' . $wpdb->last_error, $indented );
+		}
+
+		protected static function where_from_array( $named_array_of_where_clauses ) {
+			if( !is_array( $named_array_of_where_clauses ) ) {
+				return false;
+			}
+
+			$first = true;
+			$wc = '';
+			foreach( $named_array_of_where_clauses as $field=>$value ) {
+				if( $first ) {
+					$wc .= ' WHERE ';
+					$first = false;
+				}
+				else {
+					$wc .= ' AND ';
+				}
+
+				$wc .= $field . '="' . $value . '"';
+			}
+
+			ABD_Log::debug( 'Constructed WHERE clause = ' . $wc );
+
+			return $wc;
+		}
+
+
+
+
+
+
+
+
 
 		/**
 		 * Extracts value of array entry with given key if it exists.
@@ -556,25 +904,7 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			ABD_Log::perf_summary( 'ABD_Database::v31_to_v32_database_update()', $start_time, $start_mem );
 		}
 
-		public static function drop_v2_table() {
-			//		Collect start state for performance logging
-			$start_time = microtime( true );
-			$start_mem = memory_get_usage( true );
-
-			global $wpdb;
-			
-
-			$prefix = $wpdb->base_prefix;
-			$table = $prefix . 'abd_shortcodes';
-
-			$sql = "DROP TABLE IF EXISTS abd_shortcodes;";
-			$wpdb->query( $sql );
-
-			ABD_Log::info( 'Dropped version 2 table, abd_shortcodes, from the database.' );
-
-			//		Performance log
-			ABD_Log::perf_summary( 'ABD_Database::drop_v2_table()', $start_time, $start_mem );
-		}
+		
 
 	}	//	end class ABD_Database
 }	//	end if( !class_exists( ...

@@ -18,6 +18,7 @@ require( ABD_ROOT_PATH . "includes/click-handler.php" );
 require( ABD_ROOT_PATH . "includes/perf-tools.php" );
 require( ABD_ROOT_PATH . "includes/multisite.php" );
 require( ABD_ROOT_PATH . "includes/localization.php" );
+require( ABD_ROOT_PATH . "includes/ajax-actions.php" );
 
 ABD_Log::perf_summary( 'setup.php // require plugin files', $start_time, $start_mem );
 
@@ -126,6 +127,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					$prefix . 'assets/js/jquery.masonry.min.js',
 					'jquery' );
 
+
+				//	Google Charts
+				wp_enqueue_script( 'google-jsapi', 'https://www.google.com/jsapi' );
+
+
 				wp_enqueue_script( 'abd-admin-view',
 					$prefix . 'assets/js/admin-view.js', array('jquery') );
 				wp_localize_script( 'abd-admin-view', 'objectL10n', ABD_Admin_Views::get_js_localization_array() );
@@ -149,6 +155,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					$prefix . 'assets/js/adblock-detector.min.js', array('jquery') );
 				wp_enqueue_script( 'abd-fake-ad',
 					$prefix . 'assets/js/advertisement.min.js' );
+				wp_enqueue_script( 'abd-public-view',
+					$prefix . 'assets/js/public-view.js' );
 			}
 			public static function enqueue_helper_footer() {
 				$abd_settings = ABD_Database::get_settings( true );
@@ -181,14 +189,14 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	Okay, our global user-defined wrapper css selectors may be empty... however, 
 				//	it will come back as an JSON encoded array with one empty string... [""]
 				//	We don't want this... this should mean utterly blank
-				if( $abd_settings['user_defined_selectors'] == '[""]' ) {
+				if( !array_key_exists( 'user_defined_selectors', $abd_settings ) ||  $abd_settings['user_defined_selectors'] == '[""]' ) {
 					$abd_settings['user_defined_selectors'] = '';
 				}
 				
 				?>
 				<script type="text/javascript">
 					<?php
-					if( $abd_settings['enable_iframe'] != 'no' ) {
+					if( !array_key_exists( 'enable_iframe', $abd_settings ) || $abd_settings['enable_iframe'] != 'no' ) {
 						?>
 						(function() {
 							//	Insert iframe only if we can prevent it from frame busting simply.
@@ -216,8 +224,29 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 						cssSelectors: '<?php echo $abd_settings['user_defined_selectors']; ?>',
 						enableIframe: "<?php echo $abd_settings['enable_iframe']; ?>",
 						enableDiv:    "<?php echo $abd_settings['enable_div']; ?>",
-						enableJsFile: "<?php echo $abd_settings['enable_js_file']; ?>"
+						enableJsFile: "<?php echo $abd_settings['enable_js_file']; ?>",
+						statsAjaxNonce: "<?php echo wp_create_nonce( 'ad blocking detector stats ajax nonce' ); ?>",
+						ajaxUrl: "<?php echo admin_url( 'admin-ajax.php' ); ?>"
 					}
+
+					<?php
+					if( is_admin() ) {
+						?>
+						var ABDStats = {
+							pageLoadAdblocker: parseInt('<?php echo ABD_Database::stats_status_count( 1 ); ?>'),
+							pageLoadNoAdblocker: parseInt('<?php echo ABD_Database::stats_status_count( 0 ); ?>'),
+							pageLoadOther: parseInt('<?php echo ABD_Database::stats_status_count( -1 ); ?>'),
+
+							uniqueUsersAdBlocker: parseInt('<?php echo ABD_Database::stats_status_count( 1, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
+							uniqueUsersNoAdBlocker: parseInt('<?php echo ABD_Database::stats_status_count( 0, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
+							uniqueUsersOther: parseInt('<?php echo ABD_Database::stats_status_count( -1, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
+
+							numUsersToDisable: parseInt( '<?php echo ABD_Database::stats_status_count_blocker_change( "disable" ); ?>' ),
+							numUsersToEnable: parseInt( '<?php echo ABD_Database::stats_status_count_blocker_change( "enable" ); ?>' )
+						}
+						<?php
+					}
+					?>
 
 					//	Make sure ABDSettings.cssSelectors is an array... might be a string
 					if(typeof ABDSettings.cssSelectors == 'string') {
@@ -226,7 +255,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				</script>
 
 				<?php
-				if( $abd_settings['enable_div'] != 'no' ) {
+				if( !array_key_exists( 'enable_div', $abd_settings ) || $abd_settings['enable_div'] != 'no' ) {
 					?>
 					<div
 						id="abd-ad-div"
@@ -365,6 +394,13 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				array( 'ABD_Click_Handler', 'delete_shortcode' ) );
 			add_action( 'admin_post_abd_send_usage_info',
 				array( 'ABD_Click_Handler', 'send_usage_info' ) );
+			add_action( 'admin_post_abd_delete_stats',
+				array( 'ABD_Click_Handler', 'delete_all_statistics' ) );
+
+
+			//	AJAX Handlers
+			add_action( 'wp_ajax_submit_stats', 
+				array( 'ABD_Ajax_Actions', 'submit_stats' ) );
 
 			//	Admin notices
 			add_action( 'admin_notices', 
@@ -385,9 +421,9 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				self::nuke_plugin();
 			}
 				protected static function nuke_plugin() {
+					ABD_Database::drop_tables();
 					ABD_Database::nuke_all_options();
-					ABD_Database::drop_v2_table();	//	Compatibility for upgraded v2 installs
-
+					
 					ABD_Anti_Adblock::delete_bcc_plugin();
 					ABD_Anti_Adblock::delete_bcc_manual_plugin();
 				}
@@ -644,6 +680,9 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 						deactivate_plugins( ABDBLC_SUBDIR_AND_FILE );
 					}
 				}
+
+				//	Update Stats table structure
+				ABD_Database::update_stats_table_structure();
 
 				
 				//	And we update the option in the database to reflect that the upgrade was processed
