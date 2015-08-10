@@ -3,7 +3,7 @@
  * Plugin Name: Ad Blocking Detector
  * Plugin URI: http://adblockingdetector.jtmorris.net
  * Description: A plugin for detecting ad blocking browser extensions, plugins, and add-ons. It allows you to display alternative content to site visitors who block your ads.
- * Version: 3.3.0
+ * Version: 3.3.1
  * Author: John Morris
  * Author URI: http://cs.johnmorris.me
  * License: GPL2
@@ -40,7 +40,7 @@
  *    \\//    \\//    \\//    \\//
  *     \/      \/      \/      \/                          */
 
-define( 'ABD_VERSION', '3.3.0' );
+define( 'ABD_VERSION', '3.3.1' );
 
 /*     /\      /\      /\      /\
  *    //\\    //\\    //\\    //\\

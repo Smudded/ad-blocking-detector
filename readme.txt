@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
 Tested up to: 4.2.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,8 @@ screenshots.
 
 
 == Changelog ==
+= 3.3.1 =
+* Fix statistics collection bug.
 = 3.3.0 =
 * NEW FEATURE: Statistics - Now includes ability to collect ad blocker statuses of your site visitors and view the aggregated data.
 * Performance Improvement: Remove dependence on PHP sessions.
