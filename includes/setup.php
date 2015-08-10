@@ -401,6 +401,8 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			//	AJAX Handlers
 			add_action( 'wp_ajax_submit_stats', 
 				array( 'ABD_Ajax_Actions', 'submit_stats' ) );
+			add_action( 'wp_ajax_nopriv_submit_stats', 
+				array( 'ABD_Ajax_Actions', 'submit_stats' ) );
 
 			//	Admin notices
 			add_action( 'admin_notices', 
