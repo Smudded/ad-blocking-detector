@@ -3,8 +3,8 @@ Contributors: jtmorris
 Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
-Tested up to: 4.2.4
-Stable tag: 3.3.1
+Tested up to: 4.3
+Stable tag: 3.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,9 @@ screenshots.
 
 
 == Changelog ==
+= 3.3.2 =
+* Potential fix for erroneous Block List Countermeasure plugin [activation error message](https://wordpress.org/support/topic/block-list-countermeasure-not-activating)
+* Fix faulty default value for global user-defined wrapper CSS selectors
 = 3.3.1 =
 * Fix statistics collection bug.
 = 3.3.0 =
