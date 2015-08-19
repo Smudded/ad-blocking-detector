@@ -56,7 +56,8 @@ define ( 'ABDBLC_SUBDIR_AND_FILE', plugin_basename(__FILE__) );
 if( !class_exists( 'ABDBLC' ) ) {
     class ABDBLC {
         public function __construct() {
-            add_action( 'admin_init', array( &$this, 'admin_init_handler' ) );
+            //  Once plugins are all loaded, run dependency checks
+            add_action( 'plugins_loaded', array( &$this, 'plugins_all_loaded' ) );
 
             //  Activation
             register_activation_hook( ABDBLC_PLUGIN_FILE,
@@ -67,9 +68,12 @@ if( !class_exists( 'ABDBLC' ) ) {
                 array( &$this, 'hooks_helper_deactivation' ) );
         }
 
-        public function admin_init_handler() {
+        public function plugins_all_loaded() {
             //  We only want to do stuff if Ad Blocking Detector is installed and active
-            if( !is_plugin_active( 'ad-blocking-detector/ad-blocking-detector.php' ) ) {
+            //  WordPress' is_plugin_active() function seems to fail for some users, so 
+            //  instead, rely on class_exists check for a crucial ABD class ABD_Setup
+            //  if( !is_plugin_active( 'ad-blocking-detector/ad-blocking-detector.php' ) ) {
+            if( !class_exists( 'ABD_Setup' ) ) {
                 //  It's not installed or active
                 //  Notify the user, deactivate this plugin, then phone home.
                 add_action( 'admin_notices', array( &$this, 'admin_notice_missing_abd_handler' ) );
