@@ -323,7 +323,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							'display_description' => ABD_L::__( 'A list of CSS selectors for the wrapping elements. Separate multiple selectors with semicolons.' ),
 							'example_entry'       => 'ins.adsbygoogle; #myawesomeadserverwrapper',
 							'field_options_array' => array(
-								'default'    => 'ins.adsbygoogle',
+								'default'    => '',
 								'style'      => 'min-width: 350px'
 							)
 						) );
