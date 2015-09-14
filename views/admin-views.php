@@ -380,7 +380,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 							'field_name'          => 'iframe_url',
 							'type'                => 'text',
 							'display_name'        => ABD_L::__( 'URL of Iframe' ),
-							'display_description' => ABD_L::__( 'The bait iframe\'s URL. This should contain ad or advertisement keywords. I recommend a URL that doesn\'t exist to keep loading times down. Leave empty to allow automatic an automatic URL choice.' ),
+							'display_description' => ABD_L::__( 'The bait iframe\'s URL. This should contain ad or advertisement keywords. I recommend a URL that doesn\'t exist to keep loading times down. Leave empty to allow an automatic URL choice.' ),
 							'example_entry'       => 'http://YHrSUDwvRGxPpWyM-ad.us/adserver/adlogger_tracker.php',
 							'field_options_array' => array(
 								'default' => '',
