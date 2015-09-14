@@ -279,3 +279,15 @@ p.abd-stats-chart-caption {
  .abd-jqui .ui-dialog {
  	z-index: 10002 !important;
  }
+
+
+ /********************************
+ * Notification Beautification
+ ********************************/
+.abd-notice, 
+.abd-notice p {
+	font-size: 1.15em;
+}
+.abd-notice-blue {
+	border-left-color: #0080FF !important;
+}

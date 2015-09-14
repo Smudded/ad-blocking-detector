@@ -376,12 +376,13 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					) );
 					$AS_Iframe_Section->add_to_options_group( $AS_OG );
 
+						$domain = substr(md5(rand(0, 1000000)), 0, 7);
 						$AS_Iframe_URL = new ABDWPSM_Field( array(
 							'field_name'          => 'iframe_url',
 							'type'                => 'text',
 							'display_name'        => ABD_L::__( 'URL of Iframe' ),
 							'display_description' => ABD_L::__( 'The bait iframe\'s URL. This should contain ad or advertisement keywords. I recommend a URL that doesn\'t exist to keep loading times down. Leave empty to allow an automatic URL choice.' ),
-							'example_entry'       => 'http://YHrSUDwvRGxPpWyM-ad.us/adserver/adlogger_tracker.php',
+							'example_entry'       => 'http://' . $domain . '-ad.us/adserver/adlogger_tracker.php',
 							'field_options_array' => array(
 								'default' => '',
 								'style'   => 'width: 50%; max-width: 500px; min-width: 170px;'
@@ -555,7 +556,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			$stats_enabled = ABD_Database::get_specific_setting( 'enable_statistics' );
 			if( $stats_enabled != 'no' ) {
 				new ABDWPSM_Tab( array(
-					'display_name'        => ABD_L::__( 'Statistics (Beta)' ),
+					'display_name'        => ABD_L::__( 'Statistics' ),
 					'display_description' => self::statistics_tab_header(),
 					'url_slug'            => 'statistics',
 					'page'                => 'ad-blocking-detector'
@@ -727,13 +728,22 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<img class='abd-masonry-image' src="<?php echo $prefix . 'assets/images/targeted.png'; ?>" />
 
 					<p>
-						<?php ABD_L::_e( 'Ad Blocking Detector is now targeted by ad blockers. A characteristic of WordPress plugin installation makes it very simple for them to block crucial plugin files, preventing detector from working.' ); ?>
+						<?php ABD_L::_e( 'Ad Blocking Detector is now targeted by ad blockers and miscreants with philosophical agendas in opposition to this plugin.'); ?>
 					</p>
 					<p>
-						<?php ABD_L::_e( 'Fortunately, there is a way to circumvent the ad blockers, but it requires your help.' ); ?>
+						<?php ABD_L::_e( 'A characteristic of WordPress plugin installation makes it very simple for ad blockers to block crucial plugin files, preventing detection from working.' ); ?>
+					</p>
+					<p>
+						<?php ABD_L::_e( 'Fortunately, there is a way to circumvent the ad blocker targeting, but it requires your help.' ); ?>
 					</p>
 					<p>
 						<?php ABD_L::_e( 'You need to visit the Advanced Settings tab above, and follow the instructions for creating the Block List Countermeasure plugin. Until you do this, there is a good chance Ad Blocking Detector will not work correctly!' ); ?>
+					</p>
+					<p>
+						<?php ABD_L::_e( 'In addition to simple inconveniences, this plugin has inspired vitriolic diatribes, been the target of malware related issues, and more.' ); ?>
+					</p>
+					<p>
+						<?php ABD_L::_e( 'If you experience plugin issues stemming from this spotlight, please inform the developer, as this may be a new attack on functionality, and be patient as resolutions are developed and tested.' ); ?>
 					</p>
 				</div>
 
@@ -980,7 +990,6 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			ob_start();
 			?>		
 			<p><?php ABD_L::_e( 'The charts below aggregate ad blocker status statistics collected during visits to your website. The collected statistics are subject to any filtering and recording rules defined on the Advanced Settings tab, and accuracy is not guaranteed.  Charts with no relevant data will be blank until data is collected.' ); ?></p>
-			<p style="color: #990000;"><strong><em><?php ABD_L::_e( 'The statistics feature of this plugin is currently in beta testing. The aggregated data below may be inaccurate and is subject to change. If flaws are discovered, all collected statistics during this beta may be reset without warning or prompting. Feedback on this feature is welcome.' ); ?></em></strong></p>
 			<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_delete_stats' ), 'user instructed deletion of all statistics table rows' ); ?>" id="abd-statistics-reset-button" class="button abd-delete-button"><?php ABD_L::_e( 'Reset Statistics' ); ?></a>
 
 
@@ -2065,6 +2074,28 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<h3><?php ABD_L::_e( 'An Ad Blocking Detector feature you are using no longer exists.' ); ?></h3>
 				<p><?php ABD_L::_e( 'Earlier versions of this plugins supported "Network Wide Shortcodes" which could be created in a multisite\'s Network Admin, and would be available for every site in the network.  Due to the complexity of this feature and technical limitations it imposed, this capability is no longer available.  All shortcode creation and management is done on a site by site basis now.' ); ?></p>
 				<p><?php ABD_L::_e( 'All "Network Wide" shortcodes will still function for a limited time.  However, they are no longer editable, and all support will be removed in a future release.  You should change all occurrences of "Network Wide Shortcodes" on your sites to new shortcodes, and encourage any site administrators in your network to do the same to their sites.' ); ?> </p>
+			</div>
+			<?php
+		}
+
+		public static function malware_notice() {
+			?>
+			<div class='updated abd-notice abd-notice-blue'>
+				<h3><?php ABD_L::_e( 'Ad Blocking Detector Malware Issues' ); ?></h3>
+
+				<img src="<?php echo ABD_ROOT_URL; ?>/assets/images/targeted.png" style="width: 160px; float: left; margin: auto 25px 25px auto;" />
+
+				<p><?php ABD_L::_e( 'Ad Blocking Detector has been subjected to some malware attacks and problems this week. This most recent update fixes those issues.' ); ?></p>
+				<p><?php ABD_L::_e( 'Most websites should not experience any problems. However, if your website is spawning web browser or search engine warnings, check out the links below for details and resolutions.' ); ?></p>
+				<p>
+					<ul style="list-style-type: disc; margin-left: 55px;">
+						<li><a target="_blank" href="http://adblockingdetector.johnmorris.me/malware-woes/"><?php ABD_L::_e( 'Details on the Malware Issue' ); ?></a></li>
+						<li><a target="_blank" href="http://adblockingdetector.johnmorris.me/malware-woes/#fix-it"><?php ABD_L::_e( 'How to Fix Malware Browser and Search Engine Warnings' ); ?></a></li>
+						<li><a target="_blank" href="https://wordpress.org/support/topic/malware-trigger-ssoanbtrcom"><?php ABD_L::_e( 'Support Forum Issue on This Topic' ); ?></a></li>
+					</ul>
+				</p>
+				<p><?php ABD_L::_e( 'Apologies for the problems and any inconvenience.' ); ?></p>
+				<div style="clear: both;"></div>
 			</div>
 			<?php
 		}
