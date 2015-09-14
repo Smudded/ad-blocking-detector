@@ -176,7 +176,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					$sec = 'security=\"restricted\" sandbox=\"\"';
 				}
 				else {
-					$iframe_url = "http://YHrSUDwvRGxPpWyM-ad.us/adserver/adlogger_tracker.php";
+					$iframe_url = "http://advert-serv.johnmorris.me/adserver/adlogger_tracker.php";
 					$sec = '';
 				}
 
