@@ -75,9 +75,9 @@ if( !class_exists( 'ABDBLC' ) ) {
             //  if( !is_plugin_active( 'ad-blocking-detector/ad-blocking-detector.php' ) ) {
             if( !class_exists( 'ABD_Setup' ) ) {
                 //  It's not installed or active
-                //  Notify the user, deactivate this plugin, then phone home.
+                //  Notify the user, then phone home.
                 add_action( 'admin_notices', array( &$this, 'admin_notice_missing_abd_handler' ) );
-                deactivate_plugins( ABDBLC_SUBDIR_AND_FILE );
+
                 return;
             }
 
@@ -85,8 +85,8 @@ if( !class_exists( 'ABDBLC' ) ) {
             if( !defined( 'ABDBLC_ROOT_URL' ) ) {
                 //  Somebody deleted this crucial constant, which is how Ad Blocking Detector
                 //  knows whether to refer to these fallback files or not.
-                add_action( 'admin_notices', array( &$this, 'admin_notice_missing_consts_handler' ) );
-                deactivate_plugins( ABDBLC_SUBDIR_AND_FILE );
+                add_action( 'admin_notices', array( &$this, 'admin_notice_missing_consts_handler' ) );                
+
                 return;
             }
 
@@ -126,7 +126,7 @@ if( !class_exists( 'ABDBLC' ) ) {
         public function admin_notice_missing_abd_handler() {
            $this->generic_error_handler(
                 sprintf( 
-                    __( '%1$s depends on the %2$s plugin. Please activate %2$s, then try reactivating %1$s.', 'ad-blocking-detector' ), 
+                    __( '%1$s depends on the %2$s plugin. Please activate %2$s, then try reactivating %1$s if it is deactivated.', 'ad-blocking-detector' ), 
                     '<em>Ad Blocking Detector - Block List Countermeasure</em>', 
                     '<em>Ad Blocking Detector</em>' 
                 )
