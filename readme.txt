@@ -4,7 +4,7 @@ Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
 Tested up to: 4.3
-Stable tag: 3.3.3
+Stable tag: 3.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,8 @@ screenshots.
 
 
 == Changelog ==
+= 3.3.4 =
+* Fix update notification display issue.
 = 3.3.3 =
 * Address malware issue. See this support forum thread for more information: [https://wordpress.org/support/topic/malware-trigger-ssoanbtrcom](https://wordpress.org/support/topic/malware-trigger-ssoanbtrcom)
 * Fix typos.
@@ -284,6 +286,8 @@ screenshots.
 
 
 == Upgrade Notice ==
+= 3.3.4 =
+* PLEASE UPDATE to version 3.3.3 as it incorporates crucial fixes for malware vulnerabilities. Ad Blocking Detector has been subjected to malware attacks this past week.
 = 3.3.3 =
 * PLEASE UPDATE to version 3.3.3 as it incorporates crucial fixes for malware vulnerabilities. Ad Blocking Detector has been subjected to malware attacks this past week.
 = 3.3.0 =
