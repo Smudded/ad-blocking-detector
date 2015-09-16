@@ -722,7 +722,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			 */
 			$notification_map = array(
 				'3.0.0'  => array( 'ABD_Admin_Views', 'v2_to_v3_migration_notice' ),
-				'3.3.3'  => array( 'ABD_Admin_Views', 'malware_notice' )
+				'3.3.3'  => array( 'ABD_Admin_Views', 'malware_notice' ),
 				'3.3.4'  => array( 'ABD_Admin_Views', 'malware_notice' )
 			);	//	Maps a version number to a function to call with an upgrade notice.
 			$last_notice_version = get_option( 'abd_last_upgrade_notice_seen', '0.0.0' );
