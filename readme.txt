@@ -3,8 +3,8 @@ Contributors: jtmorris
 Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.2
-Tested up to: 4.3
-Stable tag: 3.3.4
+Tested up to: 4.5
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,10 @@ screenshots.
 
 
 == Changelog ==
+= 3.4.0 =
+* Add selective loading for certain elements to keep Ad Blocking Detector from slowing down the entire dashboard backend.
+* Add a caching mechanism to statistics collection and calculation, helping to tamp down performance creep of this feature.
+* Fix documentation typo.
 = 3.3.4 =
 * Fix update notification display issue.
 = 3.3.3 =
@@ -286,6 +290,8 @@ screenshots.
 
 
 == Upgrade Notice ==
+= 3.4.0 =
+* Highly recommended performance improvement update! Addresses issues with backend/dashboard slow downs as well as a few other improvements.
 = 3.3.4 =
 * PLEASE UPDATE to version 3.3.3 as it incorporates crucial fixes for malware vulnerabilities. Ad Blocking Detector has been subjected to malware attacks this past week.
 = 3.3.3 =
