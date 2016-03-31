@@ -20,7 +20,8 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		);
 		protected static $our_list_of_transients = array(
 			'abd_sc_cache',
-			'abd_next_shortcode_id'
+			'abd_next_shortcode_id',
+			'abd_statistics_cache'
 		);
 
 		/**
@@ -633,6 +634,25 @@ if ( !class_exists( 'ABD_Database' ) ) {
 		public static function stats_status_count( $status_code = 1, $custom_query = "SELECT adblocker FROM {{table}} WHERE 1=1" ) {
 			global $wpdb;
 
+			//	Check cached value
+			$stats_cache = get_transient( 'abd_statistics_cache' );
+			if( is_array( $stats_cache ) ) {
+				foreach( $stats_cache as $key=>$cache_row ) {
+					if( $cache_row['status'] == $status_code && $cache_row['query'] == $custom_query ) {
+						if( $cache_row['expires'] > time() ) {
+							return $cache_row['count'];
+						}
+						else {
+							unset( $stats_cache[$key] );
+						}
+					}
+				}
+			}
+			else {	//	Cache has expired, delete its row
+				$stats_cache = array();
+			}
+
+			//	If here, no cached value is present, so run the database query.
 			$table = $wpdb->prefix . self::$our_stats_table;
 
 			$custom_query = str_replace( '{{table}}', $table, $custom_query );
@@ -640,11 +660,33 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			$sql = $custom_query . " AND adblocker = $status_code AND blog_id=" . ABD_Multisite::get_current_blog_id();
 			$wpdb->get_results( $sql );
 
-			return intval( $wpdb->num_rows );
+			$count = intval( $wpdb->num_rows );
+
+			//	Cache results
+			$stats_cache[] = array(
+				'status'=>$status_code,
+				'query'=>$custom_query,
+				'count'=>$count,
+				'expires'=>time()+86400  // 86400 is 24 hours in seconds
+			);
+			set_transient( 'abd_statistics_cache', $stats_cache, 86400 );
+
+			return $count;
 		}
 			public static function stats_status_count_blocker_change( $change_type = 'disable' ) {
 				global $wpdb;
 
+				//	Check cached value
+				$stats_cache = get_transient( 'abd_statistics_cache' );
+				$cache_key = 'blocker_cahnge_'.$change_type;
+				if( is_array( $stats_cache ) && array_key_exists( $cache_key, $stats_cache ) ) {
+					$cache_row = $stats_cache[$cache_key];
+					if( $cache_row['expires'] < time() ) {
+						return $cache_row['count'];
+					}
+				}
+
+				//	If here, no cached value is present, so run database query.
 				$table = $wpdb->prefix . self::$our_stats_table;
 
 				$count = 0;
@@ -670,6 +712,15 @@ if ( !class_exists( 'ABD_Database' ) ) {
 						$count++;
 					}
 				}
+
+				//	Cache results
+				$stats_cache[$cache_key] = array(
+					'status' => $change_type,
+					'query'  => $sql,
+					'count'  => $count,
+					'expires'=> time()+86400	//	86400 is 24 hours in seconds
+				);
+				set_transient( 'abd_statistics_cache', $stats_cache, 86400 );
 
 				return $count;
 			}
