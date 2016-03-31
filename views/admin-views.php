@@ -989,7 +989,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 		protected static function statistics_tab_description() {
 			ob_start();
 			?>		
-			<p><?php ABD_L::_e( 'The charts below aggregate ad blocker status statistics collected during visits to your website. The collected statistics are subject to any filtering and recording rules defined on the Advanced Settings tab, and accuracy is not guaranteed.  Charts with no relevant data will be blank until data is collected.' ); ?></p>
+			<p><?php ABD_L::_e( 'The charts below aggregate ad blocker status statistics collected during visits to your website. The collected statistics are subject to any filtering and recording rules defined on the Advanced Settings tab, and accuracy is not guaranteed.  Charts with no relevant data will be blank until data is collected. Stats are only calculated once every 24 hours.' ); ?></p>
 			<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_delete_stats' ), 'user instructed deletion of all statistics table rows' ); ?>" id="abd-statistics-reset-button" class="button abd-delete-button"><?php ABD_L::_e( 'Reset Statistics' ); ?></a>
 
 
@@ -1415,9 +1415,17 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<p>
 						<?php ABD_L::_e( 'This plugin logs noteworthy actions and errors during usage of this dashboard. If an action isn\'t working correctly, try clearing this log using the button below, reattempting the action, then checking the log for information, or pass it to the developer in a bug report or support request.' ); ?>
 					</p>
-					<div><textarea style='width: 100% !important'>SESSION LOG&#13;&#10;============&#13;&#10;============&#13;&#10;&#13;&#10;<?php echo ABD_Log::get_readable_log(); ?></textarea></div>
 
-					<p><strong><?php ABD_L::_e( 'Number of Log Entries:  ' ); ?></strong><?php echo count( ABD_Log::get_all_log_entries() ); ?></p>
+					<?php
+					//	Only go through the overhead of loading the session log if we're on a page that will display it
+					if( $_GET['page'] == 'ad-blocking-detector' && $_GET['tab'] == 'debug' ) {
+						?>
+						<div><textarea style='width: 100% !important'>SESSION LOG&#13;&#10;============&#13;&#10;============&#13;&#10;&#13;&#10;<?php echo ABD_Log::get_readable_log(); ?></textarea></div>
+
+						<p><strong><?php ABD_L::_e( 'Number of Log Entries:  ' ); ?></strong><?php echo count( ABD_Log::get_all_log_entries() ); ?></p>
+						<?php
+					}
+					?>
 					<!-- Space for Date and Time -->
 					<p id="abd-js-date-time"><strong><?php ABD_L::_e( 'Current Date and Time: ' ); ?></strong></p>
 
@@ -1440,7 +1448,14 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<div class="abd-masonry-block">
 					<h3><?php ABD_L::_e( 'Plugin, WordPress, and Server Configuration Data' ); ?></h3>			
 
-					<textarea id="abd-server-config-textarea"><?php echo ABD_Perf_Tools::get_readable_server_config_data(); ?></textarea>
+					<?php
+					//	Only go through the overhead of loading the server config data if we're on a page that will display it
+					if( $_GET['page'] == 'ad-blocking-detector' && $_GET['tab'] == 'debug' ) {
+						?>
+						<textarea id="abd-server-config-textarea"><?php echo ABD_Perf_Tools::get_readable_server_config_data(); ?></textarea>
+						<?php
+					}
+					?>
 				</div>
 
 				
@@ -1911,7 +1926,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			?>
 
 			<p>
-				<?php ABD_L::_e( 'This plugin inserts bait content on your site. This bait content is detected by ad blockers, which then remove or hide it. This removal can the be detected. One of the bait items is an HTML iframe. This iframe is occasionally troublesome. To account for this, some of the iframe\'s behavior can be customized using the tools below.'); ?>
+				<?php ABD_L::_e( 'This plugin inserts bait content on your site. This bait content is detected by ad blockers, which then remove or hide it. This removal can then be detected. One of the bait items is an HTML iframe. This iframe is occasionally troublesome. To account for this, some of the iframe\'s behavior can be customized using the tools below.'); ?>
 			</p>
 			<p>
 				<em>

@@ -231,20 +231,27 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 					<?php
 					if( is_admin() ) {
-						?>
-						var ABDStats = {
-							pageLoadAdblocker: parseInt('<?php echo ABD_Database::stats_status_count( 1 ); ?>'),
-							pageLoadNoAdblocker: parseInt('<?php echo ABD_Database::stats_status_count( 0 ); ?>'),
-							pageLoadOther: parseInt('<?php echo ABD_Database::stats_status_count( -1 ); ?>'),
+						//	Selectively load statistics on statistics tab
+						if( $_GET['page'] == 'ad-blocking-detector' && $_GET['tab'] == 'statistics' ) {
+							$start_time = microtime( true );
+							$start_mem = memory_get_usage( true );
+							
+							?>
+							var ABDStats = {
+								pageLoadAdblocker: parseInt('<?php echo ABD_Database::stats_status_count( 1 ); ?>'),
+								pageLoadNoAdblocker: parseInt('<?php echo ABD_Database::stats_status_count( 0 ); ?>'),
+								pageLoadOther: parseInt('<?php echo ABD_Database::stats_status_count( -1 ); ?>'),
 
-							uniqueUsersAdBlocker: parseInt('<?php echo ABD_Database::stats_status_count( 1, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
-							uniqueUsersNoAdBlocker: parseInt('<?php echo ABD_Database::stats_status_count( 0, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
-							uniqueUsersOther: parseInt('<?php echo ABD_Database::stats_status_count( -1, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
+								uniqueUsersAdBlocker: parseInt('<?php echo ABD_Database::stats_status_count( 1, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
+								uniqueUsersNoAdBlocker: parseInt('<?php echo ABD_Database::stats_status_count( 0, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
+								uniqueUsersOther: parseInt('<?php echo ABD_Database::stats_status_count( -1, "SELECT DISTINCT ip FROM {{table}} WHERE 1=1" ); ?>'),
 
-							numUsersToDisable: parseInt( '<?php echo ABD_Database::stats_status_count_blocker_change( "disable" ); ?>' ),
-							numUsersToEnable: parseInt( '<?php echo ABD_Database::stats_status_count_blocker_change( "enable" ); ?>' )
+								numUsersToDisable: parseInt( '<?php echo ABD_Database::stats_status_count_blocker_change( "disable" ); ?>' ),
+								numUsersToEnable: parseInt( '<?php echo ABD_Database::stats_status_count_blocker_change( "enable" ); ?>' )
+							}
+							<?php
+							ABD_Log::perf_summary( 'ABD_Setup::enqueue_helper_footer() // retrieve statistics', $start_time, $start_mem );
 						}
-						<?php
 					}
 					?>
 
