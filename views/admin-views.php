@@ -1574,7 +1574,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 						
 						<br /><strong style="color: #444; "><?php ABD_L::_e( 'Automatic Plugin Status' ); ?>:</strong>
 						<?php
-						if( !$blcp_status['plugin_exists'] ) {
+						if( !$blcp_status['auto_plugin_exists'] ) {
 							?>
 							<ul>
 								<li class="abd_failure_message">

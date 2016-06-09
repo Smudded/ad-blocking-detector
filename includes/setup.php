@@ -82,9 +82,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers
 				//	from blocking our assets. If it exists, use those files. Otherwise,
 				//	use ours.
+				$js_file = 'adblock-detector.min.js';
 				if( defined( 'ABDBLC_ROOT_URL' ) ) {
 					//	Then our plugin is loaded because it defines this constant.
 					$prefix = ABDBLC_ROOT_URL;
+					$js_file = ABD_Anti_Adblock::get_bcc_plugin_js_file_name();
 				}
 				else {
 					$prefix = ABD_ROOT_URL;
@@ -100,7 +102,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 
 				// Ad Blocking Detector
 				wp_enqueue_script( 'abd-adblock-detector',
-					$prefix . 'assets/js/adblock-detector.min.js', array('jquery') );
+					$prefix . 'assets/js/' . $js_file, array('jquery') );
 				wp_enqueue_script( 'abd-fake-ad',
 					$prefix . 'assets/js/advertisement.min.js' );
 				
@@ -141,9 +143,11 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers
 				//	from blocking our assets. If it exists, use those files. Otherwise,
 				//	use ours.
+				$js_file = 'adblock-detector.min.js';
 				if( defined( 'ABDBLC_ROOT_URL' ) ) {
 					//	Then our plugin is loaded because it defines this constant.
 					$prefix = ABDBLC_ROOT_URL;
+					$js_file = ABD_Anti_Adblock::get_bcc_plugin_js_file_name();
 				}
 				else {
 					$prefix = ABD_ROOT_URL;
@@ -152,7 +156,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				//	Now do the enqueueing
 				wp_enqueue_script( 'jquery' );
 				wp_enqueue_script( 'abd-adblock-detector',
-					$prefix . 'assets/js/adblock-detector.min.js', array('jquery') );
+					$prefix . 'assets/js/' . $js_file, array('jquery') );
 				wp_enqueue_script( 'abd-fake-ad',
 					$prefix . 'assets/js/advertisement.min.js' );
 				wp_enqueue_script( 'abd-public-view',
@@ -181,7 +185,7 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				}
 
 				if( !empty( $abd_settings['iframe_url'] ) ) {
-					$iframe_url = $abd_settings['iframe_url'];					
+					$iframe_url = $abd_settings['iframe_url'];
 				}
 
 
@@ -785,6 +789,12 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 			$sub_mem = memory_get_usage( true );
 			self::plugin_list_links();
 			ABD_Log::perf_summary( 'ABD_Setup::initialize() // self::plugin_list_links()', $sub_time, $sub_mem, true );
+
+			//	Run Anti Adblock Initialization
+			$sub_time = microtime( true );
+			$sub_mem = memory_get_usage( true );
+			ABD_Anti_Adblock::initialize();
+			ABD_Log::perf_summary( 'ABD_Setup::initialize() // ABD_Anti_Adblock::initialize()', $sub_time, $sub_mem, true );
 
 			ABD_Log::perf_summary( 'ABD_Setup::initialize()', $start_time, $start_mem );
 		}

@@ -7,6 +7,12 @@
 if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 	class ABD_Anti_Adblock {
 		protected static $our_bcc_plugin_filename = 'ad-blocking-detector-block-list-countermeasure.php';
+		protected static $our_bcc_asset_rename_file_map = array();
+
+
+		public static function initialize() {
+			self::$our_bcc_asset_rename_file_map['adblock-detector.min.js'] = self::get_bcc_plugin_js_file_name();
+		}
 
 		/**
 		 * Generates a random directory name that shouldn't seem like an ad blocker at all.
@@ -51,6 +57,17 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 			return $dir_name;
 		}
 
+		public static function get_bcc_plugin_js_file_name() {
+			$manual_plugin_exists = self::bcc_plugin_status( 'manual_plugin_activated' );
+
+			if( $manual_plugin_exists ) {
+				return self::get_bcc_manual_plugin_js_file_name();
+			}
+
+			$hash = hash( 'crc32', self::get_bcc_plugin_dir_name() . 'adblock-detector.js' ) . '.js';
+			return $hash;
+		}
+
 		public static function create_bcc_plugin() {
 			$start_time = microtime( true );
 			$start_mem = memory_get_usage( true );
@@ -80,6 +97,15 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 			//	Add directories
 			mkdir( $fp_dir );
 
+			//	Store directory
+			//	This must happen prior to file copying as those functions depend on this directory
+			//	being stored in the database!
+			update_site_option( 'abd_blc_dir', $dir_only );
+
+			//	Reinitialize with respect to new plugin directory name. This too must happen prior
+			//	to copying files.
+			self::initialize();
+
 			//	Okay, we need to copy the the files in /assets/anti-adblock, and the entire
 			//	directory /assets/ to the root of our fallback plugin directory.  If any process
 			//	fails or errors out, return false.
@@ -90,15 +116,14 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 				ABD_Log::error( 'Block List Countermeasure plugin creation failed: Could not copy plugin readme file.' );
 				return false;
 			}
-			if( !self::copy_dir( ABD_ROOT_PATH . 'assets/', $fp_dir . '/assets/' ) ) {
+			if( !self::copy_dir( ABD_ROOT_PATH . 'assets/', $fp_dir . '/assets/', self::$our_bcc_asset_rename_file_map ) ) {
 				ABD_Log::error( 'Block List Countermeasure plugin creation failed: Could not recursively copy /assets/ directory.' );
 				return false;
 			}
 
 			//	If we've reached this point, everything was successful
-			//	Store a flag in the DB so we know the BLC plugin is automatic, and store its dir name.
+			//	Store a flag in the DB so we know the BLC plugin is automatic.
 			update_site_option( 'abd_blc_plugin_type', 'auto' );
-			update_site_option( 'abd_blc_dir', $dir_only );
 			ABD_Log::info( 'Successfully created Block List Countermeasure plugin in directory ' . $dir_only );
 
 			ABD_Log::perf_summary( 'ABD_Anti_Adblock::create_bcc_plugin()', $start_time, $start_mem );
@@ -146,31 +171,35 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 		public static function bcc_plugin_status( $what_you_want_to_know = 'plugin_activated' ) {
 			//		Collect start state for performance logging
 			// $start_time = microtime( true );
-			// $start_mem = memory_get_usage( true );	
+			// $start_mem = memory_get_usage( true );
 
 			$dir_name = get_site_option( 'abd_blc_dir' );
-			$plugin_type = get_site_option( 'abd_blc_plugin_type' );		
+			$plugin_type = get_site_option( 'abd_blc_plugin_type' );
 
 			$plugin_path = ABD_ROOT_PATH . '../' . $dir_name;
 
 			switch( $what_you_want_to_know ) {
 				case 'plugin_activated':
-					$retval = ( self::bcc_plugin_status( 'auto_plugin_activated' ) || self::bcc_plugin_status( 'manual_plugin_activated' ) );
+					$retval = ( defined( 'ABDBLC_VERSION' ) ? true : false );
 					break;
+
 				case 'auto_plugin_activated':
 					$retval = ( defined( 'ABDBLC_VERSION' ) ? true : false ) && $plugin_type == 'auto';
 					break;
 				case 'manual_plugin_activated':
 					$retval = ( defined( 'ABDBLC_VERSION' ) ? true : false ) && $plugin_type == 'manual';
 					break;
+
 				case 'plugin_exists':
 					$retval = ( self::bcc_plugin_status( 'auto_plugin_exists' ) || self::bcc_plugin_status( 'manual_plugin_exists' ) );
 					break;
+
 				case 'auto_plugin_exists':
 					$retval = is_dir( $plugin_path ) && $plugin_type == 'auto';
 					break;
 				case 'manual_plugin_exists':
-					$retval = is_dir( $plugin_path) && $plugin_type == 'manual';
+					$manual_dir_name = self::get_bcc_manual_plugin_dir_name( true );
+					$retval = is_dir( ABD_ROOT_PATH . '../' . $manual_dir_name );
 					break;
 				default:
 					ABD_Log::error( 'Unknown BLC Plugin status request type: ' . $what_you_want_to_know );
@@ -186,15 +215,10 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 
 
 
-
-
-
-
-
 		public static function get_bcc_manual_plugin_dir_name( $force_file_read = false ) {
 			$status = self::bcc_plugin_status();
 
-			if( $status['manual_plugin_exists'] && !$force_file_read ) {
+			if( !$force_file_read && $status['manual_plugin_exists'] ) {
 				$pn = get_site_option( 'abd_blc_dir' );
 				if( $pn === false ) {
 					ABD_Log::error( 'Could not retrieve Block List Countermeasure plugin directory name from database. It should exist, but doesn\'t seem to.' );
@@ -207,9 +231,13 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 					ABD_Log::error( 'Could not read in name of manual Block List Countermeasure plugin directory from file.' );
 					return false;
 				}
-			}		
+			}
 
 			return $pn;
+		}
+
+		public static function get_bcc_manual_plugin_js_file_name( ) {
+			return self::get_bcc_manual_plugin_dir_name() . '.js';
 		}
 
 
@@ -288,7 +316,7 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 		 *
 		 * @return   boolean                      true on success, false on failure.
 		 */
-		public static function copy_dir( $source_dir, $destination_dir ) {
+		public static function copy_dir( $source_dir, $destination_dir, $file_rename_map = array() ) {
 			try {
 				$dir = opendir( $source_dir );
 				if(  !mkdir( $destination_dir ) ) {
@@ -300,13 +328,20 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 				while( false !== ( $file = readdir( $dir ) ) ) {
 					if( $file != '.' && $file != '..' ) {
 						if( is_dir( $source_dir . '/' . $file ) ) {
-							if( !self::copy_dir( $source_dir . '/' . $file, $destination_dir . '/' . $file ) ) {
+							if( !self::copy_dir( $source_dir . '/' . $file, $destination_dir . '/' . $file, $file_rename_map ) ) {
 								ABD_Log::debug( 'ABD_Anti_Adblock::copy_dir() failure point: recursive ABD_Anti_Adblock::copy_dir() call' );
 								throw new Exception( 'Recursive copy failed.' );
 							}
 						}
 						else {
-							if( !copy( $source_dir . '/' . $file, $destination_dir . '/' . $file ) ) {
+							if( array_key_exists( $file, $file_rename_map ) ) {
+								$destination_file = $file_rename_map[$file];
+							}
+							else {
+								$destination_file = $file;
+							}
+
+							if( !copy( $source_dir . '/' . $file, $destination_dir . '/' . $destination_file ) ) {
 								//	Failure
 								ABD_Log::debug( 'ABD_Anti_Adblock::copy_dir() failure point: copy()' );
 								throw new Exception( 'Copy operation failed.' );
@@ -438,6 +473,15 @@ if ( !class_exists( 'ABD_Anti_Adblock' ) ) {
 			}
 
 			return self::check_plugin_dir() && self::check_safe_mode() && self::check_mkdir() && $php;
+		}
+
+		public static function get_bcc_asset_file_name( $original_file_name ) {
+			if( array_key_exists( $original_file_name, self::$our_bcc_asset_rename_file_map ) ) {
+				return self::$our_bcc_asset_rename_file_map[$original_file_name];
+			}
+			else {
+				return $original_file_name;
+			}
 		}
 	}	//	end class
 }	//	end if ( !class_exists( ...
