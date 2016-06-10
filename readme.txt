@@ -2,9 +2,9 @@
 Contributors: jtmorris
 Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
-Requires at least: 4.2
-Tested up to: 4.5
-Stable tag: 3.4.0
+Requires at least: 4.4
+Tested up to: 4.5.2
+Stable tag: 3.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,9 @@ screenshots.
 
 
 == Changelog ==
+= 3.5.0 =
+* Fix AdBlock Plus Easy List blocking this plugin.
+* Fix BLC plugin checklist errors.
 = 3.4.0 =
 * Add selective loading for certain elements to keep Ad Blocking Detector from slowing down the entire dashboard backend.
 * Add a caching mechanism to statistics collection and calculation, helping to tamp down performance creep of this feature.
@@ -290,6 +293,8 @@ screenshots.
 
 
 == Upgrade Notice ==
+= 3.5.0 =
+* Fixes AdBlock Plus EasyList breaking this plugin. If you've been experiencing detection issues with AdBlock Plus, you'll want to update!
 = 3.4.0 =
 * Highly recommended performance improvement update! Addresses issues with backend/dashboard slow downs as well as a few other improvements.
 = 3.3.4 =
