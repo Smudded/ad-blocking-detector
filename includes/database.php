@@ -16,7 +16,8 @@ if ( !class_exists( 'ABD_Database' ) ) {
 			'abd_user_settings',
 			'abd_list_of_shortcodes',
 			'abd_feedback_nag_time',
-			'abd_current_version'
+			'abd_current_version',
+			'abd_last_upgrade_notice_seen'
 		);
 		protected static $our_list_of_transients = array(
 			'abd_sc_cache',
