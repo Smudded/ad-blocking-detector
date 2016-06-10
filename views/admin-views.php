@@ -2115,6 +2115,21 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			<?php
 		}
 
+		public static function v3_5_0_adblockplus_notice() {
+			?>
+			<div class='notice notice-info abd-notice abd-notice-blue'>
+				<h3><?php ABD_L::_e( 'Ad Blocking Detector - AdBlock Plus EasyList Issues' ); ?></h3>
+
+				<img src="<?php echo ABD_ROOT_URL; ?>/assets/images/targeted.png" style="width: 160px; float: left; margin: auto 25px 25px auto;" />
+
+				<p><?php ABD_L::_e( 'The AdBlock Plus ad blocker has been successfully evading detection for the past few weeks. The default AdBlock Plus block list was blocking crucial plugin files and circumventing previously enacted countermeasures. Ad Blocking Detector was just updated to address this issue. ' ); ?></p>
+				</p>
+				<p><?php ABD_L::_e( 'I apologize for it taking so long! This fix was fairly complex and needed extensive testing. Please continue reporting any issues you find!' ); ?></p>
+				<div style="clear: both;"></div>
+			</div>
+			<?php
+		}
+
 
 		public static function rate_plugin_nag() {
 			
