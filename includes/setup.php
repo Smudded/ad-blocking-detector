@@ -140,6 +140,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 				wp_localize_script( 'abd-admin-view', 'abdPaths', array( 'abdRootUrl' => ABD_ROOT_URL ) );
 			}
 			public static function enqueue_helper_public_js( $prefix = ABD_ROOT_URL ) {
+				if( !apply_filters( 'ABD_enabled', true ) && !is_admin() ) {
+					return;
+				}
+
 				//	Our anti-adblock plugin may serve as a backup to prevent ad blockers
 				//	from blocking our assets. If it exists, use those files. Otherwise,
 				//	use ours.
@@ -163,6 +167,10 @@ if ( !class_exists( 'ABD_Setup' ) ) {
 					$prefix . 'assets/js/public-view.js' );
 			}
 			public static function enqueue_helper_footer() {
+				if( !apply_filters( 'ABD_enabled', true ) && !is_admin() ) {
+					return;
+				}
+
 				$abd_settings = ABD_Database::get_settings( true );
 
 				//	We need a fake iframe URL.  Ideally, this is to some completely random
