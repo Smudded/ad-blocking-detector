@@ -1478,23 +1478,6 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 					<textarea id="abd-results-textarea">DETECTION RESULTS&#13;&#10;==================&#13;&#10;==================&#13;&#10;&#13;&#10;</textarea>
 				</div>
-
-
-
-				
-
-
-
-				<div class="abd-masonry-block">
-					<h3><?php ABD_L::_e( 'Revert to An Old Version' ); ?></h3>
-					<p><?php ABD_L::_e( 'I work very hard to make sure plugin updates do not break what used to work, or removes features you may rely on.  However, if I have failed in this regard, you can revert to previous versions of this plugin.  I have included download links to some stable and mature plugin versions below, and will continue to update this list.' ); ?></p>
-					<p><?php echo sprintf( ABD_L::__( 'You can also download every released version of this plugin from its %sWordPress.org plugin repository%s if you want more choices.' ), '<a href="https://wordpress.org/plugins/ad-blocking-detector/developers/" target="_blank">', '</a>' ); ?></p>
-					<p><em><?php ABD_L::_e( 'Be warned, reverting to one of these plugin versions will stop update notifications, and I only provide support for the latest releases.' ); ?></em></p>
-
-					<ul>
-						<li><?php echo sprintf( ABD_L::__( '%sVersion 2.2.8%s:  The last stable release of the version 2 branch.  It was stable and effective, however, it was vulnerable to ad blocker block lists, and had some minor user-interface issues.' ), '<a href="https://downloads.wordpress.org/plugin/ad-blocking-detector.2.2.8.zip">', '</a>' ); ?></li>
-					</ul>
-				</div>
 			</div>
 
 			<?php
