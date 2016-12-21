@@ -193,7 +193,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			 * It may look a bit cluttered at first glance, but the code below is much more
 			 * consistent, logical, and concise than a vanilla Settings API implementation would
 			 * be.  With a little bit of familiarity, I think you'll agree that this thing is
-			 * awesome.
+			 * awesome. But I am biased.
 			 */
 			
 			//	If we don't need to, don't register all this crap. Some users have had performance
@@ -1432,9 +1432,6 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<!-- Clear log button -->
 					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_clear_log' ), 'user instructed deletion of all log entries' ); ?>' class='button'>
 						<?php ABD_L::_e('Clear Log'); ?>
-					</a>
-					<a href='<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=abd_send_usage_info' ), 'user instructed sending usage info to dev' ); ?>' class='button abd-submit-log-to-dev-button'>
-						<?php ABD_L::_e( 'Send a Copy of Log to Developer' ); ?>
 					</a>
 				</div>
 
