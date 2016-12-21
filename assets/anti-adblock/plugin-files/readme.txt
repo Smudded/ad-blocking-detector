@@ -1,5 +1,5 @@
 === Ad Blocking Detector - Block List Countermeasure ===
-Contributors: jtmorris
+Contributors: getadmiral
 Donate link: http://adblockingdetector.jtmorris.net/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 3.9

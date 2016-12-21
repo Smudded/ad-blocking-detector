@@ -1,6 +1,5 @@
 === Ad Blocking Detector ===
-Contributors: jtmorris
-Donate link: http://adblockingdetector.johnmorris.me/
+Contributors: getadmiral
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.4
 Tested up to: 4.7
