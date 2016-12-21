@@ -3,8 +3,8 @@ Contributors: jtmorris
 Donate link: http://adblockingdetector.johnmorris.me/
 Tags: adblock, adblocker, ad blocker, adblock plus, detector, advertisement, ads, ad blocking
 Requires at least: 4.4
-Tested up to: 4.6.1
-Stable tag: 3.5.1
+Tested up to: 4.7
+Stable tag: 3.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,7 @@ For ideas and information on how to use this power, look at the following articl
 == Installation ==
 = Using WordPress.org's Plugin Repository (recommended) =
 1. Search for "Ad Blocking Detector" in your WordPress "Add New" plugin section of your dashboard.
-1. Install and activate the "[Ad Blocking Detector](http://wordpress.org/plugins/ad-blocking-detector/)" plugin by John Morris.
+1. Install and activate the "[Ad Blocking Detector](http://wordpress.org/plugins/ad-blocking-detector/)" plugin.
 1. Visit the newly added "Ad Blocking" menu in your admin section to get started.
 
 
@@ -87,7 +87,7 @@ It was not designed to do so, but it is possible to replicate that behavior in a
 This plugin's purpose is to simply places alternative content in the space the ad would have displayed.
 
 If you want more information on how to replicate the obscuring of content, check out this blog post
-on the plugin's website: [http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/]http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/)
+on the plugin's website: [http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/](http://adblockingdetector.johnmorris.me/combine-javascript-and-ad-blocking-detector/)
 
 
 = Why doesn't this plugin detect the _______________ ad blocker? =
@@ -123,6 +123,9 @@ screenshots.
 
 
 == Changelog ==
+= 3.5.2 =
+* Fix typos.
+* Change developer contact information.
 = 3.5.1 =
 * Add requested "ABD_enabled" filter, for selective enabling/disabling of plugin.
 = 3.5.0 =

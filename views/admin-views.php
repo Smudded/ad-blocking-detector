@@ -44,9 +44,9 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 			'wporglisting'        => 'https://wordpress.org/plugins/ad-blocking-detector/description/',
 
 			///////		Dev Info
-			'emaildev'            => 'mailto:johntylermorris@jtmorris.net?subject=Ad%20Blocking%20Detector%20Support',
-			'devemail'            => 'mailto:johntylermorris@jtmorris.net?subject=Ad%20Blocking%20Detector%20Support',
-			'devwebsite'          => 'http://cs.johnmorris.me',
+			'emaildev'            => 'mailto:support@getadmiral.com?subject=Ad%20Blocking%20Detector%20Support',
+			'devemail'            => 'mailto:support@getadmiral.com?subject=Ad%20Blocking%20Detector%20Support',
+			'devwebsite'          => 'http://getadmiral.com',
 
 			///////		Plugin Website/Repo
 			'website'             => 'http://adblockingdetector.johnmorris.me',
@@ -54,7 +54,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 
 			//////		Miscellaneous
 			//		Tweet love of this plugin
-			'twitterlove'         => 'http://twitter.com/home?status=I%20love%20the%20Ad%20Blocking%20Detector%20WordPress%20plugin%20by%20%40jt_morris!%20http://wordpress.org/plugins/ad-blocking-detector/'
+			'twitterlove'         => 'http://twitter.com/home?status=I%20love%20the%20Ad%20Blocking%20Detector%20WordPress%20plugin!%20http://wordpress.org/plugins/ad-blocking-detector/'
 		);
 
 		public static function add_action_notices() {
@@ -853,18 +853,7 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 				<div class="abd-stark-highlight abd-masonry-block">
 					<h3><?php ABD_L::_e( 'Support This Plugin' ); ?></h3>
 					<p>
-						<?php ABD_L::_e( 'Is this plugin useful for you? If so, please support its ongoing development and improvement with a donation.' ); ?>
-					</p>
-					<p>
-						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-							<input type="hidden" name="cmd" value="_s-xclick">
-							<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-							<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-							<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-						</form>
-					</p>
-					<p>
-						<?php ABD_L::_e( 'Or, if you are short on funds, there are other ways to help out:' ); ?>
+						<?php ABD_L::_e( 'Is this plugin useful for you? If so, please support its ongoing development and improvement by spreading the word.' ); ?>
 					</p>
 					<ul>
 						<li>
@@ -1380,29 +1369,19 @@ if ( !class_exists( 'ABD_Admin_Views' ) ) {
 					<h3><?php ABD_L::_e( 'Contact the Developer' ); ?></h3>
 
 					<p>
-						<?php echo sprintf( ABD_L::__( 'The best ways to get of the developer is through this plugin\'s %sWordPress.org support forum%s, or by %semail%s. Either contact method is acceptable; however, asking questions on the support forum, instead of privately by email, may help others with the same problem.' ), '<a href="' . self::$our_links['wporgsupport'] . '" target="_blank">', '</a>', '<a href="' . self::$our_links['emaildev'] . '">', '</a>' ); ?>
+						<?php echo sprintf( ABD_L::__( 'The best ways to get a hold of the developer is through this plugin\'s %sWordPress.org support forum%s, or by %semail%s. Either contact method is acceptable; however, asking questions on the support forum, instead of privately by email, may help others with the same problem.' ), '<a href="' . self::$our_links['wporgsupport'] . '" target="_blank">', '</a>', '<a href="' . self::$our_links['emaildev'] . '">', '</a>' ); ?>
 					</p>
 					<p>
 						<table>
 							<tr>
-								<th><?php ABD_L::_e( 'Developer Name' ); ?></th>
-								<td>John Morris</td>
+								<th><?php ABD_L::_e( 'Developer' ); ?></th>
+								<td><a href="<?php echo self::$our_links['devwebsite']; ?>" target="_blank">Admiral</a></td>
 							</tr>
-							<!-- <tr>
-								<th><?php ABD_L::_e( 'Website' ); ?></th>
-								<td><a href="<?php echo self::$our_links['devwebsite']; ?>" target="_blank"><?php echo self::$our_links['devwebsite']; ?></a></td>
-							</tr> -->
 							<tr>
 								<th><?php ABD_L::_e( 'Email Address' ); ?></th>
-								<td><a href="<?php echo self::$our_links['emaildev']; ?>">johntylermorris@jtmorris.net</a></td>
+								<td><a href="<?php echo self::$our_links['emaildev']; ?>">support@getadmiral.com</a></td>
 							</tr>
 						</table>
-					</p>
-					<p>
-						<?php ABD_L::_e( 'Please note I have several WordPress plugins, and other projects, live at any given time. I generally provide support on a first-come, first-served basis, with exceptions for critical plugin bugs.' ); ?>
-					</p>
-					<p>
-						<?php ABD_L::_e( 'I will usually respond within forty-eight hours.  However, if I have a lot of queued support requests, it can take up to several weeks.' ); ?>
 					</p>
 				</div>
 

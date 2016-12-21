@@ -3,9 +3,9 @@
  * Plugin Name: Ad Blocking Detector - Block List Countermeasure
  * Plugin URI: http://adblockingdetector.johnmorris.me
  * Description: Provides fallback files in the event the main Ad Blocking Detector's assets are blocked.
- * Version: 3.5.1
- * Author: John Morris
- * Author URI: http://cs.johnmorris.me
+ * Version: 3.5.2
+ * Author: Admiral
+ * Author URI: http://getadmiral.com
  * License: GPL2
  */
 
@@ -38,7 +38,7 @@
  *    \\//    \\//    \\//    \\//
  *     \/      \/      \/      \/                          */
 
-define( 'ABDBLC_VERSION', '3.5.1' );
+define( 'ABDBLC_VERSION', '3.5.2' );
 
 /*     /\      /\      /\      /\
  *    //\\    //\\    //\\    //\\
